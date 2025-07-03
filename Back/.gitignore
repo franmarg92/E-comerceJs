@@ -1,0 +1,19 @@
+# Dependencias y build
+node_modules/
+dist/
+build/
+.env
+.env.*
+
+# Logs
+*.log
+
+# IDEs
+.vscode/
+.idea/
+
+# Archivos temporales
+*.tmp
+*.swp
+*.tsbuildinfo
+.DS_Store
