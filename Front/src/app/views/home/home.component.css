@@ -1,0 +1,259 @@
+.hero {
+    background: url('../../../../public/slider_joyeria2.jpg') no-repeat center center/cover;
+    color: white;
+    padding: 80px 20px;
+     background-size: cover; /* La imagen cubrirá todo el ancho y largo */
+    background-position: center;
+}
+
+.home-container {
+  font-family: 'Playfair Display', serif;
+  color: #333;
+  padding-bottom: 40px;
+}
+
+/* Hero Section */
+.hero {
+  position: relative;
+  height: 30vh;
+  overflow: hidden;
+}
+
+.hero-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: brightness(0.7);
+}
+
+.hero-overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #000;
+  text-align: center;
+  
+  
+}
+
+.hero-overlay h1 {
+  font-size: 42px;
+  margin-bottom: 12px;
+  text-transform: uppercase;
+}
+
+.hero-overlay p {
+  font-size: 18px;
+}
+
+/* Cards Section */
+.info-cards {
+  display: flex;
+  gap: 32px;
+  flex-wrap: wrap;
+  justify-content: center;
+  padding: 48px 24px 0;
+}
+
+.card {
+  background-color: #fff;
+  border: 1px solid #e2e2e2;
+  border-left: 6px solid #d4af37;
+  padding: 24px;
+  max-width: 320px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+  transition: transform 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-6px);
+}
+
+.card h3 {
+  margin-bottom: 12px;
+  font-size: 20px;
+  color: #222;
+  position: relative;
+}
+
+.card p {
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+.info-cards {
+  display: flex;
+  gap: 32px;
+  flex-wrap: wrap;
+  justify-content: center;
+  padding: 64px 32px;
+  background-color: #fff;
+  text-align: center;
+  flex-direction: row; /* aseguramos horizontal en desktop */
+}
+
+.info-title {
+  font-size: 28px;
+  font-weight: 600;
+  margin-bottom: 48px;
+  color: #222;
+  font-family: 'Playfair Display', serif;
+  position: relative;
+  display: inline-block;
+}
+
+.info-title::after {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 2px;
+  background-color: #d4af37;
+}
+
+.featured-products {
+  padding: 64px 32px 32px;
+  text-align: center;
+  background-color: #fff;
+}
+
+.featured-products h2 {
+  font-size: 28px;
+  margin-bottom: 32px;
+  font-family: 'Playfair Display', serif;
+  color: #222;
+  position: relative;
+}
+
+.featured-products h2::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: -10px;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 2px;
+  background-color: #d4af37;
+}
+
+.product-grid {
+  display: flex;
+  gap: 32px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.product-card {
+  background-color: #fdfdfd;
+  border: 1px solid #e2e2e2;
+  border-left: 6px solid #d4af37;
+  padding: 20px;
+  width: 280px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+  transition: transform 0.3s ease;
+  text-align: left;
+}
+
+.product-card:hover {
+  transform: translateY(-6px);
+}
+
+.product-card img {
+  width: 100%;
+  height: auto;
+  margin-bottom: 16px;
+  border-radius: 4px;
+}
+
+.product-card h4 {
+  font-size: 18px;
+  margin-bottom: 6px;
+  color: #222;
+}
+
+.product-card p {
+  font-size: 14px;
+  margin-bottom: 12px;
+  color: #555;
+}
+
+.price {
+  font-weight: bold;
+  color: #d4af37;
+  font-size: 16px;
+}
+
+
+.payment-methods {
+  padding: 64px 32px 48px;
+  text-align: center;
+  background-color: #f8f8f8;
+  font-family: 'Playfair Display', serif;
+}
+
+.payment-methods h2 {
+  font-size: 28px;
+  margin-bottom: 28px;
+  color: #222;
+  position: relative;
+}
+
+.payment-methods h2::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: -10px;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 2px;
+  background-color: #d4af37;
+}
+
+.payment-icons {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 24px;
+  margin-bottom: 16px;
+}
+
+.payment-icons div {
+  font-size: 18px;
+  color: #444;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.payment-icons i {
+  font-size: 24px;
+  color: #d4af37;
+}
+
+.payment-note {
+  font-size: 15px;
+  color: #555;
+  margin-top: 12px;
+  max-width: 500px;
+  margin-inline: auto;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .hero-overlay h1 {
+    font-size: 32px;
+  }
+
+  .info-cards {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .card {
+    width: 100%;
+    max-width: 90%;
+  }
+}
