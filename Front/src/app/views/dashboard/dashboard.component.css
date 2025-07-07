@@ -1,0 +1,10 @@
+.dashboard-layout {
+  display: flex;
+  gap: 32px;
+  padding: 32px;
+  align-items: flex-start;
+}
+
+.dashboard-content {
+  flex: 1;
+}
