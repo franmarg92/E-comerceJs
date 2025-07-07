@@ -1,0 +1,35 @@
+<header class="header">
+  <nav class="nav-container">
+    <div class="brand">
+      <h1 class="logo">Distinzione Joyas</h1>
+    </div>
+
+    <ul class="nav-links">
+      <li><a routerLink="/">Inicio</a></li>
+      <li><a routerLink="/shop">Shop</a></li>
+      <li><a routerLink="/about-us">Nosotros</a></li>
+      <li><a routerLink="/contact">Contacto</a></li>
+    </ul>
+
+    <div class="nav-actions">
+      <a *ngIf="!isAuthenticated" routerLink="/cart" class="action">
+        <i class="fa-solid fa-cart-shopping"></i> Carrito
+        <span class="cart-count">2</span>
+      </a>
+
+      <div *ngIf="isAuthenticated" class="user-dropdown" (click)="toggleDropdown()">
+        <div class="user-toggle">
+          <span class="user-name">{{ user?.name }}</span>
+          <i class="fa-solid fa-chevron-down"></i>
+        </div>
+
+        <ul class="dropdown-menu" *ngIf="dropdownOpen">
+          <li><a routerLink="/dashboard">Dashboard</a></li>
+          <li><a (click)="logout()">Cerrar sesión</a></li>
+        </ul>
+      </div>
+
+      <a *ngIf="!isAuthenticated" routerLink="/account" class="action">Cuenta</a>
+    </div>
+  </nav>
+</header>
