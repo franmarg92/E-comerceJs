@@ -1,0 +1,100 @@
+.account-wrapper {
+  max-width: 400px;
+  margin: 64px auto;
+  padding: 32px;
+  background-color: #fff;
+  border: 1px solid #e2e2e2;
+  border-left: 6px solid #d4af37;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  font-family: 'Playfair Display', serif;
+  color: #333;
+  border-radius: 6px;
+}
+
+/* Título */
+.account-wrapper h2 {
+  text-align: center;
+  font-size: 24px;
+  margin-bottom: 24px;
+  position: relative;
+}
+
+.account-wrapper h2::after {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 40px;
+  height: 2px;
+  background-color: #d4af37;
+}
+
+/* Formulario */
+form label {
+  display: block;
+  margin: 12px 0 4px;
+  font-weight: 500;
+}
+
+form input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 15px;
+  transition: border-color 0.3s ease;
+}
+
+form input:focus {
+  border-color: #d4af37;
+  outline: none;
+}
+
+/* Botón de envío */
+form button[type="submit"] {
+  width: 100%;
+  background-color: #d4af37;
+  color: #fff;
+  border: none;
+  padding: 12px 0;
+  font-size: 16px;
+  margin-top: 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+form button:hover {
+  background-color: #c49e2e;
+}
+
+/* Botón para alternar vista */
+.toggle {
+  background: none;
+  border: none;
+  color: #555;
+  text-decoration: underline;
+  margin-top: 16px;
+  cursor: pointer;
+  font-size: 14px;
+  display: block;
+  text-align: center;
+  transition: color 0.3s ease;
+}
+
+.toggle:hover {
+  color: #d4af37;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .account-wrapper {
+    margin: 32px 16px;
+    padding: 24px;
+  }
+
+  form button[type="submit"] {
+    font-size: 15px;
+  }
+}

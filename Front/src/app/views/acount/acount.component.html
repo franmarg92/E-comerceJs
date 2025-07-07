@@ -1,0 +1,71 @@
+<div class="account-wrapper">
+  <h2>{{ isLoginView ? "Iniciar sesión" : "Registrarse" }}</h2>
+
+  <form [formGroup]="accountForm" (ngSubmit)="onSubmit()">
+    <div *ngIf="!isLoginView">
+      <label>Nombre</label>
+      <input
+        formControlName="name"
+        id="name"
+        type="text"
+        placeholder="Introduce tu nombre"
+        required
+      />
+
+      <label>Apellido</label>
+      <input
+        formControlName="lastName"
+        id="lastName"
+        type="text"
+        placeholder="Introduce tu apellidp"
+        required
+      />
+
+      <label>Dni</label>
+      <input
+        formControlName="dni"
+        id="dni"
+        type="text"
+        placeholder="Introduce tu DNI"
+        required
+      />
+      <label>Fecha de nacimiento</label>
+      <input
+        formControlName="date_of_birth"
+        id="date_of_birth"
+        type="date"
+        required
+      />
+    </div>
+
+    <label>Email</label>
+    <input
+      formControlName="email"
+      id="email"
+      type="email"
+      placeholder="Introduce Email"
+      required
+    />
+
+    <label>Contraseña</label>
+    <input
+      formControlName="password"
+      id="password"
+      type="password"
+      placeholder="Introduce password"
+      required
+    />
+
+    <button type="submit">
+      {{ isLoginView ? "Ingresar" : "Crear cuenta" }}
+    </button>
+  </form>
+
+  <button class="toggle" (click)="toggleView()">
+    {{
+      isLoginView
+        ? "¿No tenés cuenta? Registrate"
+        : "¿Ya tenés cuenta? Iniciá sesión"
+    }}
+  </button>
+</div>
