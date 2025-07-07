@@ -1,0 +1,7 @@
+<nav class="sidebar">
+  <ul>
+    <li *ngFor="let item of filteredSidebarItems">
+      <a [routerLink]="item.path" (click)="onItemClick()">{{ item.label }}</a>
+    </li>
+  </ul>
+</nav>
