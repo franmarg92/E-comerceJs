@@ -8,18 +8,23 @@ import { AboutUsComponent } from './views/about-us/about-us.component';
 import { ContactComponent } from './views/contact/contact.component';
 import { ProfileComponent } from './views/profile/profile.component';
 import { CartComponent } from './views/cart/cart.component';
+import { ProductEditorComponent } from './views/product-editor/product-editor.component';
 
 export const routes: Routes = [
-    {path: '', component:HomeComponent},
-    {path: 'account', component:AcountComponent},
-    {path: 'shop', component:ShopComponent},
-    {path: 'about-us', component:AboutUsComponent},
-    {path: 'contact', component:ContactComponent},
-    {path: 'cart', component:CartComponent},
-    {path: 'dashboard', component:DashboardComponent, canActivate: [AuthGuard], data: { roles: ['admin', 'cliente'] },
-        children: [
-            {path: 'profile', component:ProfileComponent},
-           
-        ]
-    }
+  { path: '', component: HomeComponent },
+  { path: 'account', component: AcountComponent },
+  { path: 'shop', component: ShopComponent },
+  { path: 'about-us', component: AboutUsComponent },
+  { path: 'contact', component: ContactComponent },
+  { path: 'cart', component: CartComponent },
+  {
+    path: 'dashboard',
+    component: DashboardComponent,
+    canActivate: [AuthGuard],
+    data: { roles: ['admin', 'cliente'] },
+    children: [
+      { path: 'profile', component: ProfileComponent },
+      { path: 'product-editor', component: ProductEditorComponent },
+    ],
+  },
 ];
