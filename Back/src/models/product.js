@@ -11,10 +11,10 @@ const variantSchema = new mongoose.Schema(
 
 const productSchema = new mongoose.Schema(
   {
-    name: { type: String, required: true },
+    name: { type: String },
     description: { type: String },
     image: [String],
-    price: { type: Number, required: true },
+    price: { type: Number  },
     stock: { type: Number, default: 0 },
     categories: [
       {

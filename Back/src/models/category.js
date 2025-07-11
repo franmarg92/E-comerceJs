@@ -8,7 +8,7 @@ const categorySchema = new mongoose.Schema(
       unique: true,
     },
     description: {
-      type: String, // ⚠️ corregido: tenías "trype" en lugar de "type"
+      type: String, 
     },
     parent: {
       type: mongoose.Schema.Types.ObjectId,
