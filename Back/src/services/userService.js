@@ -6,7 +6,7 @@ const getALlUsers = async () => {
   return users;
 };
 
-const editUser = async (id, userData, userRole) => {
+const editUser = async (userId, userData, userRole) => {
   let allowedFields;
 
   if (userRole === "admin") {
@@ -29,15 +29,17 @@ const editUser = async (id, userData, userRole) => {
     }
   }
 
-  const result = await User.findByIdAndUpdate(id, filteredData, { new: true });
+  const result = await User.findByIdAndUpdate(userId, filteredData, {
+    new: true,
+  });
 
   if (!result) throw new Error("Usuario sin cambios o no encontrado");
 
   return { message: "Usuario actualizado correctamente", user: result };
 };
 
-const changePassword = async (user_id, oldPassword, newPassword) => {
-  const user = await User.findById(user_id);
+const changePassword = async (userId, oldPassword, newPassword) => {
+  const user = await User.findById(userId);
 
   if (!user) throw new Error("Usuario no encontrado");
 
