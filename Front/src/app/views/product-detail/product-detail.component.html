@@ -1,0 +1,35 @@
+<div class="product-showcase" *ngIf="product">
+  <div class="left-block">
+    <img *ngIf="product?.image?.length" [src]="product.image[0]" alt="{{ product.name }}" />
+  </div>
+
+  <div class="right-block">
+    <h1 class="title">{{ product.name }}</h1>
+
+    <p class="description">{{ product.description }}</p>
+
+    <div class="price-section">
+      <div class="main-price">$ {{ product.price }}</div>
+      <div class="installments">12 cuotas sin interés de ${{ (product.price / 12) | number:'1.2-2' }}</div>
+      <div class="tax-note">Precio sin impuestos: ${{ (product.price / 1.21) | number:'1.2-2' }}</div>
+    </div>
+
+    <div class="badges">
+      <span class="badge">💎 100% Original</span>
+      <span class="badge">🚚 Envío exprés gratis</span>
+      <span class="badge stock">Última unidad disponible</span>
+    </div>
+
+    <button class="cta-button" (click)="addToCart()">Agregar al carrito</button>
+  </div>
+</div>
+
+
+<div *ngIf="!product" class="loading">
+  <p>Cargando producto...</p>
+</div>
+
+
+
+
+
