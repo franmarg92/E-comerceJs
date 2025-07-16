@@ -1,0 +1,60 @@
+.about-section {
+  max-width: 900px;
+  margin: 4rem auto;
+  padding: 3rem;
+  background: linear-gradient(to bottom right, #fff, #fdf9f3);
+  border: 1px solid #e2d5b0;
+  border-radius: 16px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+  font-family: 'Montserrat', sans-serif;
+}
+
+.about-title {
+  font-size: 2.4rem;
+  font-weight: 700;
+  text-align: center;
+  color: #2c2c2c;
+  margin-bottom: 1rem;
+  position: relative;
+}
+
+.about-title::after {
+  content: '';
+  width: 60px;
+  height: 3px;
+  background-color: #d4af37;
+  position: absolute;
+  left: 50%;
+  bottom: -10px;
+  transform: translateX(-50%);
+  border-radius: 4px;
+}
+
+.gold-divider {
+  display: none; /* lo reemplazamos con el ::after elegante */
+}
+
+.about-description {
+  font-size: 1.15rem;
+  line-height: 1.8;
+  color: #444;
+  text-align: center;
+  margin-bottom: 2rem;
+  padding: 0 2rem;
+}
+
+/* ✨ Animación suave al cargar */
+.about-wrapper {
+  animation: fadeInUp 1s ease both;
+}
+
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
