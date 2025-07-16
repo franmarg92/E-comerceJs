@@ -2,8 +2,7 @@ const {productService} = require("../services");
 
 const createProductController = async (req, res) => {
   try {
-    const productData = req.body;
-    console.log('📥 Body recibido en createProduct:', req.body.product);
+    const productData = req.body.product || req.body;
 
 
     const result = await productService.createProduct(productData);
@@ -64,8 +63,24 @@ const editProductController = async (req, res) => {
   }
 };
 
+const getProductByIdController = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const findProduct = await productService.getAllProductsById(id)
+    res.status(200).json(findProduct)
+  } catch (error) {
+     console.error(
+      "Error en controlador de obtención de productos:",
+      error.message
+    );
+    return res.status(500).json({ error: "Error interno del servidor" });
+  }
+  
+}
+
 module.exports = {
   createProductController,
   getAllProductsController,
   editProductController,
+  getProductByIdController
 };

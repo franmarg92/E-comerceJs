@@ -6,11 +6,11 @@ const cartSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
       required: true,
-      unique: true, // Cada usuario tiene un carrito único
+      unique: true, 
     },
     items: [
       {
-        product: {
+        productId: {
           type: mongoose.Schema.Types.ObjectId,
           ref: 'Product',
           required: true,

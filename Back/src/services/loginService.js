@@ -20,7 +20,7 @@ const loginUserService = async (email, password) => {
   }
 
   const tokenPayload = {
-    user_id: user._id,
+    userId: user._id,
     name: user.name,
     lastName: user.lastName,
     email: user.email,

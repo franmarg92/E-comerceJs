@@ -2,6 +2,8 @@ const { Product } = require("../models");
 
 const createProduct = async (productData) => {
   try {
+
+    
     const {
       name,
       description,
@@ -51,8 +53,12 @@ const createProduct = async (productData) => {
 
 
 const getAllProducts = async () => {
-  const products = await Product.find();
-  return products;
+   try {
+    const products = await Product.find();
+    return { success: true, products };
+  } catch (error) {
+    return { success: false, error: error.message };
+  }
 };
 
 const editProduct = async (productId, productData) => {
@@ -88,4 +94,13 @@ const editProduct = async (productId, productData) => {
   return updatedProduct;
 };
 
-module.exports = { createProduct, getAllProducts, editProduct };
+const getAllProductsById = async (_id) => {
+   try {
+    const product = await Product.findById(_id);
+    return { success: true, product };
+  } catch (error) {
+    return { success: false, error: error.message };
+  }
+};
+
+module.exports = { createProduct, getAllProducts, editProduct, getAllProductsById };

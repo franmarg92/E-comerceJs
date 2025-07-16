@@ -10,6 +10,8 @@ const {
   userRouter,
   productRouter,
   categoryRouter,
+  cartRouter,
+  orderRouter
 } = require("./src/routes");
 
 const app = express();
@@ -24,6 +26,8 @@ app.use("/api/auth", loginRouter);
 app.use("/api/user", userRouter);
 app.use("/api/product", productRouter);
 app.use("/api/category", categoryRouter);
+app.use('/api/cart', cartRouter)
+app.use('/api/order', orderRouter)
 
 app.listen(PORT, async () => {
   await connectDB.initDB();
