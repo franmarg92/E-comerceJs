@@ -5,7 +5,8 @@ import { ProductService } from '../../services/product/product.service';
 import { CategoryService } from '../../services/category/category.service';
 import { Product, Variant } from '../../models/productModel';
 import { Category } from '../../models/categoryModel';
-import { CategoryResponse } from '../../models/categoryResponse';
+import Swal from 'sweetalert2';
+
 
 
 @Component({
@@ -89,13 +90,10 @@ onSubmit(): void {
 
   const formData = { ...this.productForm.value };
 
-  
   formData.image = formData.image
     .split(',')
-    .map((url: string) => url.trim())
-    .filter((url: string | any[]) => url.length > 0);
+    .map((url: string) => url.trim());
 
-  
   formData.categories = Array.isArray(formData.categories)
     ? formData.categories
     : [formData.categories];
@@ -103,14 +101,60 @@ onSubmit(): void {
   console.log('📦 Payload corregido a enviar:', formData);
 
   if (this.isEditMode) {
-    this.productService.editProduct(formData).subscribe();
+    this.productService.editProduct(formData).subscribe({
+      next: () => {
+        Swal.fire({
+          icon: 'success',
+          title: 'Producto editado',
+          text: 'Los cambios fueron guardados correctamente.',
+          confirmButtonColor: '#d4af37'
+        });
+      },
+      error: err => {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error al editar',
+          text: err.message || 'No se pudo guardar el producto.',
+          confirmButtonColor: '#d4af37'
+        });
+      }
+    });
   } else {
     this.productService.createProduct(formData).subscribe({
-      next: res => console.log('✅ Producto creado:', res),
-      error: err => console.error('❌ Error al crear producto:', err.message)
+      next: res => {
+        console.log('✅ Producto creado:', res);
+
+        Swal.fire({
+          icon: 'success',
+          title: 'Producto creado',
+          text: 'El producto se ha registrado exitosamente.',
+          confirmButtonColor: '#d4af37'
+        });
+
+        this.productForm.reset({
+          name: '',
+          price: 0,
+          description: '',
+          image: '',
+          categories: '',
+          isActive: true,
+          stock: 0
+        });
+      },
+      error: err => {
+        console.error('❌ Error al crear producto:', err.message);
+
+        Swal.fire({
+          icon: 'error',
+          title: 'Error al crear',
+          text: err.message || 'No se pudo crear el producto.',
+          confirmButtonColor: '#d4af37'
+        });
+      }
     });
   }
 }
+
 
 
 }
