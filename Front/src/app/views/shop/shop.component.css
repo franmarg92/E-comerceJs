@@ -8,6 +8,7 @@
 .shop-sidebar {
   width: 220px;
   padding: 24px;
+  height: auto;
   background-color: #fafafa;
   border: 1px solid #e2e2e2;
   border-left: 6px solid #d4af37;
@@ -33,6 +34,7 @@
   text-decoration: none;
   color: #555;
   transition: color 0.3s ease;
+  cursor: pointer;
 }
 
 .shop-sidebar a:hover {
@@ -46,6 +48,7 @@
 
 .shop-main h2 {
   font-size: 24px;
+  text-align: center;
   margin-bottom: 24px;
   color: #333;
 }
@@ -64,6 +67,105 @@
   color: #999;
   border-radius: 6px;
 }
+
+.product-card {
+  background-color: #fff;
+  padding: 12px;
+  border: 1px solid #e2e2e2;
+  border-radius: 8px;
+  text-align: center;
+  transition: box-shadow 0.3s ease, border 0.3s ease;
+  box-shadow: 0 0 0 transparent;
+  cursor: pointer;
+  max-width: 200px;
+}
+
+.product-card:hover {
+  box-shadow: 0 0 12px rgba(212, 175, 55, 0.4); /* sombra dorada */
+  border: 1px solid #d4af37; /* borde dorado al pasar el mouse */
+}
+
+.product-card img {
+  max-width: 140px;
+  height: 140px;
+  margin-bottom: 8px;
+  object-fit: contain;
+  border-radius: 4px;
+}
+
+.product-card h4 {
+  font-size: 15px;
+  margin-bottom: 4px;
+  font-weight: 600;
+  color: #222;
+  line-height: 1.2;
+}
+
+.product-card p {
+  font-size: 14px;
+  color: #444;
+  margin: 0;
+}
+
+.product-card small {
+  display: block;
+  margin-top: 6px;
+  font-size: 12px;
+  color: #999;
+}
+.product-card.out-of-stock {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+/* Línea dorada debajo de imagen */
+.gold-divider {
+  border: none;
+  height: 2px;
+  background: linear-gradient(to right, #d4af37, #f5e6b2);
+  margin: 12px auto;
+  width: 60%;
+  border-radius: 1px;
+}
+
+/* Botones */
+.product-buttons {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  margin-top: 12px;
+}
+
+.product-buttons button {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 4px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: 'Playfair Display', serif;
+}
+
+.view-btn {
+  background-color: #fafafa;
+  border: 1px solid #d4af37;
+  color: #333;
+}
+
+.view-btn:hover {
+  background-color: #fff8dc;
+  box-shadow: 0 0 6px rgba(212, 175, 55, 0.5);
+}
+
+.add-btn {
+  background-color: #d4af37;
+  color: #fff;
+}
+
+.add-btn:hover {
+  background-color: #b4972f;
+}
+
 
 /* Responsive */
 @media (max-width: 768px) {

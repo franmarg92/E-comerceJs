@@ -2,21 +2,66 @@
   <!-- 🧭 Sidebar de categorías -->
   <aside class="shop-sidebar">
     <h3>Categorías</h3>
+    <hr class="gold-divider" />
     <ul>
-      <li><a href="#">Anillos</a></li>
-      <li><a href="#">Aros</a></li>
-      <li><a href="#">Collares</a></li>
-      <li><a href="#">Dijes</a></li>
-      <li><a href="#">Pulseras</a></li>
+      <li (click)="filterByCategory(null)">
+        <a>Ver todas</a>
+      </li>
+      <li *ngFor="let cat of availableCategories">
+        <a (click)="filterByCategory(cat._id)">{{ cat.name }}</a>
+      </li>
     </ul>
   </aside>
 
   <!-- 🛍️ Contenido principal -->
   <section class="shop-main">
-    <h2>Productos</h2>
+    <h2>Nuestros Productos</h2>
+    <hr class="gold-divider" />
     <div class="product-grid">
-      <!-- Cards vacías o de prueba -->
-      <div class="product-card placeholder">Próximamente...</div>
+      <div
+        class="product-card"
+        *ngFor="let product of filteredProducts"
+        [class.out-of-stock]="product.stock === 0"
+      >
+        <img
+          *ngIf="product.image?.length"
+          [src]="product.image[0]"
+          alt="{{ product.name }}"
+        />
+
+        <hr class="gold-divider" />
+        <h4>{{ product.name }}</h4>
+        <p>{{ product.price | currency : "ARS" }}</p>
+
+        <div class="product-buttons">
+          <button (click)="goToProductDetail(product._id)">Ver</button>
+
+          <!-- Usuario logueado -->
+          <button
+            class="add-btn"
+            *ngIf="isAuthenticated && product._id"
+            (click)="addToCart(product._id)"
+          >
+            Comprar
+          </button>
+
+          <!-- Usuario invitado -->
+          <button
+            class="add-btn guest"
+            *ngIf="!isAuthenticated && product._id"
+            (click)="addToAnonymousCart(product._id)"
+          >
+            Guardar para más tarde
+          </button>
+        </div>
+
+        <small *ngIf="product.stock === 0">Sin stock</small>
+      </div>
     </div>
+
+    <!-- 🧭 Fallback visual -->
+    <p *ngIf="filteredProducts.length === 0" class="no-products">
+      🕵️ No se encontraron productos para la categoría seleccionada.
+    </p>
   </section>
 </div>
