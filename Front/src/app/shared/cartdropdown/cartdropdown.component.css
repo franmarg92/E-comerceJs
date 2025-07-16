@@ -1,0 +1,125 @@
+*{
+  font-family: 'Playfair Display', serif;
+}
+.cart-widget {
+  position: fixed;
+  top: 80px;
+  right: 20px; /* ✅ Más hacia la derecha */
+  width: 320px;
+  max-height: 80vh;
+  background-color: #fff;
+  box-shadow: -2px 0 12px rgba(0, 0, 0, 0.15);
+  border-radius: 14px;
+  overflow-y: auto;
+  padding: 1.2rem;
+  z-index: 1000;
+  font-family: 'Montserrat', sans-serif;
+  border: 1px solid #d4af37; /* toque pulido */
+}
+
+/* Título refinado */
+.widget-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  text-align: center;
+  color: #2c2c2c;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 0.5rem;
+}
+
+/* Cada ítem con borde sutil y hover */
+.widget-item {
+  display: flex;
+  align-items: center;
+  padding: 0.8rem 0;
+  border-bottom: 1px solid #f2f2f2;
+  transition: background-color 0.2s ease;
+}
+
+.widget-item:hover {
+  background-color: #fafafa;
+}
+
+/* Imagen con sombra más elegante */
+.widget-item img {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-right: 1rem;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+}
+
+/* Info con subrayado suave */
+.info .name {
+  font-size: 1rem;
+  font-weight: 500;
+  margin: 0;
+  color: #333;
+  border-bottom: 1px dashed #ddd;
+  display: inline-block;
+  padding-bottom: 0.2rem;
+}
+
+.info .price,
+.info .quantity {
+  font-size: 0.95rem;
+  color: #666;
+  margin: 0.2rem 0;
+  transition: color 0.2s ease;
+}
+
+.widget-item:hover .price,
+.widget-item:hover .quantity {
+  color: #444;
+}
+
+
+.empty-cart {
+  text-align: center;
+  font-style: italic;
+  color: #999;
+  margin-top: 2rem;
+}
+
+.quantity-selector {
+  display: flex;
+  gap: 0.4rem;
+  align-items: center;
+  margin: 0.5rem 0;
+}
+
+.quantity-selector button {
+  background-color: #f8f8f8;
+  border: 1px solid #ddd;
+  padding: 0.3rem 0.6rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.remove-btn {
+  background-color: transparent;
+  border: none;
+  color: #c00;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.cart-footer {
+  border-top: 1px solid #eee;
+  padding-top: 1rem;
+  text-align: right;
+}
+
+.checkout-btn {
+  background-color: #d4af37;
+  border: none;
+  color: #fff;
+  padding: 0.7rem 1.5rem;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-top: 0.5rem;
+}
+

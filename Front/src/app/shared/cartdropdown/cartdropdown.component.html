@@ -1,0 +1,35 @@
+<div class="cart-widget">
+  <h3 class="widget-title">Tu carrito</h3>
+
+  <div class="widget-body">
+    <div *ngFor="let item of cartService.items" class="widget-item">
+      <img [src]="item.productId.image[0]" alt="{{ item.productId.name }}" />
+
+      <div class="info">
+        <p class="name">{{ item.productId.name }}</p>
+        <p class="price">Precio unitario: ${{ item.productId.price }}</p>
+
+        <div class="quantity-selector">
+          <button (click)="decrease(item)">−</button>
+          <span>{{ item.quantity }}</span>
+          <button (click)="increase(item)">+</button>
+        </div>
+
+        <p class="subtotal">
+          Subtotal: ${{ item.productId.price * item.quantity | number: '1.2-2' }}
+        </p>
+
+        <button class="remove-btn" (click)="remove(item)">Eliminar</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="cart-footer" *ngIf="cartService.items.length > 0">
+    <p>Total: ${{ getTotal() | number: '1.2-2' }}</p>
+    <button class="checkout-btn" (click)="checkout()">Finalizar compra</button>
+  </div>
+
+  <div *ngIf="cartService.items.length === 0" class="empty-cart">
+    Tu carrito está vacío. ¡A buscar joyitas! ✨
+  </div>
+</div>
