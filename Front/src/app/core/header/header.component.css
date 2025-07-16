@@ -53,6 +53,12 @@
   transition: color 0.3s ease;
 }
 
+.cart-btn{
+  border: none;
+  background-color: #ffffff;
+  cursor: pointer;
+}
+
 .action:hover {
   color: #d4af37;
 }

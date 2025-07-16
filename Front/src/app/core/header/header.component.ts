@@ -1,54 +1,51 @@
-import {
-  Component,
-  HostListener,
-  Inject,
-  PLATFORM_ID,
-} from '@angular/core';
+import { Component, HostListener, Inject, PLATFORM_ID } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { AuthService } from '../../services/auth/auth.service';
+import { CartService } from '../../services/cart/cart.service';
+import { CartdropdownComponent } from '../../shared/cartdropdown/cartdropdown.component';
 import { User } from '../../models/userModel';
 import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, CartdropdownComponent],
   templateUrl: './header.component.html',
   styleUrl: './header.component.css',
 })
 export class HeaderComponent {
-  menuOpen = false;
-  dropdownOpen = false;
   isAuthenticated = false;
   user: User | null = null;
   userRole = '';
-  isBrowser = false;
+  isCartOpen = false;
+  dropdownOpen = false;
 
   constructor(
     private authService: AuthService,
+    public cartService: CartService,
     private router: Router,
     @Inject(PLATFORM_ID) private platformId: Object
-  ) {
-    this.isBrowser = isPlatformBrowser(this.platformId);
-  }
+  ) {}
 
   ngOnInit(): void {
-  
-
     this.authService.user$.subscribe((user) => {
       this.user = user;
       this.isAuthenticated = !!user;
       this.userRole = this.authService.getUserRole()?.toLowerCase() || '';
-    });
-  }
 
-  toggleMenu(): void {
-    this.menuOpen = !this.menuOpen;
+      if (this.isAuthenticated && user?._id) {
+        this.cartService.loadCart(user._id);
+      }
+    });
   }
 
   toggleDropdown(): void {
     this.dropdownOpen = !this.dropdownOpen;
+  }
+
+  toggleCartDropdown(): void {
+    this.isCartOpen = !this.isCartOpen;
   }
 
   @HostListener('document:click', ['$event'])

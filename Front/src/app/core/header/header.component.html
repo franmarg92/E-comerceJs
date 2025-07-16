@@ -12,10 +12,14 @@
     </ul>
 
     <div class="nav-actions">
-      <a *ngIf="!isAuthenticated" routerLink="/cart" class="action">
+      <a class="action cart-btn" (click)="toggleCartDropdown()">
         <i class="fa-solid fa-cart-shopping"></i> Carrito
-        <span class="cart-count">2</span>
+        <span class="cart-count">{{ cartService.getItemCount() }}</span>
       </a>
+
+      <div *ngIf="isCartOpen" class="cart-dropdown">
+        <app-cartdropdown (closeDropdown)="toggleCartDropdown()" />
+      </div>
 
       <div *ngIf="isAuthenticated" class="user-dropdown" (click)="toggleDropdown()">
         <div class="user-toggle">
