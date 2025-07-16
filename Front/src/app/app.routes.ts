@@ -7,8 +7,8 @@ import { DashboardComponent } from './views/dashboard/dashboard.component';
 import { AboutUsComponent } from './views/about-us/about-us.component';
 import { ContactComponent } from './views/contact/contact.component';
 import { ProfileComponent } from './views/profile/profile.component';
-import { CartComponent } from './views/cart/cart.component';
 import { ProductEditorComponent } from './views/product-editor/product-editor.component';
+import { ProductDetailComponent } from './views/product-detail/product-detail.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -16,7 +16,7 @@ export const routes: Routes = [
   { path: 'shop', component: ShopComponent },
   { path: 'about-us', component: AboutUsComponent },
   { path: 'contact', component: ContactComponent },
-  { path: 'cart', component: CartComponent },
+  {path: 'product-detail/:id', component:ProductDetailComponent },
   {
     path: 'dashboard',
     component: DashboardComponent,
