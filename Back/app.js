@@ -37,7 +37,7 @@ if (process.env.NODE_ENV === "production") {
 }
 
 // Servir frontend SPA desde /public
-app.use(express.static(path.join(__dirname, '../Front/dist/browser')));
+app.use(express.static(path.join(__dirname, 'public')));
 
 // Rutas backend
 app.use("/api/auth", authRouter);
@@ -54,7 +54,7 @@ app.get("/api/health", (req, res) => {
 
 // Fallback para frontend SPA (Angular routing)
 app.get('*', (req, res) => {
-  res.sendFile(path.resolve(__dirname, '../Front/dist/browser/index.html'));
+  res.sendFile(path.resolve(__dirname, 'public', 'index.html'));
 });
 
 // Start del servidor
