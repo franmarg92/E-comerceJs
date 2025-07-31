@@ -170,6 +170,14 @@
   font-weight: 500;
 }
 
+/* Mostrar texto y ocultar ícono en desktop */
+.label {
+  display: inline;
+}
+
+.icon {
+  display: none;
+}
 /* Responsive */
 /* Mostrar hamburguesa en móviles */
 @media (max-width: 768px) {
@@ -177,11 +185,16 @@
     display: block;
   }
 
+  .label {
+    display: none;
+  }
 
+  .icon {
+    display: none;
+  }
 
- 
-
-  .user-toggle, .nav-links  {
+  .user-toggle,
+  .nav-links {
     display: none;
   }
 
@@ -189,10 +202,8 @@
     display: none !important;
   }
 
-
-
   .mobile-menu.open .nav-links,
-  .mobile-menu.open  {
+  .mobile-menu.open {
     display: flex;
     flex-direction: column;
     gap: 12px;
@@ -227,7 +238,6 @@
 
   .hamburger {
     order: 0;
-   
   }
 
   .brand {
@@ -237,6 +247,5 @@
 
   .nav-actions {
     order: 2;
-   
   }
 }

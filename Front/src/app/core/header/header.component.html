@@ -22,8 +22,10 @@
 
     <div class="nav-actions">
       <a class="action cart-btn" (click)="toggleCartDropdown()">
-        <i class="fa-solid fa-cart-shopping"></i> 
-        <span class="cart-count">{{ cartService.getItemCount() }}</span>
+        <i class="fa-solid fa-cart-shopping"></i>
+        <span class="cart-count" *ngIf="cartService.getItemCount() > 1">
+          {{ cartService.getItemCount() }}
+        </span>
       </a>
 
       <div *ngIf="isCartOpen" class="cart-dropdown">
@@ -40,15 +42,17 @@
           <i class="fa-solid fa-chevron-down"></i>
         </div>
 
-        <ul class="dropdown-menu " *ngIf="dropdownOpen">
+        <ul class="dropdown-menu" *ngIf="dropdownOpen">
           <li><a routerLink="/dashboard">Dashboard</a></li>
           <li><a (click)="logout()">Cerrar sesión</a></li>
         </ul>
       </div>
 
-      <a *ngIf="!isAuthenticated" routerLink="/account" class="action"
-        >Cuenta</a
-      >
+      <!-- Usuario invitado -->
+      <a *ngIf="!isAuthenticated" routerLink="/account" class="action">
+        <span class="label">Cuenta</span>
+        <i class="fa-solid fa-user icon"></i>
+      </a>
     </div>
 
     <!-- Menú hamburguesa en móviles -->
