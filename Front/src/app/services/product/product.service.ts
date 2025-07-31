@@ -6,7 +6,7 @@ import { Product, ProductUpdatePayload } from '../../models/productModel';
   providedIn: 'root',
 })
 export class ProductService {
-  private apiUrl = 'http://localhost:3000/api/product';
+  private apiUrl = 'https://distinzionejoyas.com/api/product';
 
   constructor(private http: HttpClient) {}
 

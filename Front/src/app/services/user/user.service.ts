@@ -6,7 +6,7 @@ import { User } from '../../models/userModel';
   providedIn: 'root',
 })
 export class UserService {
-  private apiUrl = 'http://localhost:3000/api/user';
+  private apiUrl = 'https://distinzionejoyas.com/api/user';
 
   constructor(private http: HttpClient) {}
 

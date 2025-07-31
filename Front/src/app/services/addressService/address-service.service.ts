@@ -10,7 +10,7 @@ import Swal from 'sweetalert2';
   providedIn: 'root',
 })
 export class AddressServiceService {
-  private apiUrl = 'http://localhost:3000/api/address';
+  private apiUrl = 'https://distinzionejoyas.com/api/address';
   private userId: string = '';
 
  

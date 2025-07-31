@@ -9,7 +9,7 @@ import { Category } from '../../models/categoryModel';
   providedIn: 'root',
 })
 export class CategoryService {
-  private apiUrl = 'http://localhost:3000/api/category';
+  private apiUrl = 'https://distinzionejoyas.com/api/category';
 
   constructor(private http: HttpClient) {}
 

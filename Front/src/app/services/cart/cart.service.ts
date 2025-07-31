@@ -14,7 +14,7 @@ import Swal from 'sweetalert2';
 export class CartService {
   items: CartItem[] = [];
   private userId: string = '';
-  private apiUrl = 'http://localhost:3000/api/cart';
+  private apiUrl = 'https://distinzionejoyas.com/api/cart';
   
   constructor(private http: HttpClient, private router:Router) {}
 
