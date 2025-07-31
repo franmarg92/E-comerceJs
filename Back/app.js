@@ -47,6 +47,12 @@ app.use("/api/cart", cartRouter);
 app.use("/api/order", orderRouter);
 app.use("/api/address", addressRouter);
 
+
+
+// Servir archivos estáticos
+app.use('/imgs', express.static('./src/storage/imgs'));
+
+
 // 🩺 Health check
 app.get("/api/health", (req, res) => {
   res.status(200).send("OK");
