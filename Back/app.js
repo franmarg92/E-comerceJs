@@ -1,12 +1,15 @@
+// 🌐 Importaciones
 const express = require("express");
-require("dotenv").config();
+const path = require("path");
 const passport = require("passport");
 const cors = require("cors");
-const path = require("path");
+require("dotenv").config();
 
-const { connectDB } = require("./src/config"); // Separado si lo modularizás
-const corsConfig = require("./src/config"); // Ideal separar en archivo propio
+// ⚙️ Configuración y conexión
+const { connectDB } = require("./src/config");
+const corsConfig = require("./src/config");
 
+// 🧭 Rutas backend
 const {
   authRouter,
   userRouter,
@@ -17,29 +20,31 @@ const {
   addressRouter,
 } = require("./src/routes");
 
+// 🚀 Inicializar Express
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Middleware general
+// 🛡️ Middlewares
 app.use(express.json());
 app.use(cors(corsConfig));
 app.use(passport.initialize());
 
-// Logging elegante
+// 🧾 Logging simple
 app.use((req, res, next) => {
   console.log(`[${req.method}] ${req.originalUrl}`);
   next();
 });
 
-// Producción con Coolify + proxy
+// 🌐 Trust proxy en producción (Coolify)
 if (process.env.NODE_ENV === "production") {
-  app.set("trust proxy", 1); // Para SSL detrás de proxy
+  app.set("trust proxy", 1);
 }
 
-// Servir frontend SPA desde /public
-app.use(express.static(path.join(__dirname, '../Front/dist/front/browser')));
+// 🖼️ Servir frontend Angular compilado
+const frontendPath = path.join(__dirname, "../Front/dist/front/browser");
+app.use(express.static(frontendPath));
 
-// Rutas backend
+// ⚙️ Rutas backend
 app.use("/api/auth", authRouter);
 app.use("/api/user", userRouter);
 app.use("/api/product", productRouter);
@@ -48,16 +53,17 @@ app.use("/api/cart", cartRouter);
 app.use("/api/order", orderRouter);
 app.use("/api/address", addressRouter);
 
+// 🩺 Endpoint de salud
 app.get("/api/health", (req, res) => {
   res.status(200).send("OK");
 });
 
-// Fallback para frontend SPA (Angular routing)
-app.get('*', (req, res) => {
-  res.sendFile(path.resolve(__dirname, '../Front/dist/front/browser/index.html'));
+// 🪐 Fallback de rutas (SPA Angular)
+app.get("*", (req, res) => {
+  res.sendFile(path.join(frontendPath, "index.html"));
 });
 
-// Start del servidor
+// 🔌 Inicializar servidor
 app.listen(PORT, async () => {
   await connectDB.initDB();
   console.log(`🟢 Servidor corriendo en puerto ${PORT}`);
