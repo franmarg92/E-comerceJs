@@ -48,6 +48,10 @@ app.use("/api/cart", cartRouter);
 app.use("/api/order", orderRouter);
 app.use("/api/address", addressRouter);
 
+app.get("/api/health", (req, res) => {
+  res.status(200).send("OK");
+});
+
 // Fallback para frontend SPA (Angular routing)
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "index.html"));
