@@ -15,7 +15,8 @@ WORKDIR /app
 COPY ./Back/ ./Back
 
 # Copiar el build del frontend generado en etapa anterior
-COPY --from=frontend /app/build/ ./Back/public/
+COPY --from=frontend /app/front/dist/front/ ./Back/public/
+
 
 WORKDIR /app/Back
 RUN npm install
