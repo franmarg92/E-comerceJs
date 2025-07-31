@@ -3,12 +3,38 @@
   <aside class="shop-sidebar">
     <h3>Categorías</h3>
     <hr class="gold-divider" />
-    <ul>
-      <li (click)="filterByCategory(null)">
-        <a>Ver todas</a>
+
+    <ul class="category-list">
+      <!-- Ver todas -->
+      <li>
+        <a (click)="filterByCategory(null)">Ver todas</a>
       </li>
-      <li *ngFor="let cat of availableCategories">
-        <a (click)="filterByCategory(cat._id)">{{ cat.name }}</a>
+
+      <!-- Loop de categorías principales -->
+      <li
+        *ngFor="let cat of availableCategories"
+        class="category-block"
+        [class.expanded]="expandedCategories[cat._id!]"
+      >
+        <!-- Encabezado de categoría con toggle -->
+        <div class="category-toggle" (click)="onCategoryClick(cat._id!)">
+          <span>{{ cat.name }}</span>
+          <span class="toggle-icon">
+            {{ expandedCategories[cat._id!] ? "▼" : "▶" }}
+          </span>
+        </div>
+
+        <!-- Subcategorías desplegables -->
+        <ul *ngIf="expandedCategories[cat._id!]" class="subcategory-list">
+          <li
+            *ngFor="let sub of subcategoriesMap[cat._id!]"
+            [class.active]="sub._id === selectedSubcategoryId"
+          >
+            <a (click)="filterBySubcategory(sub._id!)">
+              {{ sub.name }}
+            </a>
+          </li>
+        </ul>
       </li>
     </ul>
   </aside>
@@ -17,6 +43,20 @@
   <section class="shop-main">
     <h2>Nuestros Productos</h2>
     <hr class="gold-divider" />
+
+    <div class="category-select-wrapper">
+      <label for="categorySelect">Categorías</label>
+      <select #categorySelect (change)="filterByCategory(categorySelect.value)">
+        <option value="">Ver todas</option>
+        <option
+          *ngFor="let cat of availableCategories"
+          [value]="cat._id"
+          [selected]="selectedCategoryId === cat._id"
+        >
+          {{ cat.name }}
+        </option>
+      </select>
+    </div>
     <div class="product-grid">
       <div
         class="product-card"
@@ -31,7 +71,9 @@
 
         <hr class="gold-divider" />
         <h4>{{ product.name }}</h4>
-        <p>{{ product.price | currency : "ARS" }}</p>
+        <p class="price">{{ product.price | currency : "$" }}</p>
+        <!-- 💎 Stock visual -->
+        <p class="stock-indicator">Stock: {{ product.stock }}</p>
 
         <div class="product-buttons">
           <button (click)="goToProductDetail(product._id)">Ver</button>
@@ -51,7 +93,7 @@
             *ngIf="!isAuthenticated && product._id"
             (click)="addToAnonymousCart(product._id)"
           >
-            Guardar para más tarde
+            Comprar
           </button>
         </div>
 

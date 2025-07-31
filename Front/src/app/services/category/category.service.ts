@@ -25,4 +25,8 @@ export class CategoryService {
   getAllCategory(): Observable<CategoryResponse[]> {
     return this.http.get<CategoryResponse[]>(`${this.apiUrl}/`);
   }
+
+  getSubcategories(parentId: string): Observable<any> {
+  return this.http.get(`${this.apiUrl}/${parentId}/subcategories`);
+}
 }

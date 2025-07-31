@@ -55,6 +55,7 @@ export class AcountComponent {
             lastName: ['', Validators.required],
             dni: ['', Validators.required],
             date_of_birth: ['', Validators.required],
+            phoneNumber:['', Validators.required]
           }),
     });
   }

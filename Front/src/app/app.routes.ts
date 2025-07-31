@@ -9,6 +9,10 @@ import { ContactComponent } from './views/contact/contact.component';
 import { ProfileComponent } from './views/profile/profile.component';
 import { ProductEditorComponent } from './views/product-editor/product-editor.component';
 import { ProductDetailComponent } from './views/product-detail/product-detail.component';
+import { OrderDetailComponent } from './views/order-detail/order-detail.component';
+import { MyPurchasesComponent } from './views/my-purchases/my-purchases.component';
+import { SalesComponent } from './views/sales/sales.component';
+import { EditProductComponent } from './views/edit-product/edit-product.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -16,7 +20,8 @@ export const routes: Routes = [
   { path: 'shop', component: ShopComponent },
   { path: 'about-us', component: AboutUsComponent },
   { path: 'contact', component: ContactComponent },
-  {path: 'product-detail/:id', component:ProductDetailComponent },
+  { path: 'product-detail/:id', component: ProductDetailComponent },
+  { path: 'order-detail', component: OrderDetailComponent },
   {
     path: 'dashboard',
     component: DashboardComponent,
@@ -25,6 +30,9 @@ export const routes: Routes = [
     children: [
       { path: 'profile', component: ProfileComponent },
       { path: 'product-editor', component: ProductEditorComponent },
+      { path: 'my-purchases', component: MyPurchasesComponent },
+      { path: 'sales', component: SalesComponent },
+      {path: 'edit-product', component:EditProductComponent}
     ],
   },
 ];

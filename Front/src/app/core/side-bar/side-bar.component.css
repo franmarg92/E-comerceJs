@@ -1,13 +1,13 @@
 .sidebar {
   width: 240px;
   background-color: #fff;
-  font-family: 'Playfair Display', serif;
+  font-family: "Playfair Display", serif;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
   border-radius: 12px;
   padding: 24px 0;
   border: 1px solid #e5e5e5;
-  margin: 32px auto; /* centrar horizontalmente */
-  max-height: calc(100vh - 64px); /* opcional, para respiración */
+  margin: 32px auto;
+  max-height: calc(100vh - 64px);
   overflow-y: auto;
 }
 
@@ -30,7 +30,8 @@
   font-weight: 500;
   font-size: 15px;
   border-left: 4px solid transparent;
-  transition: border-color 0.3s ease, background-color 0.3s ease, color 0.3s ease;
+  transition: border-color 0.3s ease, background-color 0.3s ease,
+    color 0.3s ease;
   border-radius: 4px;
 }
 
@@ -46,4 +47,45 @@
   border-left-color: #d4af37;
   background-color: #fdfaf5;
   color: #d4af37;
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    display: flex; /* o flex si querés animar la transición */
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    border: 1px solid #e5e5e5;
+    border-radius: 0;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    border-radius: 12px;
+  }
+
+  .sidebar ul {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around; /* o start / center / between */
+    flex-wrap: wrap; /* si querés que bajen en más de una línea */
+    padding: 12px;
+    gap: 8px;
+  }
+
+  .sidebar li {
+    margin-bottom: 0;
+    flex: 1 1 auto;
+  }
+
+  .sidebar a {
+    font-size: 14px;
+    padding: 10px 12px;
+    text-align: center;
+    border-left: none;
+    border-radius: 6px;
+  }
+
+  .sidebar a:hover {
+    border-left-color: #d4af37;
+    background-color: #fafafa;
+    color: #d4af37;
+  }
 }

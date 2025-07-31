@@ -15,6 +15,7 @@ export class ContactComponent {
     this.contactForm = this.fb.group({
       name: [''],
       email: [''],
+      phoneNumber:[''],
       message: ['']
     });
   }

@@ -16,7 +16,7 @@ const createOrder = async ({ userId, items, shippingAddressId, paymentDetails })
     processedItems.push({
       product: product._id,
       quantity: item.quantity,
-      variant: item.variant || {}, // si usás size/color en frontend
+      variant: item.variant || {}, 
       unitPrice,
       subtotal
     });
@@ -40,7 +40,7 @@ const createOrder = async ({ userId, items, shippingAddressId, paymentDetails })
 
 const getAllOrders = async () => {
   return await Order.find()
-    .populate('userId', 'name email')
+    .populate('userId', 'name email dni lastName')
     .populate('items.product', 'name image price')
     .populate('shippingAddress');
 };

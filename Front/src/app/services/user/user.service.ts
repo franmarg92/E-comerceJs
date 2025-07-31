@@ -13,19 +13,20 @@ export class UserService {
   editUser(userData: User): Observable<User> {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
 
-    return this.http.put<User>(
+    return this.http.patch<User>(
       `${this.apiUrl}/edit`,
+      
        userData ,
       { headers }
     );
   }
 
   changePassword(
-    userId: number,
+    userId: string,
     oldPassword: string,
     newPassword: string
   ): Observable<any> {
-    return this.http.put(`${this.apiUrl}/change-password`, {
+    return this.http.patch(`${this.apiUrl}/change-password`, {
       userId,
       oldPassword,
       newPassword,
@@ -34,6 +35,10 @@ export class UserService {
 
   getAllUsers(): Observable<User[]> {
     return this.http.get<User[]>(`${this.apiUrl}/`);
+  }
+
+  getUserById(id:string): Observable<{user :User}>{
+    return this.http.get<{ user: User }>(`${this.apiUrl}/${id}`);
   }
 
 }

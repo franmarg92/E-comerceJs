@@ -15,11 +15,11 @@ AuthService
 export class SideBarComponent {
  sidebarItems = [
     { label: 'Perfil', path: 'profile', roles: ['cliente'] },
-    { label: 'Mis compras', path: 'attendance', roles: ['cliente'] },
+    { label: 'Mis compras', path: 'my-purchases', roles: ['cliente'] },
     { label: 'Cargar Productos', path: 'product-editor', roles: ['admin'] },
-    { label: 'Clientes', path: 'wods', roles: ['admin'] },
-    { label: 'Configuracion', path: 'users', roles: ['admin'] },
-    { label: 'Ventas', path: 'medicalFit', roles: ['admin'] },
+   // { label: 'Clientes', path: 'wods', roles: ['admin'] },
+    { label: 'Editar productos', path: 'edit-product', roles: ['admin'] },
+    { label: 'Ventas', path: 'sales', roles: ['admin'] },
     
   ];
 

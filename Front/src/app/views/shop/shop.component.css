@@ -2,13 +2,13 @@
   display: flex;
   gap: 32px;
   padding: 48px 32px;
-  font-family: 'Playfair Display', serif;
+  font-family: "Playfair Display", serif;
 }
 
 .shop-sidebar {
   width: 220px;
   padding: 24px;
-  height: auto;
+  max-height: 400px;
   background-color: #fafafa;
   border: 1px solid #e2e2e2;
   border-left: 6px solid #d4af37;
@@ -41,6 +41,37 @@
   color: #d4af37;
 }
 
+.category-toggle {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  font-weight: 600;
+  color: #333;
+  transition: background 0.3s ease;
+}
+
+.category-toggle:hover {
+  color: #d4af37;
+}
+
+.toggle-icon {
+  font-size: 16px;
+  color: #d4af37;
+  font-weight: bold;
+}
+
+.subcategory-list {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s ease;
+}
+
+.category-block.expanded .subcategory-list {
+  max-height: 500px; /* valor suficientemente grande */
+}
+
+
 /* Main content */
 .shop-main {
   flex: 1;
@@ -55,7 +86,7 @@
 
 .product-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 24px;
 }
 
@@ -69,28 +100,33 @@
 }
 
 .product-card {
-  background-color: #fff;
-  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center; 
+  justify-content: flex-start;
+  background-color: #fdfdfd;
   border: 1px solid #e2e2e2;
+  border-left: 6px solid #d4af37;
+  padding: 20px;
+  width: 280px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  transition: transform 0.3s ease;
+  text-align: left;
   border-radius: 8px;
-  text-align: center;
-  transition: box-shadow 0.3s ease, border 0.3s ease;
-  box-shadow: 0 0 0 transparent;
   cursor: pointer;
-  max-width: 200px;
 }
 
 .product-card:hover {
-  box-shadow: 0 0 12px rgba(212, 175, 55, 0.4); /* sombra dorada */
-  border: 1px solid #d4af37; /* borde dorado al pasar el mouse */
+  box-shadow: 0 0 12px rgba(212, 175, 55, 0.4); 
+  border: 1px solid #d4af37; 
 }
 
 .product-card img {
-  max-width: 140px;
-  height: 140px;
-  margin-bottom: 8px;
-  object-fit: contain;
+  width: 170px;
+  height: 170px;
+  margin-bottom: 16px;
   border-radius: 4px;
+  object-fit: cover;
 }
 
 .product-card h4 {
@@ -100,6 +136,8 @@
   color: #222;
   line-height: 1.2;
 }
+
+
 
 .product-card p {
   font-size: 14px;
@@ -143,7 +181,7 @@
   font-size: 13px;
   cursor: pointer;
   transition: all 0.3s ease;
-  font-family: 'Playfair Display', serif;
+  font-family: "Playfair Display", serif;
 }
 
 .view-btn {
@@ -166,14 +204,111 @@
   background-color: #b4972f;
 }
 
+.category-list > li {
+  margin-bottom: 12px;
+}
 
-/* Responsive */
+.subcategory-list {
+  margin-left: 10px;
+  padding-left: 10px;
+  border-left: 2px solid #d4af37;
+}
+
+.subcategory-list li {
+  font-size: 0.95em;
+  margin-bottom: 6px;
+}
+
+
+.category-select-wrapper{
+  display: none;
+}
+
 @media (max-width: 768px) {
-  .shop-layout {
-    flex-direction: column;
+  .shop-sidebar{
+    display: none;
   }
 
-  .shop-sidebar {
+.category-select-wrapper {
+  display: block;
+  margin-bottom: 24px;
+  font-family: "Playfair Display", serif;
+}
+
+.category-select-wrapper label {
+  display: block;
+  margin-bottom: 6px;
+  color: #222;
+  font-weight: 600;
+  font-size: 15px;
+}
+
+.category-select-wrapper select {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid #d4af37;
+  border-radius: 8px;
+  background-color: #fafafa;
+  color: #333;
+  font-size: 15px;
+  transition: box-shadow 0.3s ease;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' fill='%23d4af37' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M7 10l5 5 5-5H7z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  background-size: 16px;
+}
+
+.category-select-wrapper select:focus {
+  outline: none;
+  box-shadow: 0 0 6px rgba(212, 175, 55, 0.4);
+}
+
+
+
+  .product-grid {
+    
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 24px;
+  justify-content: center; /* 👈 esto la centra horizontalmente */
+
+
+    
+  }
+
+  .product-card {
+    width: 80%;
+    padding: 16px;
+    margin: 0 auto; 
+  }
+
+  .product-card img {
+    width: 140px;
+    height: 140px;
+  }
+
+  .product-card h4 {
+    font-size: 14px;
+  }
+
+  .product-card p {
+    font-size: 13px;
+  }
+
+  .product-card small {
+    font-size: 11px;
+  }
+
+  .product-buttons {
+    flex-direction: row;
+    gap: 6px;
+  }
+
+  .product-buttons button {
     width: 100%;
+    font-size: 12px;
+    padding: 6px 10px;
   }
 }
+

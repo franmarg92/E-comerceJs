@@ -1,37 +1,115 @@
-<form [formGroup]="productForm" (ngSubmit)="onSubmit()" class="product-form">
-  <!-- Nombre y precio -->
-  <div class="row">
-    <div class="col-md-6 mb-3">
-      <label for="name" class="form-label">Nombre</label>
-      <input id="name" type="text" formControlName="name" class="form-control elegant-input" required>
-    </div>
+<!-- Toggle de visibilidad -->
+<button class="btn btn-gold mb-3" (click)="toggleEditList()">
+  {{
+    showEditList
+      ? "Ocultar productos para editar"
+      : "Mostrar productos para editar"
+  }}
+</button>
 
-    <div class="col-md-6 mb-3">
-      <label for="price" class="form-label">Precio</label>
-      <input id="price" type="number" formControlName="price" class="form-control elegant-input" required min="0">
+<!-- Lista de productos editable -->
+<ul *ngIf="showEditList" class="product-list">
+  <li *ngFor="let product of products" (click)="selectForEdit(product)">
+    <div class="product-row">
+      <img
+        *ngIf="product.image?.[0]"
+        [src]="product.image[0]"
+        alt="Preview"
+        class="thumbnail"
+      />
+      <div class="product-info">
+        <strong>{{ product.name }}</strong>
+        <div class="data">
+          <span class="price">$ {{ product.price }}</span>
+          <span class="stock">Stock: {{ product.stock }}</span>
+          <span *ngIf="product.featured" class="badge badge-featured">★</span>
+        </div>
+      </div>
     </div>
+  </li>
+</ul>
+
+<!-- Formulario del producto -->
+<form [formGroup]="productForm" (ngSubmit)="onSubmit()" class="product-form">
+  <!-- Nombre y Precio -->
+<div class="row g-3">
+  <div class="col-md-6">
+    <label for="articleCode" class="form-label">Código de artículo</label>
+    <input
+      id="articleCode"
+      formControlName="articleCode"
+      type="text"
+      class="form-control elegant-input"
+      placeholder="Ej: JY-042"
+    />
   </div>
+
+  <div class="col-md-6">
+    <label for="name" class="form-label">Nombre</label>
+    <input
+      id="name"
+      type="text"
+      formControlName="name"
+      class="form-control elegant-input"
+      required
+    />
+  </div>
+
+  <div class="col-md-6">
+    <label for="price" class="form-label">Precio</label>
+    <input
+      id="price"
+      type="number"
+      formControlName="price"
+      class="form-control elegant-input"
+      required
+      min="0"
+    />
+  </div>
+</div>
+
 
   <!-- Descripción -->
   <div class="mb-3">
     <label for="description" class="form-label">Descripción</label>
-    <textarea id="description" formControlName="description" class="form-control elegant-input" rows="3"></textarea>
+    <textarea
+      id="description"
+      formControlName="description"
+      class="form-control elegant-input"
+      rows="3"
+    ></textarea>
   </div>
 
-  <!-- Imágenes -->
-  <div class="mb-3">
-    <label for="image" class="form-label">URLs de imágenes</label>
-    <input id="image" type="text" formControlName="image" class="form-control elegant-input" placeholder="Separadas por coma">
-  </div>
+  <!-- URLs de imágenes -->
+ <div class="mb-3">
+  <label for="imageFile" class="form-label">Subir imagen</label>
+  <input
+    id="imageFile"
+    type="file"
+    (change)="onFileSelected($event)"
+    class="form-control elegant-input"
+    accept="image/*"
+  />
+</div>
 
-  <!-- Selector de categorías -->
+
+
+  
+
+  <!-- Selector de categoría -->
   <div class="mb-3 category-selector">
-   <select formControlName="categories" class="form-select">
-  <option [value]="null" disabled selected>Elegí una categoría</option>
-  <option *ngFor="let cat of availableCategories" [value]="cat._id">
-    {{ cat.name }}
-  </option>
-</select>
+    <label class="form-label">Categoría principal</label>
+    <select
+      formControlName="categories"
+      class="form-select elegant-input"
+      (change)="onCategoryChange()"
+    >
+      <option [value]="null" disabled selected>Elegí una categoría</option>
+      <option *ngFor="let cat of availableCategories" [value]="cat._id">
+        {{ cat.name }}
+      </option>
+    </select>
+
     <!-- Crear nueva categoría -->
     <div class="input-group mt-2">
       <input
@@ -40,32 +118,94 @@
         [ngModelOptions]="{ standalone: true }"
         class="form-control elegant-input"
         placeholder="Nueva categoría"
-      >
-      <button type="button" class="btn btn-outline-success" (click)="createCategory()">Crear y agregar</button>
+      />
+      <button type="button" class="btn btn-gold" (click)="createCategory()">
+        Crear y agregar
+      </button>
     </div>
   </div>
 
-  <!-- Stock (variantes simplificadas) -->
- <div class="mb-3">
-  <label for="stock" class="form-label">Stock disponible</label>
-  <input
-    type="number"
-    id="stock"
-    formControlName="stock"
-    class="form-control elegant-input"
-    min="0"
-    required
+  <!-- Crear subcategoría -->
+  <div
+    class="mb-3 subcategory-creator"
+    *ngIf="productForm.get('categories')?.value"
   >
-</div>
+    <label class="form-label">Crear subcategoría para la seleccionada</label>
+    <div class="input-group">
+      <input
+        type="text"
+        [(ngModel)]="newSubcategoryName"
+        [ngModelOptions]="{ standalone: true }"
+        class="form-control elegant-input"
+        placeholder="Ej. Oro, Plata"
+      />
+      <button type="button" class="btn btn-gold" (click)="createSubcategory()">
+        Crear subcategoría
+      </button>
+    </div>
+  </div>
+
+  <!-- Checkboxes de subcategorías -->
+  <div class="mt-3" *ngIf="subcategoryList.length">
+    <label class="form-label">Subcategorías disponibles</label>
+    <div class="form-check" *ngFor="let sub of subcategoryList">
+      <input
+        type="checkbox"
+        class="form-check-input"
+        [value]="sub._id"
+        (change)="sub._id && onSubcategoryToggle(sub._id, $event)"
+        [checked]="productForm.get('subcategories')?.value.includes(sub._id)"
+      />
+      <label class="form-check-label">{{ sub.name }}</label>
+    </div>
+  </div>
+
+  <!-- Chips visuales -->
+  <div class="mt-2">
+    <span
+      *ngFor="let sub of productForm.get('subcategories')?.value"
+      class="chip"
+    >
+      {{ getSubcategoryName(sub) }}
+    </span>
+  </div>
+
+  <!-- Stock -->
+  <div class="mb-3">
+    <label for="stock" class="form-label">Stock disponible</label>
+    <input
+      type="number"
+      id="stock"
+      formControlName="stock"
+      class="form-control elegant-input"
+      min="0"
+      required
+    />
+  </div>
 
   <!-- Estado -->
   <div class="form-check mb-3">
-    <input type="checkbox" id="isActive" formControlName="isActive" class="form-check-input">
+    <input
+      type="checkbox"
+      id="isActive"
+      formControlName="isActive"
+      class="form-check-input"
+    />
     <label for="isActive" class="form-check-label">Activo</label>
   </div>
+  <!-- Destacado -->
+  <div class="form-check mb-3">
+    <input
+      type="checkbox"
+      id="featured"
+      formControlName="featured"
+      class="form-check-input"
+    />
+    <label for="featured" class="form-check-label">Destacado</label>
+  </div>
 
-  <!-- Submit -->
-  <button type="submit" class="btn btn-primary">
-    {{ isEditMode ? 'Guardar cambios' : 'Crear producto' }}
+  <!-- Botón de envío -->
+  <button type="submit" class="btn btn-gold">
+    {{ isEditMode ? "Guardar cambios" : "Crear producto" }}
   </button>
 </form>

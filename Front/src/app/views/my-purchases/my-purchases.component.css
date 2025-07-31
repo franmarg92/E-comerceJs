@@ -1,0 +1,44 @@
+/* 🟫 Card de resumen por producto sin imagen */
+.card-product-summary {
+  background-color: #fffaf0;
+  border: 1px solid #d4af37;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(212, 175, 55, 0.1);
+  transition: transform 0.3s ease;
+}
+
+.card-product-summary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(212, 175, 55, 0.2);
+}
+
+/* Texto fuerte */
+.card-product-summary p {
+  color: #111;
+  font-size: 0.95rem;
+}
+
+
+/* 🧾 Tabla refinada boutique */
+.product-table {
+  background-color: #fffaf0;
+  border: 1px solid #d4af37;
+  font-size: 0.95rem;
+  color: #111;
+}
+
+.product-table th {
+  background-color: #f9f3da;
+  color: #d4af37;
+  font-weight: 600;
+  border-color: #d4af37;
+}
+
+.product-table td {
+  vertical-align: middle;
+  border-color: #d4af37;
+}
+
+.product-table tr:hover {
+  background-color: #fffbe6;
+}

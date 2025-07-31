@@ -20,6 +20,8 @@ export class HeaderComponent {
   userRole = '';
   isCartOpen = false;
   dropdownOpen = false;
+  mobileMenuOpen = false;
+  isMobile = false
 
   constructor(
     private authService: AuthService,
@@ -39,6 +41,13 @@ export class HeaderComponent {
       }
     });
   }
+
+  
+
+toggleMobileMenu() {
+  this.mobileMenuOpen = !this.mobileMenuOpen;
+}
+
 
   toggleDropdown(): void {
     this.dropdownOpen = !this.dropdownOpen;

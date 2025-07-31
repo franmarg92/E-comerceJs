@@ -16,15 +16,14 @@ const getAllUsersController = async (req, res) => {
 
 const editUserController = async (req, res) => {
   try {
-    const editedUser = req.body.user;
-    const updated = await userService.editUser(editedUser.userId, editedUser);
+    const { userId, ...rest } = req.body; // ya vienen planos
+    const updated = await userService.editUser(userId, rest);
     res.status(200).json({
       message: "Usuario actualizado correctamente",
       user: updated,
     });
   } catch (error) {
     console.error("Error al editar usuario:", error.message);
-
     res.status(500).json({
       error: "No se pudo editar el usuario",
       details: error.message,
@@ -59,8 +58,25 @@ const changePasswordController = async (req, res) => {
   }
 };
 
+const getUserByIdController = async (req, res) => {
+
+  try {
+    const id = req.params.id;
+    const findUser = await userService.getUserById(id)
+    res.status(200).json(findUser)
+  } catch (error) {
+    console.error(
+      "Error en controlador de obtención del Usuario:",
+      error.message
+    );
+    return res.status(500).json({ error: "Error interno del servidor" });
+  }
+  
+}
+
 module.exports = {
   getAllUsersController,
   editUserController,
   changePasswordController,
+  getUserByIdController
 };

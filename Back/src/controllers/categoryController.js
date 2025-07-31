@@ -47,4 +47,16 @@ const createCategoryController = async (req, res) => {
   }
 };
 
-module.exports = { getAllCategoriesController, createCategoryController };
+const getSubcategoriesController = async (req, res) => {
+  const { parentId } = req.params;
+
+  const result = await categoryService.getSubCategories(parentId);
+
+  if (result.success) {
+    res.status(200).json(result);
+  } else {
+    res.status(500).json(result);
+  }
+};
+
+module.exports = { getAllCategoriesController, createCategoryController, getSubcategoriesController };

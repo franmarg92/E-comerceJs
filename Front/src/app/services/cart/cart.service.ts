@@ -1,5 +1,6 @@
 import { AddToCartResponse } from './../../models/AddToCartResponseModel';
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { AddToCartPayload } from '../../models/cartPayloadModel';
@@ -14,8 +15,8 @@ export class CartService {
   items: CartItem[] = [];
   private userId: string = '';
   private apiUrl = 'http://localhost:3000/api/cart';
-
-  constructor(private http: HttpClient) {}
+  
+  constructor(private http: HttpClient, private router:Router) {}
 
   
 
@@ -120,9 +121,31 @@ const payload: AddToCartPayload = {
 
 
   checkout(): void {
-    Swal.fire('¡Compra realizada!', 'Gracias por tu pedido.', 'success');
-    this.items = [];
+  const payloadDraft = {
+    items: this.items,
+    total: this.getTotal()
+  };
+
+  if (!this.userId || this.items.length === 0) {
+    Swal.fire('🛑 Carrito vacío', 'No hay productos para procesar.', 'warning');
+    return;
   }
+
+  Swal.fire({
+    title: 'Confirmar compra',
+    text: '¿Querés avanzar con tu pedido?',
+    icon: 'question',
+    showCancelButton: true,
+    confirmButtonColor: '#d4af37',
+    cancelButtonText: 'Cancelar',
+    confirmButtonText: 'Sí, continuar',
+  }).then((result) => {
+    if (result.isConfirmed) {
+      
+      this.router.navigate(['/order-detail'], { state: { payloadDraft, userId: this.userId } });
+    }
+  });
+}
 
   addToCartProduct(productId: string, userId: string): void {
   

@@ -1,0 +1,93 @@
+/* 🔹 Espaciado general para evitar solaparse con footer */
+.container {
+  margin-bottom: 5rem;
+}
+
+/* 🟡 Card principal dorado boutique */
+.card-gold-wrapper {
+  background-color: #fdf5e6;
+  border-left: 6px solid #d4af37;
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 0 12px rgba(212, 175, 55, 0.1);
+}
+
+/* 🟠 Card para nueva dirección */
+.card-new-address {
+  background-color: #fffaf0;
+  border: 1px solid #d4af37;
+  border-radius: 8px;
+  padding: 1.5rem;
+}
+
+/* 🔸 Títulos con acento dorado */
+h1, h2, h3, h4, h5 {
+  color: #d4af37;
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+
+/* 🏷️ Textos dorados */
+.text-gold {
+  color: #d4af37;
+  font-weight: 600;
+}
+
+/* 🟨 Botón dorado */
+.btn-gold {
+  background-color: #d4af37;
+  color: #111;
+  border: none;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.btn-gold:hover {
+  background-color: #b28c27;
+  box-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
+}
+
+/* 🟧 Botón contorno dorado */
+.btn-outline-gold {
+  border: 1px solid #d4af37;
+  color: #d4af37;
+  background-color: transparent;
+  transition: all 0.3s ease;
+}
+
+.btn-outline-gold:hover {
+  background-color: #fff8dc;
+  color: #b28c27;
+  border-color: #b28c27;
+}
+
+/* 🧾 Inputs, selects y textarea elegantes */
+input, select, textarea {
+  background-color: #fff;
+  border: 1px solid #d4af37;
+  color: #111;
+  padding: 0.6rem;
+  border-radius: 4px;
+  width: 100%;
+}
+
+input:focus, select:focus, textarea:focus {
+  outline: none;
+  box-shadow: 0 0 5px #d4af37;
+}
+
+/* 📄 Separador visual */
+hr {
+  border-color: #d4af37;
+}
+
+/* 🧩 Tabla de resumen */
+.table th {
+  background-color: #f9f3da;
+  color: #111;
+  font-weight: 600;
+}
+
+.table td {
+  vertical-align: middle;
+}

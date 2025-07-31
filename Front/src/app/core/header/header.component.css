@@ -2,7 +2,7 @@
   background-color: #fff;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   padding: 12px 32px;
-  font-family: 'Playfair Display', serif;
+  font-family: "Playfair Display", serif;
   border-bottom: 2px solid #d4af37;
 }
 
@@ -23,6 +23,7 @@
 .nav-links {
   list-style: none;
   display: flex;
+  flex-direction: row;
   gap: 24px;
   margin: 0;
   padding: 0;
@@ -53,13 +54,13 @@
   transition: color 0.3s ease;
 }
 
-.cart-btn{
+.cart-btn {
   border: none;
   background-color: #ffffff;
   cursor: pointer;
 }
 
-.action:hover {
+.nav-actions a:hover {
   color: #d4af37;
 }
 
@@ -93,8 +94,8 @@
 }
 
 .dropdown-menu {
-    display: block !important;
-  visibility: visible !important;
+  display: block !important;
+  visibility: visible !important ;
   opacity: 1 !important;
   z-index: 9999 !important;
   top: 40px !important;
@@ -126,28 +127,116 @@
   background-color: #f5f5f5;
 }
 
+.hamburger {
+  display: none;
+
+  background: none;
+  border: none;
+  font-size: 22px;
+  color: #d4af37;
+  cursor: pointer;
+}
+
+.mobile-menu {
+  display: none;
+}
+
+.mobile-menu.open {
+  display: block;
+  position: absolute;
+  top: 70px;
+  left: 16px;
+  background-color: #fff;
+  border: 1px solid #e2e2e2;
+  border-left: 6px solid #d4af37;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  padding: 16px;
+  z-index: 1000;
+  animation: fadeIn 0.3s ease;
+}
+
+.nav-links,
+.nav-actions {
+  display: flex;
+  flex-direction: row;
+  gap: 15px;
+}
+
+.nav-links a,
+.nav-actions a {
+  text-decoration: none;
+  color: #333;
+  font-family: "Playfair Display", serif;
+  font-weight: 500;
+}
+
 /* Responsive */
+/* Mostrar hamburguesa en móviles */
 @media (max-width: 768px) {
-  header {
-    flex-wrap: wrap;
-    padding: 16px;
-  }
-
-  .nav-links {
-    display: none;
-    flex-direction: column;
-    width: 100%;
-    margin-top: 12px;
-  }
-
-  .nav-links.active {
-    display: flex;
-  }
-
-  .burger {
+  .hamburger {
     display: block;
-    font-size: 28px;
-    color: #d4af37;
-    cursor: pointer;
+  }
+
+
+
+ 
+
+  .user-toggle, .nav-links  {
+    display: none;
+  }
+
+  .dropdown-menu {
+    display: none !important;
+  }
+
+
+
+  .mobile-menu.open .nav-links,
+  .mobile-menu.open  {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .mobile-menu {
+    display: none;
+  }
+
+  .mobile-menu.open {
+    display: block;
+    position: absolute;
+    top: 70px;
+    right: 16px;
+    background-color: #fff;
+    border: 1px solid #e2e2e2;
+    border-bottom: 6px solid #d4af37;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    padding: 16px;
+    z-index: 1000;
+    animation: fadeIn 0.3s ease;
+    width: 260px;
+  }
+
+  .nav-links a,
+  .nav-actions a {
+    color: #333;
+    font-family: "Playfair Display", serif;
+    font-weight: 500;
+    text-decoration: none;
+  }
+
+  .hamburger {
+    order: 0;
+   
+  }
+
+  .brand {
+    order: 1;
+    text-align: center;
+  }
+
+  .nav-actions {
+    order: 2;
+   
   }
 }

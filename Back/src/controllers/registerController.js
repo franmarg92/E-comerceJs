@@ -1,7 +1,7 @@
 const { registerUserService } = require('../services/registerService');
 
 const registerUser = async (req, res) => {
-  const { name, lastName, dni, date_if_birth, email, password } = req.body;
+  const { name, lastName, dni, date_if_birth, email, phoneNumber, password } = req.body;
   try {
     const newUser = await registerUserService  (
       name,
@@ -9,6 +9,7 @@ const registerUser = async (req, res) => {
       dni,
       date_if_birth,
       email,
+      phoneNumber,
       password
     );
     return res.status(201).json({

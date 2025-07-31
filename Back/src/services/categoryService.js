@@ -53,4 +53,14 @@ const getAllCategories = async () => {
   }
 };
 
-module.exports = { createCategory, getAllCategories };
+
+const getSubCategories = async (parentId) => {
+
+  try {
+     const subcategories = await Category.find({ parent: parentId });
+     return { success: true, subcategories };
+  } catch (error) {
+    return { success: false, error: error.message };
+  }
+}
+module.exports = { createCategory, getAllCategories, getSubCategories };

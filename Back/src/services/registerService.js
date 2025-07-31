@@ -7,6 +7,7 @@ const registerUserService = async (
   dni,
   date_of_birth,
   email,
+  phoneNumber,
   password,
   roleName = 'Cliente'
 ) => {
@@ -44,6 +45,7 @@ const registerUserService = async (
     dni,
     date_of_birth,
     email,
+    phoneNumber,
     password: hashedPassword,
     role: role._id
   });

@@ -1,3 +1,4 @@
+import { Address } from "cluster";
 export interface User {
   _id?: string;
   name: string;
@@ -5,7 +6,9 @@ export interface User {
   dni: number;
   date_of_birth: Date;
   email: string;
+  phoneNumber: string;
   role: string;
+  address?: Address
 }
 
 export interface UserWithPassword extends User {

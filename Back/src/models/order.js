@@ -19,9 +19,10 @@ const orderSchema = new mongoose.Schema(
           size: String,
           color: String,
         },
+         
       },
     ],
-    totalAmount: { type: Number, required: true },
+    totalAmount: { type: Number, required: true, min: 0},
     status: {
       type: String,
       enum: ['pending', 'paid', 'shipped', 'delivered', 'cancelled'],
@@ -36,6 +37,10 @@ const orderSchema = new mongoose.Schema(
       method: String,
       transactionId: String,
     },
+    notes: {
+      type: String,
+      trim: true,
+    }
   },
   { timestamps: true }
 );

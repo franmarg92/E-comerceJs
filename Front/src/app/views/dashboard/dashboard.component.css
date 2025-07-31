@@ -8,3 +8,21 @@
 .dashboard-content {
   flex: 1;
 }
+
+
+@media (max-width: 768px) {
+  .dashboard-layout {
+    flex-direction: column;
+    gap: 16px; /* opcional: menos espacio en mobile */
+    padding: 16px;
+  }
+
+  app-side-bar {
+    width: 100%; /* que ocupe todo el ancho arriba */
+    order: -1;   /* si querés que aparezca antes en el flujo visual */
+  }
+
+  .dashboard-content {
+    width: 100%;
+  }
+}

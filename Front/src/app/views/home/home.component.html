@@ -36,26 +36,15 @@
     </div>
   </section>
 
-  <section class="featured-products">
-    <h2>Destacados</h2>
-    <div class="product-grid">
-      <div class="product-card">
-        <img src="https://www.makedoonia.com/wp-content/uploads/2017/07/aros-dorados-XL.jpg" alt="Aros dorados" />
-        <h4>Aros dorados</h4>
-        <p>Hechos a mano con baño de oro 18k</p>
-        <span class="price">$8.900</span>
-      </div>
-
-      <div class="product-card">
-        <img src="https://cdn-media.glamira.com/media/product/newgeneration/view/1/sku/hearteye-5-r/diamond/amethyst_AAA/alloycolour/yellow.jpg" alt="Anillo corazón" />
-        <h4>Anillo corazón</h4>
-        <p>Diseño exclusivo en plata 925</p>
-        <span class="price">$12.500</span>
-      </div>
-
-      <!-- Podés agregar más cards con productos -->
-    </div>
-  </section>
+<section class="featured-products">
+  <h2>Destacados</h2>
+  <div class="product-grid" *ngIf="featuredProducts.length > 0">
+  <app-cards
+    *ngFor="let product of featuredProducts"
+    [product]="product"
+  ></app-cards>
+</div>
+</section>
 
   <section class="payment-methods">
     <h2>Medios de Pago</h2>

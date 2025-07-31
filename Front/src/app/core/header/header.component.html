@@ -4,6 +4,15 @@
       <h1 class="logo">Distinzione Joyas</h1>
     </div>
 
+    <!-- Botón hamburguesa (solo visible en móviles) -->
+    <button class="hamburger" (click)="toggleMobileMenu()">
+      <i
+        class="fa-solid"
+        [ngClass]="mobileMenuOpen ? 'fa-xmark' : 'fa-bars'"
+      ></i>
+    </button>
+
+    <!-- Menú normal en desktop -->
     <ul class="nav-links">
       <li><a routerLink="/">Inicio</a></li>
       <li><a routerLink="/shop">Shop</a></li>
@@ -13,7 +22,7 @@
 
     <div class="nav-actions">
       <a class="action cart-btn" (click)="toggleCartDropdown()">
-        <i class="fa-solid fa-cart-shopping"></i> Carrito
+        <i class="fa-solid fa-cart-shopping"></i> 
         <span class="cart-count">{{ cartService.getItemCount() }}</span>
       </a>
 
@@ -21,19 +30,58 @@
         <app-cartdropdown (closeDropdown)="toggleCartDropdown()" />
       </div>
 
-      <div *ngIf="isAuthenticated" class="user-dropdown" (click)="toggleDropdown()">
+      <div
+        *ngIf="isAuthenticated"
+        class="user-dropdown"
+        (click)="toggleDropdown()"
+      >
         <div class="user-toggle">
           <span class="user-name">{{ user?.name }}</span>
           <i class="fa-solid fa-chevron-down"></i>
         </div>
 
-        <ul class="dropdown-menu" *ngIf="dropdownOpen">
+        <ul class="dropdown-menu " *ngIf="dropdownOpen">
           <li><a routerLink="/dashboard">Dashboard</a></li>
           <li><a (click)="logout()">Cerrar sesión</a></li>
         </ul>
       </div>
 
-      <a *ngIf="!isAuthenticated" routerLink="/account" class="action">Cuenta</a>
+      <a *ngIf="!isAuthenticated" routerLink="/account" class="action"
+        >Cuenta</a
+      >
+    </div>
+
+    <!-- Menú hamburguesa en móviles -->
+    <div class="mobile-menu" [class.open]="mobileMenuOpen">
+      <ul class="nav-links">
+        <li><a routerLink="/">Inicio</a></li>
+        <li><a routerLink="/shop">Shop</a></li>
+        <li><a routerLink="/about-us">Nosotros</a></li>
+        <li><a routerLink="/contact">Contacto</a></li>
+        <li>
+          <!-- Usuario logueado -->
+          <div
+            *ngIf="isAuthenticated"
+            class="user-dropdown"
+            (click)="toggleDropdown()"
+          >
+            <div>
+              <span class="user-name">{{ user?.name }}</span>
+              <i class="fa-solid fa-chevron-down"></i>
+            </div>
+
+            <ul class="nav-links" *ngIf="dropdownOpen">
+              <li><a routerLink="/dashboard">Dashboard</a></li>
+              <li><a (click)="logout()">Cerrar sesión</a></li>
+            </ul>
+          </div>
+
+          <!-- Usuario invitado -->
+          <a *ngIf="!isAuthenticated" routerLink="/account" class="action"
+            >Cuenta</a
+          >
+        </li>
+      </ul>
     </div>
   </nav>
 </header>

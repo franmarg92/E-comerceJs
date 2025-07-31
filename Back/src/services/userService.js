@@ -6,25 +6,12 @@ const getALlUsers = async () => {
   return users;
 };
 
-const editUser = async (userId, userData, userRole) => {
-  let allowedFields;
-
-  if (userRole === "admin") {
-    allowedFields = [
-      "name",
-      "lastname",
-      "email",
-      "date_of_birth",
-      "dni",
-      "role_id",
-    ];
-  } else {
-    allowedFields = ["name", "lastname", "email", "date_of_birth"];
-  }
+const editUser = async (userId, userData) => {
+  const allowedFields = ["name", "lastName", "email", "date_of_birth", "phoneNumber"];
 
   const filteredData = {};
   for (const key of allowedFields) {
-    if (userData.hasOwnProperty(key)) {
+    if (userData[key] !== undefined && userData[key] !== "") {
       filteredData[key] = userData[key];
     }
   }
@@ -55,4 +42,13 @@ const changePassword = async (userId, oldPassword, newPassword) => {
   return { message: "Contraseña actualizada correctamente" };
 };
 
-module.exports = { editUser, changePassword, getALlUsers };
+const getUserById = async (_id) => {
+  try {
+    const user = await User.findById(_id);
+    return {success: true, user}
+  } catch (error) {
+    return { success: false, error: error.message };
+  }
+}
+
+module.exports = { editUser, changePassword, getALlUsers, getUserById };
