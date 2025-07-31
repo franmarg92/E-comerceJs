@@ -1,0 +1,19 @@
+[phases.setup]
+nixpkgs = ["nodejs", "nginx", "bash"]
+
+[phases.build]
+cmds = [
+  "cd frontend && npm install && npm run build",
+  "cd backend && npm install"
+]
+
+[phases.start]
+cmds = [
+  "cp -r frontend/dist/* /var/www/html/",
+  "cd backend && npm start"
+]
+
+[start]
+cmd = "nginx -g 'daemon off;' && cd backend && npm start"
+
+
