@@ -27,11 +27,8 @@ app.use(express.json());
 app.use(cors(corsConfig));
 app.use(passport.initialize());
 
-// Ruta absoluta a la carpeta de imágenes
-const imagePath = path.join(__dirname, 'storage', 'imgs');
-
 // Servir archivos estáticos
-app.use('/imgs', express.static(imagePath));
+app.use('/imgs', express.static('./src/storage/imgs'));
  
 // Logging básico
 app.use((req, res, next) => {
