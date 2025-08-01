@@ -24,7 +24,7 @@ export class MyPurchasesComponent implements OnInit {
     try {
       const user = JSON.parse(userData);
       this.userId = user.userId || '';
-      console.log('🆔 User ID:', this.userId);
+     
     } catch (e) {
       console.error('❌ Error parseando userData:', e);
     }

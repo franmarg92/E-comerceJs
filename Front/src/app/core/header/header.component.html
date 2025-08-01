@@ -23,7 +23,7 @@
     <div class="nav-actions">
       <a class="action cart-btn" class="cart-toggle-button" (click)="toggleCartDropdown()">
         <i class="fa-solid fa-cart-shopping"></i> 
-         <span class="cart-count" *ngIf="cartService.getItemCount() > 1">
+         <span class="cart-count" *ngIf="cartService.getItemCount() >= 1">
           {{ cartService.getItemCount() }}
         </span>
       </a>
