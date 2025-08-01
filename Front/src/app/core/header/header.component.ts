@@ -21,7 +21,7 @@ export class HeaderComponent {
   isCartOpen = false;
   dropdownOpen = false;
   mobileMenuOpen = false;
-  isMobile = false
+ 
 
   constructor(
     private authService: AuthService,
@@ -57,13 +57,27 @@ toggleMobileMenu() {
     this.isCartOpen = !this.isCartOpen;
   }
 
-  @HostListener('document:click', ['$event'])
-  closeDropdownOnClickOutside(event: Event): void {
-    const target = event.target as HTMLElement;
-    if (this.dropdownOpen && !target.closest('.user-dropdown')) {
-      this.dropdownOpen = false;
-    }
+@HostListener('document:click', ['$event'])
+closeDropdownOnClickOutside(event: Event): void {
+  const target = event.target as HTMLElement;
+
+  // Dropdown usuario
+  if (this.dropdownOpen && !target.closest('.user-dropdown') && !target.closest('.user-toggle-button')) {
+    this.dropdownOpen = false;
   }
+
+  // Dropdown carrito
+  if (this.isCartOpen && !target.closest('.cart-dropdown') && !target.closest('.cart-toggle-button')) {
+    this.isCartOpen = false;
+  }
+
+    // Menú hamburguesa móvil
+  if (this.mobileMenuOpen && !target.closest('.mobile-menu') && !target.closest('.hamburger')) {
+    this.mobileMenuOpen = false;
+  }
+ 
+}
+
 
   logout(): void {
     this.authService.logout();

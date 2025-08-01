@@ -5,7 +5,7 @@
     </div>
 
     <!-- Botón hamburguesa (solo visible en móviles) -->
-    <button class="hamburger" (click)="toggleMobileMenu()">
+    <button class="hamburger"  (click)="toggleMobileMenu()">
       <i
         class="fa-solid"
         [ngClass]="mobileMenuOpen ? 'fa-xmark' : 'fa-bars'"
@@ -21,9 +21,11 @@
     </ul>
 
     <div class="nav-actions">
-      <a class="action cart-btn" (click)="toggleCartDropdown()">
+      <a class="action cart-btn" class="cart-toggle-button" (click)="toggleCartDropdown()">
         <i class="fa-solid fa-cart-shopping"></i> 
-        <span class="cart-count">{{ cartService.getItemCount() }}</span>
+         <span class="cart-count" *ngIf="cartService.getItemCount() > 1">
+          {{ cartService.getItemCount() }}
+        </span>
       </a>
 
       <div *ngIf="isCartOpen" class="cart-dropdown">
@@ -40,7 +42,7 @@
           <i class="fa-solid fa-chevron-down"></i>
         </div>
 
-        <ul class="dropdown-menu " *ngIf="dropdownOpen">
+        <ul class="dropdown-menu" *ngIf="dropdownOpen">
           <li><a routerLink="/dashboard">Dashboard</a></li>
           <li><a (click)="logout()">Cerrar sesión</a></li>
         </ul>
@@ -52,7 +54,8 @@
     </div>
 
     <!-- Menú hamburguesa en móviles -->
-    <div class="mobile-menu" [class.open]="mobileMenuOpen">
+     <div class="mobile-menu" [class.open]="mobileMenuOpen">
+
       <ul class="nav-links">
         <li><a routerLink="/">Inicio</a></li>
         <li><a routerLink="/shop">Shop</a></li>

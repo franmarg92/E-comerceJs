@@ -177,11 +177,12 @@
     display: block;
   }
 
+  .action {
+    display: none;
+  }
 
-
- 
-
-  .user-toggle, .nav-links  {
+  .user-toggle,
+  .nav-links {
     display: none;
   }
 
@@ -189,18 +190,14 @@
     display: none !important;
   }
 
-
-
   .mobile-menu.open .nav-links,
-  .mobile-menu.open  {
+  .mobile-menu.open {
     display: flex;
     flex-direction: column;
     gap: 12px;
   }
 
-  .mobile-menu {
-    display: none;
-  }
+
 
   .mobile-menu.open {
     display: block;
@@ -227,7 +224,6 @@
 
   .hamburger {
     order: 0;
-   
   }
 
   .brand {
@@ -237,6 +233,5 @@
 
   .nav-actions {
     order: 2;
-   
   }
 }
