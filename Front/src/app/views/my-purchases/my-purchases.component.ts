@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { OrderServiceService } from '../../services/orserService/order-service.service';
-import { Order } from '../../models/orderModel';
 import { FormsModule } from '@angular/forms';
 import { OrderWithDetails } from '../../models/OrderWhitDetails';
 
@@ -33,7 +32,7 @@ export class MyPurchasesComponent implements OnInit {
     this.orderService.getOrderByUserId(this.userId).subscribe({
       next: (res) => {
         this.orders = res.orders || [];
-        
+        console.log(res)
       },
       error: (err) => {
         console.error('❌ Error al cargar órdenes:', err);

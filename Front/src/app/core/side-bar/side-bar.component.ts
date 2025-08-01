@@ -15,7 +15,7 @@ AuthService
 export class SideBarComponent {
  sidebarItems = [
     { label: 'Perfil', path: 'profile', roles: ['cliente'] },
-    { label: 'Mis compras', path: 'my-purchases', roles: ['cliente'] },
+    { label: 'Mis compras', path: 'my-purchases' , roles: ['cliente'] },
     { label: 'Cargar Productos', path: 'product-editor', roles: ['admin'] },
    // { label: 'Clientes', path: 'wods', roles: ['admin'] },
     { label: 'Editar productos', path: 'edit-product', roles: ['admin'] },
