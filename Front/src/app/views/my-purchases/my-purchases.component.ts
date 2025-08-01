@@ -16,14 +16,24 @@ export class MyPurchasesComponent implements OnInit {
   orders: OrderWithDetails[] = [];
 
   ngOnInit(): void {
-    // Recuperar desde localStorage (modo SSR safe)
-    if (typeof window !== 'undefined') {
-      this.userId = localStorage.getItem('userId') || '';
+    
+   
+  if (typeof window !== 'undefined') {
+  const userData = localStorage.getItem('user');
+  if (userData) {
+    try {
+      const user = JSON.parse(userData);
+      this.userId = user.userId || '';
+      console.log('🆔 User ID:', this.userId);
+    } catch (e) {
+      console.error('❌ Error parseando userData:', e);
     }
+  }
+}
 
-    if (this.userId) {
-      this.loadOrders();
-    }
+  if (this.userId) {
+    this.loadOrders();
+  }
   }
 
   constructor(private orderService: OrderServiceService) {}
@@ -32,7 +42,7 @@ export class MyPurchasesComponent implements OnInit {
     this.orderService.getOrderByUserId(this.userId).subscribe({
       next: (res) => {
         this.orders = res.orders || [];
-        console.log(res)
+       
       },
       error: (err) => {
         console.error('❌ Error al cargar órdenes:', err);
