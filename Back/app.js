@@ -18,12 +18,18 @@ const {
 } = require("./src/routes");
 
 const app = express();
+
+
+
 const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
 app.use(cors(corsConfig));
 app.use(passport.initialize());
 
+// Servir archivos estáticos
+app.use('/imgs', express.static('./src/storage/imgs'));
+ 
 // Logging básico
 app.use((req, res, next) => {
   console.log(`[${req.method}] ${req.originalUrl}`);

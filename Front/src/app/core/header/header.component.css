@@ -170,6 +170,14 @@
   font-weight: 500;
 }
 
+/* Mostrar texto y ocultar ícono en desktop */
+.label {
+  display: inline;
+}
+
+.icon {
+  display: none;
+}
 /* Responsive */
 /* Mostrar hamburguesa en móviles */
 @media (max-width: 768px) {

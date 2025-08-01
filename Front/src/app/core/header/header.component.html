@@ -48,9 +48,11 @@
         </ul>
       </div>
 
-      <a *ngIf="!isAuthenticated" routerLink="/account" class="action"
-        >Cuenta</a
-      >
+      <!-- Usuario invitado -->
+      <a *ngIf="!isAuthenticated" routerLink="/account" class="action">
+        <span class="label">Cuenta</span>
+        <i class="fa-solid fa-user icon"></i>
+      </a>
     </div>
 
     <!-- Menú hamburguesa en móviles -->
