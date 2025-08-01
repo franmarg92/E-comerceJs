@@ -15,10 +15,8 @@ export class CartService {
   items: CartItem[] = [];
   private userId: string = '';
   private apiUrl = 'https://distinzionejoyas.com/api/cart';
-  
-  constructor(private http: HttpClient, private router:Router) {}
 
-  
+  constructor(private http: HttpClient, private router: Router) {}
 
   addToCart(payload: AddToCartPayload): Observable<AddToCartResponse> {
     return this.http.post<AddToCartResponse>(`${this.apiUrl}/add`, payload);
@@ -59,96 +57,105 @@ export class CartService {
     );
   }
 
- increaseQuantity(item: CartItem): void {
-if (!item.productId._id) return; 
+  increaseQuantity(item: CartItem): void {
+    if (!item.productId._id) return;
 
-const payload: AddToCartPayload = {
-  userId: this.userId,
-  productId: item.productId._id, 
-  quantityChange: 1
-};
+    const payload: AddToCartPayload = {
+      userId: this.userId,
+      productId: item.productId._id,
+      quantityChange: 1,
+    };
 
-  this.updateQuantity(payload).subscribe({
-    next: () => item.quantity++,
-    error: () =>
-      Swal.fire('Error', 'No se pudo aumentar la cantidad.', 'error'),
-  });
-}
+    this.updateQuantity(payload).subscribe({
+      next: () => item.quantity++,
+      error: () =>
+        Swal.fire('Error', 'No se pudo aumentar la cantidad.', 'error'),
+    });
+  }
 
   decreaseQuantity(item: CartItem): void {
-   if (!item.productId._id) return; 
+    if (!item.productId._id) return;
 
-const payload: AddToCartPayload = {
-  userId: this.userId,
-  productId: item.productId._id, 
-  quantityChange: -1
-};
+    const payload: AddToCartPayload = {
+      userId: this.userId,
+      productId: item.productId._id,
+      quantityChange: -1,
+    };
 
-  this.updateQuantity(payload).subscribe({
-    next: () => item.quantity--,
-    error: () =>
-      Swal.fire('Error', 'No se pudo aumentar la cantidad.', 'error'),
-  });
+    this.updateQuantity(payload).subscribe({
+      next: () => item.quantity--,
+      error: () =>
+        Swal.fire('Error', 'No se pudo aumentar la cantidad.', 'error'),
+    });
   }
 
   removeItem(item: CartItem): void {
-  Swal.fire({
-    title: '¿Eliminar producto del carrito?',
-    text: 'Esta acción quitará todos los ítems de este producto del carrito.',
-    icon: 'warning',
-    showCancelButton: true,
-    confirmButtonColor: '#d4af37',
-    cancelButtonColor: '#aaa',
-    confirmButtonText: 'Sí, eliminar',
-    cancelButtonText: 'Cancelar',
-  }).then((result) => {
-    if (result.isConfirmed) {
-      const productId = item.productId._id;
+    Swal.fire({
+      title: '¿Eliminar producto del carrito?',
+      text: 'Esta acción quitará todos los ítems de este producto del carrito.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d4af37',
+      cancelButtonColor: '#aaa',
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        const productId = item.productId._id;
 
-      if (!productId) return;
+        if (!productId) return;
 
-      this.deleteByProduct(this.userId, productId).subscribe({
-        next: () => {
-          this.items = this.items.filter(i => i.productId._id !== productId);
-          Swal.fire('¡Eliminado!', 'Producto eliminado del carrito.', 'success');
-        },
-        error: () =>
-          Swal.fire('Error', 'No se pudo eliminar el producto.', 'error'),
-      });
-    }
-  });
-}
-
-
-  checkout(): void {
-  const payloadDraft = {
-    items: this.items,
-    total: this.getTotal()
-  };
-
-  if (!this.userId || this.items.length === 0) {
-    Swal.fire('🛑 Carrito vacío', 'No hay productos para procesar.', 'warning');
-    return;
+        this.deleteByProduct(this.userId, productId).subscribe({
+          next: () => {
+            this.items = this.items.filter(
+              (i) => i.productId._id !== productId
+            );
+            Swal.fire(
+              '¡Eliminado!',
+              'Producto eliminado del carrito.',
+              'success'
+            );
+          },
+          error: () =>
+            Swal.fire('Error', 'No se pudo eliminar el producto.', 'error'),
+        });
+      }
+    });
   }
 
-  Swal.fire({
-    title: 'Confirmar compra',
-    text: '¿Querés avanzar con tu pedido?',
-    icon: 'question',
-    showCancelButton: true,
-    confirmButtonColor: '#d4af37',
-    cancelButtonText: 'Cancelar',
-    confirmButtonText: 'Sí, continuar',
-  }).then((result) => {
-    if (result.isConfirmed) {
-      
-      this.router.navigate(['/order-detail'], { state: { payloadDraft, userId: this.userId } });
+  checkout(): void {
+    const payloadDraft = {
+      items: this.items,
+      total: this.getTotal(),
+    };
+
+    if (!this.userId || this.items.length === 0) {
+      Swal.fire(
+        '🛑 Carrito vacío',
+        'No hay productos para procesar.',
+        'warning'
+      );
+      return;
     }
-  });
-}
+
+    Swal.fire({
+      title: 'Confirmar compra',
+      text: '¿Querés avanzar con tu pedido?',
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonColor: '#d4af37',
+      cancelButtonText: 'Cancelar',
+      confirmButtonText: 'Sí, continuar',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.router.navigate(['/order-detail'], {
+          state: { payloadDraft, userId: this.userId },
+        });
+      }
+    });
+  }
 
   addToCartProduct(productId: string, userId: string): void {
-  
     if (!userId) {
       console.warn('🛑 Usuario no definido. No se puede agregar al carrito.');
       return;
@@ -158,10 +165,24 @@ const payload: AddToCartPayload = {
     this.addToCart(payload).subscribe({
       next: () => {
         Swal.fire({
-          icon: 'success',
-          title: 'Agregado al carrito',
-          text: 'Producto añadido exitosamente',
+          title: '¿Agregar al carrito?',
+          text: '¿Deseás añadir este producto?',
+          icon: 'question',
+          showCancelButton: true,
+          confirmButtonText: 'Sí, agregar',
+          cancelButtonText: 'Cancelar',
           confirmButtonColor: '#d4af37',
+          cancelButtonColor: '#aaa',
+        }).then((result) => {
+          if (result.isConfirmed) {
+            // ✅ Lógica para agregar al carrito
+            Swal.fire({
+              icon: 'success',
+              title: 'Agregado al carrito',
+              text: 'Producto añadido exitosamente',
+              confirmButtonColor: '#d4af37',
+            });
+          }
         });
       },
       error: (err) => {

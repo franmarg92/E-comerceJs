@@ -1,8 +1,30 @@
+<div class="cards-conteiner">
+  <div class="product-card">
+    <img [src]="product.image[0]" alt="{{ product.name }}" />
+    <h4>{{ product.name }}</h4>
+    <p>Stock: {{ product.stock }}</p>
+    <span class="price">$ {{ product.price }}</span>
+    <span *ngIf="product.featured" class="badge">★ Destacado</span>
+    <div class="product-buttons">
+      <button (click)="goToProductDetail(product._id)">Ver</button>
 
-<div class="product-card">
-  <img [src]="product.image[0]" alt="{{ product.name }}" />
-  <h4>{{ product.name }}</h4>
-  <p>{{ product.description }}</p>
-  <span class="price">$ {{ product.price }}</span>
-  <span *ngIf="product.featured" class="badge">★ Destacado</span>
+      <!-- Usuario logueado -->
+      <button
+        class="add-btn"
+        *ngIf="isAuthenticated && product._id"
+        (click)="addToCart(product._id)"
+      >
+        Comprar
+      </button>
+
+      <!-- Usuario invitado -->
+      <button
+        class="add-btn guest"
+        *ngIf="!isAuthenticated && product._id"
+        (click)="addToAnonymousCart(product._id)"
+      >
+        Comprar
+      </button>
+    </div>
+  </div>
 </div>
