@@ -33,7 +33,7 @@ export class MyPurchasesComponent implements OnInit {
     this.orderService.getOrderByUserId(this.userId).subscribe({
       next: (res) => {
         this.orders = res.orders || [];
-        console.log('📦 Órdenes recibidas:', this.orders);
+        
       },
       error: (err) => {
         console.error('❌ Error al cargar órdenes:', err);
