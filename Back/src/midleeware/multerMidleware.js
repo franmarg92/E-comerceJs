@@ -8,10 +8,10 @@ const storage = multer.diskStorage({
         cb(null, rutaDestino);
     },
     filename: (req, file, cb) => {
-        const uniqueSuffix = `${Date.now()}-${file.originalname}`;
+        const uniqueSuffix = `${Date.now()}-${file.originalname}`; 
         cb(null, uniqueSuffix);
     },
-});
+});  
 
 const upload = multer({
     storage,
