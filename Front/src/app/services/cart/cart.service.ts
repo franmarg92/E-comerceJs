@@ -2,7 +2,7 @@ import { AddToCartResponse } from './../../models/AddToCartResponseModel';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable,  BehaviorSubject} from 'rxjs';
 import { AddToCartPayload } from '../../models/cartPayloadModel';
 import { Cart } from '../../models/cartModel';
 import { CartItem } from '../../models/cartModel';
@@ -15,6 +15,9 @@ export class CartService {
   items: CartItem[] = [];
   private userId: string = '';
   private apiUrl = 'https://distinzionejoyas.com/api/cart';
+
+  private itemsSubject = new BehaviorSubject<CartItem[]>([]);
+  items$ = this.itemsSubject.asObservable();
 
   constructor(private http: HttpClient, private router: Router) {}
 
@@ -195,4 +198,7 @@ export class CartService {
       },
     });
   }
+
+
+  
 }

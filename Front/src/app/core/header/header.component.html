@@ -38,7 +38,7 @@
         (click)="toggleDropdown()"
       >
         <div class="user-toggle">
-          <span class="user-name">{{ user?.name }}</span>
+          <span class="user-name" >Bienvenido {{ user?.name }}</span>
           <i class="fa-solid fa-chevron-down"></i>
         </div>
 
@@ -82,7 +82,7 @@
           </div>
 
           <!-- Usuario invitado -->
-          <a *ngIf="!isAuthenticated" routerLink="/account" class="action"
+          <a *ngIf="!isAuthenticated" routerLink="/account" class="action-menu"
             >Cuenta</a
           >
         </li>

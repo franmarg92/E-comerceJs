@@ -1,5 +1,11 @@
-import { Component, HostListener, Inject, PLATFORM_ID } from '@angular/core';
-import { CommonModule, isPlatformBrowser } from '@angular/common';
+import {
+  Component,
+  HostListener,
+  Inject,
+  PLATFORM_ID,
+  ChangeDetectorRef,
+} from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { AuthService } from '../../services/auth/auth.service';
 import { CartService } from '../../services/cart/cart.service';
@@ -21,33 +27,44 @@ export class HeaderComponent {
   isCartOpen = false;
   dropdownOpen = false;
   mobileMenuOpen = false;
- 
+  platformId: Object;
 
   constructor(
-    private authService: AuthService,
+    public authService: AuthService,
     public cartService: CartService,
     private router: Router,
-    @Inject(PLATFORM_ID) private platformId: Object
-  ) {}
-
-  ngOnInit(): void {
-    this.authService.user$.subscribe((user) => {
-      this.user = user;
-      this.isAuthenticated = !!user;
-      this.userRole = this.authService.getUserRole()?.toLowerCase() || '';
-
-      if (this.isAuthenticated && user?._id) {
-        this.cartService.loadCart(user._id);
-      }
-    });
+    @Inject(PLATFORM_ID) platformId: Object,
+    private cdr: ChangeDetectorRef
+  ) {
+    this.platformId = platformId;
+    
   }
 
-  
+ngOnInit(): void {
+  console.log('[Header] ngOnInit');
 
-toggleMobileMenu() {
-  this.mobileMenuOpen = !this.mobileMenuOpen;
+  this.authService.authStatus$.subscribe((status) => {
+    console.log('[Header] authStatus$', status);
+    this.isAuthenticated = status;
+    this.cdr.detectChanges();
+  });
+
+  this.authService.user$.subscribe(user => {
+    console.log('[Header] user$', user);
+    this.user = user;
+    if (this.isAuthenticated && user?._id) {
+      this.cartService.loadCart(user._id);
+    }
+
+    this.userRole = this.authService.getUserRole()?.toLowerCase() || '';
+    this.cdr.detectChanges(); 
+  });
 }
 
+
+  toggleMobileMenu() {
+    this.mobileMenuOpen = !this.mobileMenuOpen;
+  }
 
   toggleDropdown(): void {
     this.dropdownOpen = !this.dropdownOpen;
@@ -57,27 +74,38 @@ toggleMobileMenu() {
     this.isCartOpen = !this.isCartOpen;
   }
 
-@HostListener('document:click', ['$event'])
-closeDropdownOnClickOutside(event: Event): void {
-  const target = event.target as HTMLElement;
+  @HostListener('document:click', ['$event'])
+  closeDropdownOnClickOutside(event: Event): void {
+    const target = event.target as HTMLElement;
 
-  // Dropdown usuario
-  if (this.dropdownOpen && !target.closest('.user-dropdown') && !target.closest('.user-toggle-button')) {
-    this.dropdownOpen = false;
+    if (
+      this.dropdownOpen &&
+      !target.closest('.user-dropdown') &&
+      !target.closest('.user-toggle-button')
+    ) {
+      this.dropdownOpen = false;
+    }
+
+    if (
+      this.isCartOpen &&
+      !target.closest('.cart-dropdown') &&
+      !target.closest('.cart-toggle-button')
+    ) {
+      this.isCartOpen = false;
+    }
+
+    const isMenuClick = target.closest('.mobile-menu');
+    const isHamburgerClick = target.closest('.hamburger');
+    const isInteractiveInsideMenu =
+      target.closest('.mobile-menu a') || target.closest('.mobile-menu button');
+
+    if (
+      this.mobileMenuOpen &&
+      (!isMenuClick && !isHamburgerClick || isInteractiveInsideMenu)
+    ) {
+      this.mobileMenuOpen = false;
+    }
   }
-
-  // Dropdown carrito
-  if (this.isCartOpen && !target.closest('.cart-dropdown') && !target.closest('.cart-toggle-button')) {
-    this.isCartOpen = false;
-  }
-
-    // Menú hamburguesa móvil
-  if (this.mobileMenuOpen && !target.closest('.mobile-menu') && !target.closest('.hamburger')) {
-    this.mobileMenuOpen = false;
-  }
- 
-}
-
 
   logout(): void {
     this.authService.logout();
@@ -92,4 +120,6 @@ closeDropdownOnClickOutside(event: Event): void {
       timerProgressBar: true,
     }).then(() => this.router.navigate(['/']));
   }
+
+  
 }

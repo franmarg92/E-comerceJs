@@ -7,6 +7,7 @@ import { JwtHelperService } from '@auth0/angular-jwt';
 import { Register } from '../../models/registerModel';
 import { login } from '../../models/loginModel';
 import { loginResponse } from '../../models/loginResponseModel';
+import { User } from '../../models/userModel';
 
 @Injectable({
   providedIn: 'root',
@@ -15,10 +16,10 @@ export class AuthService {
   private apiUrl = 'https://distinzionejoyas.com/api/auth';
   private jwtHelper = new JwtHelperService();
 
-  private userSubject = new BehaviorSubject<any>(null);
-  user$ = this.userSubject.asObservable();
+ private userSubject = new BehaviorSubject<User | null>(null);
+public user$ = this.userSubject.asObservable();
 
-  private authStatus = new BehaviorSubject<boolean>(false);
+  private authStatus = new BehaviorSubject<boolean>(this.isAuthenticated());
   authStatus$ = this.authStatus.asObservable();
 
   constructor(
@@ -92,6 +93,8 @@ export class AuthService {
   getUserName(): string | null {
     return this.userSubject.value?.name || null;
   }
+
+  
 
   getToken(): string | null {
     if (!this.isBrowser()) return null;
