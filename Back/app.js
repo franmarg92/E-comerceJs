@@ -55,7 +55,7 @@ app.use("/api/address", addressRouter);
 
 
 // Servir archivos estáticos
-app.use('/imgs', express.static(path.join(__dirname, 'storage'))); 
+app.use('/imgs', express.static('../../storage'));
 
 
 // 🩺 Health check
