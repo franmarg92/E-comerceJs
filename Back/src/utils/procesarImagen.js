@@ -8,7 +8,7 @@ const procesarImagen = async (file, req) => {
   const bufferFinal = await sharpMidleware.toWebP(bufferOriginal);
 
   const nombreFinal = `${Date.now()}-${file.originalname.split('.')[0]}.webp`;
-  const rutaFinal = path.join(__dirname, '../storage/imgs', nombreFinal);
+  const rutaFinal = path.join(__dirname, 'storage', nombreFinal);
 
   await fs.writeFile(rutaFinal, bufferFinal);
   await fs.unlink(file.path);
