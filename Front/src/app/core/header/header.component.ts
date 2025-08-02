@@ -1,4 +1,10 @@
-import { Component, HostListener, Inject, PLATFORM_ID } from '@angular/core';
+import {
+  Component,
+  HostListener,
+  Inject,
+  PLATFORM_ID,
+  ChangeDetectorRef,
+} from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { AuthService } from '../../services/auth/auth.service';
@@ -15,15 +21,24 @@ import Swal from 'sweetalert2';
   styleUrl: './header.component.css',
 })
 export class HeaderComponent {
-  isAuthenticated = false;
+  isAuthenticated: boolean = false;
   user: User | null = null;
   userRole = '';
   isCartOpen = false;
   dropdownOpen = false;
   mobileMenuOpen = false;
- 
+  menuItems = [
+    {
+      label: 'Panel de control',
+      path: '/dashboard',
+      roles: ['admin', 'cliente'],
+    },
+    { label: 'Cerrar sesión', action: 'logout', roles: ['admin', 'cliente'] },
+  ];
+  filteredMenuItems: any[] = [];
 
   constructor(
+    private cdr: ChangeDetectorRef,
     private authService: AuthService,
     public cartService: CartService,
     private router: Router,
@@ -31,23 +46,25 @@ export class HeaderComponent {
   ) {}
 
   ngOnInit(): void {
-    this.authService.user$.subscribe((user) => {
-      this.user = user;
-      this.isAuthenticated = !!user;
-      this.userRole = this.authService.getUserRole()?.toLowerCase() || '';
+ 
 
-      if (this.isAuthenticated && user?._id) {
-        this.cartService.loadCart(user._id);
-      }
-    });
+    this.updateMenuItems();
   }
 
-  
+  updateMenuItems() {
+    if (!this.isAuthenticated || !this.userRole) {
+      this.filteredMenuItems = [];
+      return;
+    }
 
-toggleMobileMenu() {
-  this.mobileMenuOpen = !this.mobileMenuOpen;
-}
+    this.filteredMenuItems = this.menuItems.filter((item) =>
+      item.roles.includes(this.userRole)
+    );
+  }
 
+  toggleMobileMenu() {
+    this.mobileMenuOpen = !this.mobileMenuOpen;
+  }
 
   toggleDropdown(): void {
     this.dropdownOpen = !this.dropdownOpen;
@@ -57,27 +74,37 @@ toggleMobileMenu() {
     this.isCartOpen = !this.isCartOpen;
   }
 
-@HostListener('document:click', ['$event'])
-closeDropdownOnClickOutside(event: Event): void {
-  const target = event.target as HTMLElement;
+  @HostListener('document:click', ['$event'])
+  closeDropdownOnClickOutside(event: Event): void {
+    const target = event.target as HTMLElement;
 
-  // Dropdown usuario
-  if (this.dropdownOpen && !target.closest('.user-dropdown') && !target.closest('.user-toggle-button')) {
-    this.dropdownOpen = false;
-  }
+    // Dropdown usuario
+    if (
+      this.dropdownOpen &&
+      !target.closest('.user-dropdown') &&
+      !target.closest('.user-toggle-button')
+    ) {
+      this.dropdownOpen = false;
+    }
 
-  // Dropdown carrito
-  if (this.isCartOpen && !target.closest('.cart-dropdown') && !target.closest('.cart-toggle-button')) {
-    this.isCartOpen = false;
-  }
+    // Dropdown carrito
+    if (
+      this.isCartOpen &&
+      !target.closest('.cart-dropdown') &&
+      !target.closest('.cart-toggle-button')
+    ) {
+      this.isCartOpen = false;
+    }
 
     // Menú hamburguesa móvil
-  if (this.mobileMenuOpen && !target.closest('.mobile-menu') && !target.closest('.hamburger')) {
-    this.mobileMenuOpen = false;
+    if (
+      this.mobileMenuOpen &&
+      !target.closest('.mobile-menu') &&
+      !target.closest('.hamburger')
+    ) {
+      this.mobileMenuOpen = false;
+    }
   }
- 
-}
-
 
   logout(): void {
     this.authService.logout();

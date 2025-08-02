@@ -14,28 +14,26 @@ import { loginResponse } from '../../models/loginResponseModel';
 export class AuthService {
   private apiUrl = 'https://distinzionejoyas.com/api/auth';
   private jwtHelper = new JwtHelperService();
-
-  private userSubject = new BehaviorSubject<any>(null);
-  user$ = this.userSubject.asObservable();
-
-  private authStatus = new BehaviorSubject<boolean>(false);
-  authStatus$ = this.authStatus.asObservable();
-
   constructor(
     @Inject(PLATFORM_ID) private platformId: Object,
     private http: HttpClient
   ) {
     if (this.isBrowser()) {
-      const storedUser = localStorage.getItem('user');
-      const token = localStorage.getItem('token');
-
-      if (storedUser) {
-        this.userSubject.next(JSON.parse(storedUser));
-      }
-
-      this.authStatus.next(!!token);
+         const storedUser = localStorage.getItem('user');
+  if (storedUser) {
+    this.userSubject.next(JSON.parse(storedUser)); 
+  }
     }
   }
+    private userSubject = new BehaviorSubject<any>(null);
+  user$ = this.userSubject.asObservable();
+
+   private authStatus = new BehaviorSubject<boolean>(
+  typeof window !== 'undefined' && !!localStorage.getItem('token')
+);
+  authStatus$ = this.authStatus.asObservable();
+
+
 
   registerUser(userData: Register): Observable<Register> {
     return this.http.post<Register>(`${this.apiUrl}/register`, userData);
@@ -63,6 +61,8 @@ export class AuthService {
         })
       );
   }
+
+ 
 
   logout(): void {
     if (this.isBrowser()) {

@@ -3,6 +3,7 @@ import { HeaderComponent } from './core/header/header.component';
 import { FooterComponent } from './core/footer/footer.component';
 import { ContentComponent } from './content/content.component';
 import { WhatsappIconComponent } from './shared/whatsapp-icon/whatsapp-icon.component';
+import { AuthService } from './services/auth/auth.service';
 
 
 @Component({
@@ -14,4 +15,9 @@ import { WhatsappIconComponent } from './shared/whatsapp-icon/whatsapp-icon.comp
 })
 export class AppComponent {
   title = 'front';
+
+
+constructor(private authService: AuthService) {}
+
+
 }

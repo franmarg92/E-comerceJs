@@ -18,6 +18,7 @@
       <li><a routerLink="/shop">Shop</a></li>
       <li><a routerLink="/about-us">Nosotros</a></li>
       <li><a routerLink="/contact">Contacto</a></li>
+      
     </ul>
 
     <div class="nav-actions">
@@ -32,21 +33,25 @@
         <app-cartdropdown (closeDropdown)="toggleCartDropdown()" />
       </div>
 
-      <div
-        *ngIf="isAuthenticated"
-        class="user-dropdown"
-        (click)="toggleDropdown()"
-      >
-        <div class="user-toggle">
-          <span class="user-name">{{ user?.name }}</span>
-          <i class="fa-solid fa-chevron-down"></i>
-        </div>
+    <!-- Dropdown de usuario solo si está autenticado -->
+<div *ngIf="isAuthenticated" class="user-dropdown" (click)="toggleDropdown()">
+  <div class="user-toggle">
+    <span class="user-name">{{ user?.name }}</span>
+    <i class="fa-solid fa-chevron-down"></i>
+  </div>
 
-        <ul class="dropdown-menu" *ngIf="dropdownOpen">
-          <li><a routerLink="/dashboard">Dashboard</a></li>
-          <li><a (click)="logout()">Cerrar sesión</a></li>
-        </ul>
-      </div>
+  <ul class="dropdown-menu" *ngIf="dropdownOpen">
+    
+    
+
+    <!-- Menú dinámico por roles -->
+    <li *ngFor="let item of filteredMenuItems">
+      <a *ngIf="item.path" [routerLink]="item.path">{{ item.label }}</a>
+      <a *ngIf="item.action === 'logout'" (click)="logout()">{{ item.label }}</a>
+    </li>
+  </ul>
+</div>
+
 
       <!-- Usuario invitado -->
       <a *ngIf="!isAuthenticated" routerLink="/account" class="action">
