@@ -6,9 +6,10 @@ import { WhatsappIconComponent } from './shared/whatsapp-icon/whatsapp-icon.comp
 import { AuthService } from './services/auth/auth.service';
 
 
+
 @Component({
   selector: 'app-root',
-  standalone: true,
+  standalone:true,
   imports: [FooterComponent, HeaderComponent, ContentComponent, WhatsappIconComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'

@@ -3,10 +3,10 @@ import {
   HostListener,
   Inject,
   PLATFORM_ID,
-  ChangeDetectorRef,
+  
 } from '@angular/core';
-import { CommonModule, isPlatformBrowser } from '@angular/common';
-import { RouterModule, Router } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import {  Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../services/auth/auth.service';
 import { CartService } from '../../services/cart/cart.service';
 import { CartdropdownComponent } from '../../shared/cartdropdown/cartdropdown.component';
@@ -16,7 +16,7 @@ import Swal from 'sweetalert2';
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [CommonModule, RouterModule, CartdropdownComponent],
+  imports: [CommonModule,RouterModule, CartdropdownComponent],
   templateUrl: './header.component.html',
   styleUrl: './header.component.css',
 })
@@ -38,16 +38,14 @@ export class HeaderComponent {
   filteredMenuItems: any[] = [];
 
   constructor(
-    private cdr: ChangeDetectorRef,
+    private router: Router,
     private authService: AuthService,
     public cartService: CartService,
-    private router: Router,
+    
     @Inject(PLATFORM_ID) private platformId: Object
   ) {}
 
   ngOnInit(): void {
- 
-
     this.updateMenuItems();
   }
 
