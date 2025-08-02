@@ -7,7 +7,7 @@ import { WhatsappIconComponent } from './shared/whatsapp-icon/whatsapp-icon.comp
 
 @Component({
   selector: 'app-root',
-  standalone: true,
+  standalone:true,
   imports: [FooterComponent, HeaderComponent, ContentComponent, WhatsappIconComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
