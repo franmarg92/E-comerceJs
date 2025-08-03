@@ -11,10 +11,10 @@ const createCategory = async (categoryData) => {
     }
 
     // Validar que el nombre no esté duplicado
-    const exists = await Category.findOne({ name });
-    if (exists) {
-      throw new Error("Ya existe una categoría con ese nombre");
-    }
+    //const exists = await Category.findOne({ name });
+    //if (exists) {
+     // throw new Error("Ya existe una categoría con ese nombre");
+    //}
 
     // Si tiene un parent, validar que sea un ObjectId válido y exista
     if (parent) {

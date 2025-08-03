@@ -94,7 +94,8 @@ const editProduct = async (productId, productData) => {
   ) {
     filteredData.image = [filteredData.image.trim()];
   }
-
+console.log("🟡 Data original recibida:", productData);
+  console.log("🟢 Data filtrada para actualizar:", filteredData);
   const updatedProduct = await Product.findByIdAndUpdate(
     productId,
     filteredData,
