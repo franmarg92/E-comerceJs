@@ -1,13 +1,14 @@
 .hero {
-    background: url('../../../../public/slider_joyeria2.jpg') no-repeat center center/cover;
-    color: white;
-    padding: 80px 20px;
-     background-size: cover; /* La imagen cubrirá todo el ancho y largo */
-    background-position: center;
+  background: url("../../../../public/slider_joyeria2.jpg") no-repeat center
+    center/cover;
+  color: white;
+  padding: 80px 20px;
+  background-size: cover;
+  background-position: center;
 }
 
 .home-container {
-  font-family: 'Playfair Display', serif;
+  font-family: "Playfair Display", serif;
   color: #333;
   padding-bottom: 40px;
 }
@@ -33,18 +34,12 @@
   transform: translate(-50%, -50%);
   color: #000;
   text-align: center;
-  
-  
 }
 
 .hero-overlay h1 {
+  font-family: "Playfair Display", serif;
   font-size: 42px;
   margin-bottom: 12px;
-  text-transform: uppercase;
-}
-
-.hero-overlay p {
-  font-size: 18px;
 }
 
 /* Cards Section */
@@ -62,7 +57,7 @@
   border-left: 6px solid #d4af37;
   padding: 24px;
   max-width: 320px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
   transition: transform 0.3s ease;
 }
 
@@ -98,13 +93,13 @@
   font-weight: 600;
   margin-bottom: 48px;
   color: #222;
-  font-family: 'Playfair Display', serif;
+  font-family: "Playfair Display", serif;
   position: relative;
   display: inline-block;
 }
 
 .info-title::after {
-  content: '';
+  content: "";
   position: absolute;
   bottom: -10px;
   left: 50%;
@@ -123,13 +118,13 @@
 .featured-products h2 {
   font-size: 28px;
   margin-bottom: 32px;
-  font-family: 'Playfair Display', serif;
+  font-family: "Playfair Display", serif;
   color: #222;
   position: relative;
 }
 
 .featured-products h2::after {
-  content: '';
+  content: "";
   position: absolute;
   left: 50%;
   bottom: -10px;
@@ -152,7 +147,7 @@
   border-left: 6px solid #d4af37;
   padding: 20px;
   width: 280px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
   transition: transform 0.3s ease;
   text-align: left;
 }
@@ -186,12 +181,11 @@
   font-size: 16px;
 }
 
-
 .payment-methods {
   padding: 64px 32px 48px;
   text-align: center;
   background-color: #f8f8f8;
-  font-family: 'Playfair Display', serif;
+  font-family: "Playfair Display", serif;
 }
 
 .payment-methods h2 {
@@ -202,7 +196,7 @@
 }
 
 .payment-methods h2::after {
-  content: '';
+  content: "";
   position: absolute;
   left: 50%;
   bottom: -10px;
