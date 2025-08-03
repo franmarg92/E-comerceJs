@@ -225,6 +225,7 @@ export class ProductEditorComponent {
   formData.append('description', raw.description || '');
   formData.append('stock', raw.stock?.toString() || '0');
   formData.append('isActive', raw.isActive ? 'true' : 'false');
+  formData.append('featured', raw.featured ? 'true' : 'false');
 
   // Categorías
   const categories = Array.isArray(raw.categories) ? raw.categories : [raw.categories];
@@ -242,7 +243,7 @@ export class ProductEditorComponent {
     formData.append('image', raw.image);
   }
 
-  
+  console.log(formData)
 
   const request$ = this.isEditMode && this.initialData?._id
     ? this.productService.editProduct(this.initialData._id, formData)
