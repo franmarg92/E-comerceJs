@@ -64,7 +64,7 @@ const getAllProducts = async () => {
   }
 };
 
-const editProduct = async (productId, productData) => {
+const sanitizeProductUpdate = (data) => {
   const allowedFields = [
     "articleCode",
     "name",
@@ -79,23 +79,47 @@ const editProduct = async (productId, productData) => {
     "isActive",
   ];
 
-  const filteredData = {};
+  const sanitized = {};
+
+  // Asegurar que el objeto tenga prototipo normal
+  const source = { ...data };
 
   for (const key of allowedFields) {
-    if (productData.hasOwnProperty(key)) {
-      filteredData[key] = productData[key];
+    if (Object.prototype.hasOwnProperty.call(source, key)) {
+      sanitized[key] = source[key];
     }
   }
 
-  // Validar imagen si viene como string y convertirla a array (por consistencia)
-  if (
-    typeof filteredData.image === "string" &&
-    filteredData.image.trim() !== ""
-  ) {
-    filteredData.image = [filteredData.image.trim()];
+  // Imagen: limpieza y normalización
+  if (sanitized.image) {
+    if (Array.isArray(sanitized.image)) {
+      sanitized.image = sanitized.image.map(img => img.trim()).filter(Boolean);
+    } else if (typeof sanitized.image === "string" && sanitized.image.trim() !== "") {
+      sanitized.image = [sanitized.image.trim()];
+    } else {
+      delete sanitized.image;
+    }
   }
-console.log("🟡 Data original recibida:", productData);
+
+  // Validación de tipos simples
+  if (sanitized.price && isNaN(Number(sanitized.price))) {
+    throw new Error("El precio debe ser un número válido");
+  }
+
+  if (sanitized.stock && isNaN(Number(sanitized.stock))) {
+    throw new Error("El stock debe ser un número válido");
+  }
+
+  return sanitized;
+};
+
+
+const editProduct = async (productId, productData) => {
+  const filteredData = sanitizeProductUpdate(productData);
+
+  console.log("🟡 Data original recibida:", productData);
   console.log("🟢 Data filtrada para actualizar:", filteredData);
+
   const updatedProduct = await Product.findByIdAndUpdate(
     productId,
     filteredData,
@@ -105,10 +129,13 @@ console.log("🟡 Data original recibida:", productData);
     }
   );
 
-  if (!updatedProduct) throw new Error("Producto no encontrado");
+  if (!updatedProduct) {
+    throw new Error("Producto no encontrado");
+  }
 
   return updatedProduct;
 };
+
 
 
 const getAllProductsById = async (_id) => {

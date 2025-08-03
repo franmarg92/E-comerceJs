@@ -6,24 +6,24 @@ const createProductController = async (req, res) => {
   try {
     const productData = req.body.product || req.body;
 
-    console.log('📦 Datos recibidos del frontend:');
+    console.log("📦 Datos recibidos del frontend:");
     console.dir(productData, { depth: null });
 
     if (req.file) {
       const imagenUrl = await procesarImagen(req.file, req);
       productData.image = [imagenUrl];
 
-      console.log('🖼️ Imagen procesada:', imagenUrl);
+      console.log("🖼️ Imagen procesada:", imagenUrl);
     }
 
     const result = await productService.createProduct(productData);
 
     if (!result.success) {
-      console.warn('⚠️ Error en creación de producto:', result.error);
+      console.warn("⚠️ Error en creación de producto:", result.error);
       return res.status(400).json({ error: result.error });
     }
 
-    console.log('✅ Producto creado:', result.product);
+    console.log("✅ Producto creado:", result.product);
 
     return res.status(201).json({
       message: "Producto creado correctamente",
@@ -37,8 +37,6 @@ const createProductController = async (req, res) => {
     return res.status(500).json({ error: "Error interno del servidor" });
   }
 };
-
-
 
 const getAllProductsController = async (req, res) => {
   try {
@@ -61,9 +59,10 @@ const getAllProductsController = async (req, res) => {
 const editProductController = async (req, res) => {
   try {
     const { id } = req.params;
-    const productData = req.body 
+    const productData = req.body;
+    console.log("BODY:", req.body);
+    console.log("FILE:", req.file);
 
-    
     if (req.file) {
       const imagenUrl = await procesarImagen(req.file, req);
       productData.image = [imagenUrl];
