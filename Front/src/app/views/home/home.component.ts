@@ -13,19 +13,25 @@ import { CardsComponent } from '../../shared/cards/cards.component';
 })
 export class HomeComponent {
   featuredProducts: Product[] = [];
-
+  portfolioProducts: Product[] = [];
   constructor(private productService: ProductService) {}
 
   ngOnInit() {
     this.loadFeaturedProducts();
+    this.loadPortfolioProducts();
+  }
+
+  private loadPortfolioProducts(): void {
+    this.productService.getPortfolioProducts().subscribe((res: Product[]) => {
+      this.portfolioProducts = res;
+    });
+    console.log(this.portfolioProducts);
   }
 
   private loadFeaturedProducts(): void {
-   this.productService
-  .getFeaturedProducts()
-  .subscribe((res: Product[]) => {
-    this.featuredProducts = res;
-  });
-console.log(this.featuredProducts)
+    this.productService.getFeaturedProducts().subscribe((res: Product[]) => {
+      this.featuredProducts = res;
+    });
+    console.log(this.featuredProducts);
   }
 }

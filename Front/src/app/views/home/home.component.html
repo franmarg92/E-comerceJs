@@ -36,6 +36,18 @@
     </div>
   </section>
 
+  <section class="featured-products">
+  <h2>Diseños Exclusivos</h2>
+  <div class="product-grid" *ngIf="portfolioProducts.length > 0">
+  <app-cards
+    *ngFor="let product of portfolioProducts"
+    [product]="product"
+  ></app-cards>
+
+  
+</div>
+</section>
+
 <section class="featured-products">
   <h2>Destacados</h2>
   <div class="product-grid" *ngIf="featuredProducts.length > 0">
