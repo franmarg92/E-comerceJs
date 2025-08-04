@@ -112,3 +112,14 @@
 .add-btn:hover {
   background-color: #b4972f;
 }
+.portfolio-description {
+  text-align: center;
+  font-size: 1.1rem;
+  font-style: italic;
+  color: #444;
+  padding: 1rem 0;
+  margin: 0 auto;
+  max-width: 80%;
+  border-top: 1px solid #ddd;
+  border-bottom: 1px solid #ddd;
+}
