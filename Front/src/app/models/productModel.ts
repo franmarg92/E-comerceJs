@@ -11,6 +11,7 @@ export interface Product {
   description?: string;
   image: string[]; // URLs de imágenes
   price: number;
+  cost?:number;
   stock?: number;
   categories?: string[]; // IDs de categoría
   subcategories?: string[];
@@ -29,6 +30,7 @@ export interface ProductUpdatePayload {
   description?: string;
   image?: string[];
   price?: number;
+  cost?:number;
   stock?: number;
   isActive?: boolean;
   featured?: boolean;

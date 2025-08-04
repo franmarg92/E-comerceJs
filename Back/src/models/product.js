@@ -15,7 +15,7 @@ const productSchema = new mongoose.Schema(
       type: String,
       required: false,
       trim: true,
-      unique: false, 
+      unique: false,
     },
     name: { type: String },
     description: { type: String },
@@ -29,6 +29,7 @@ const productSchema = new mongoose.Schema(
       },
     ],
     subcategories: [{ type: mongoose.Schema.Types.ObjectId, ref: "Category" }],
+    cost: { type: Number, required: false },
     variants: [variantSchema],
     featured: {
       type: Boolean,

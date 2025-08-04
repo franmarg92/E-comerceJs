@@ -56,6 +56,10 @@ export class ProductEditorComponent {
         this.initialData?.price || 0,
         [Validators.required, Validators.min(0)],
       ],
+       cost: [
+        this.initialData?.price || 0,
+        [ Validators.min(0)],
+      ],
       description: [this.initialData?.description || ''],
       image: [this.initialData?.image?.join(', ') || '', Validators.required],
       categories: [
@@ -223,6 +227,7 @@ export class ProductEditorComponent {
   formData.append('articleCode', raw.articleCode|| '');
   formData.append('name', raw.name || '');
   formData.append('price', raw.price?.toString() || '0');
+  formData.append('cost', raw.cost?.toString() || '0');
   formData.append('description', raw.description || '');
   formData.append('stock', raw.stock?.toString() || '0');
   formData.append('isActive', raw.isActive ? 'true' : 'false');
@@ -266,6 +271,7 @@ export class ProductEditorComponent {
           name: '',
           
           price: 0,
+          cost:0,
           description: '',
           image: null,
           categories: '',

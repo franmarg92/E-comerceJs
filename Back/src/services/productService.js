@@ -8,6 +8,7 @@ const createProduct = async (productData) => {
       description,
       image,
       price,
+      cost,
       stock,
       categories,
       subcategories,
@@ -39,9 +40,10 @@ const createProduct = async (productData) => {
       description,
       image: imageArray,
       price,
+      cost,
       stock: stock || 0,
-      categories:  categories ,
-      subcategories:  subcategories ,
+      categories: categories,
+      subcategories: subcategories,
       ...(variantList ? { variants: variantList } : {}),
       isActive: isActive !== undefined ? isActive : true,
     });
@@ -71,6 +73,7 @@ const sanitizeProductUpdate = (data) => {
     "description",
     "image",
     "price",
+    "cost",
     "stock",
     "categories",
     "subcategories",
@@ -93,8 +96,13 @@ const sanitizeProductUpdate = (data) => {
   // Imagen: limpieza y normalización
   if (sanitized.image) {
     if (Array.isArray(sanitized.image)) {
-      sanitized.image = sanitized.image.map(img => img.trim()).filter(Boolean);
-    } else if (typeof sanitized.image === "string" && sanitized.image.trim() !== "") {
+      sanitized.image = sanitized.image
+        .map((img) => img.trim())
+        .filter(Boolean);
+    } else if (
+      typeof sanitized.image === "string" &&
+      sanitized.image.trim() !== ""
+    ) {
       sanitized.image = [sanitized.image.trim()];
     } else {
       delete sanitized.image;
@@ -112,7 +120,6 @@ const sanitizeProductUpdate = (data) => {
 
   return sanitized;
 };
-
 
 const editProduct = async (productId, productData) => {
   const filteredData = sanitizeProductUpdate(productData);
@@ -135,8 +142,6 @@ const editProduct = async (productId, productData) => {
 
   return updatedProduct;
 };
-
-
 
 const getAllProductsById = async (_id) => {
   try {
