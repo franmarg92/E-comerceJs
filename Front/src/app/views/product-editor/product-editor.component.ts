@@ -51,7 +51,7 @@ export class ProductEditorComponent {
 
     this.productForm = this.fb.group({
       name: [this.initialData?.name || '', Validators.required],
-      articleCode: [''],
+      articleCode: [this.initialData?.articleCode || '', Validators.required],
       price: [
         this.initialData?.price || 0,
         [Validators.required, Validators.min(0)],
@@ -220,6 +220,7 @@ export class ProductEditorComponent {
   const formData = new FormData();
 
   // Campos simples
+  formData.append('articleCode', raw.articleCode|| '');
   formData.append('name', raw.name || '');
   formData.append('price', raw.price?.toString() || '0');
   formData.append('description', raw.description || '');
@@ -263,6 +264,7 @@ export class ProductEditorComponent {
       if (!this.isEditMode) {
         this.productForm.reset({
           name: '',
+          
           price: 0,
           description: '',
           image: null,
