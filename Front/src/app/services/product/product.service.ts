@@ -31,4 +31,8 @@ export class ProductService {
   getFeaturedProducts(): Observable<Product[]> {
     return this.http.get<Product[]>(`${this.apiUrl}/products/featured`);
   }
+
+    getPortfolioProducts(): Observable<Product[]> {
+    return this.http.get<Product[]>(`${this.apiUrl}/products/portfolio`);
+  }
 }

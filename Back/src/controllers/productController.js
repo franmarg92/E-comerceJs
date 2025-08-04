@@ -110,10 +110,23 @@ const getFeaturedProductController = async (req, res) => {
   }
 };
 
+const getIsPorfolioController = async (req, res) => {
+  try {
+    const result = await productService.getPortfolio();
+    res.status(200).json(result.portfolioProducts);
+  } catch (err) {
+    console.error("Error al obtener destacados:", err.message);
+    res
+      .status(500)
+      .json({ error: "No se pudieron cargar los productos destacados." });
+  }
+};
+
 module.exports = {
   createProductController,
   getAllProductsController,
   editProductController,
   getProductByIdController,
   getFeaturedProductController,
+  getIsPorfolioController
 };

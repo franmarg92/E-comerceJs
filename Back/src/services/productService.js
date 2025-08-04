@@ -14,6 +14,8 @@ const createProduct = async (productData) => {
       subcategories,
       variants,
       isActive,
+      isPortfolio,
+      featured
     } = productData;
 
     // Limpiar imágenes
@@ -46,6 +48,9 @@ const createProduct = async (productData) => {
       subcategories: subcategories,
       ...(variantList ? { variants: variantList } : {}),
       isActive: isActive !== undefined ? isActive : true,
+      isPortfolio: isPortfolio !== undefined ? isActive : true,
+      featured: featured !== undefined ? isActive : true,
+
     });
 
     const savedProduct = await newProduct.save();
@@ -80,6 +85,7 @@ const sanitizeProductUpdate = (data) => {
     "variants",
     "featured",
     "isActive",
+    "isPortfolio"
   ];
 
   const sanitized = {};
@@ -164,10 +170,23 @@ const getFeaturedProduct = async () => {
   }
 };
 
+const getPortfolio = async () => {
+  try {
+    const portfolioProducts = await Product.find({
+      isPortfolio: true,
+      isActive: true,
+    });
+    return { success: true, portfolioProducts };
+  } catch (error) {
+    return { success: false, error: error.message };
+  }
+};
+
 module.exports = {
   createProduct,
   getAllProducts,
   editProduct,
   getAllProductsById,
   getFeaturedProduct,
+  getPortfolio
 };

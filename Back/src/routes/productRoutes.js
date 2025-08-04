@@ -18,5 +18,8 @@ router.get(
   "/products/featured",
   productController.getFeaturedProductController
 );
-
+router.get(
+  "/products/portfolio",
+  productController.getIsPorfolioController
+);
 module.exports = router;

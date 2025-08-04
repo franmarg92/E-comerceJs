@@ -18,6 +18,7 @@ export interface Product {
   variants?: Variant[];  // Combinaciones de color/talle/stock
   isActive?: boolean;
   featured: boolean;
+  isPortfolio:boolean;
   createdAt?: Date;
   updatedAt?: Date;
 

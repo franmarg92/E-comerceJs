@@ -72,6 +72,7 @@ export class ProductEditorComponent {
       subcategories: [this.initialData?.subcategories || [], []],
       isActive: [this.initialData?.isActive ?? true],
       featured: [this.initialData?.featured ?? false],
+      isPortfolio: [this.initialData?.isPortfolio ?? false],
       stock: [
         this.initialData?.stock || 0,
         [Validators.required, Validators.min(0)],
@@ -238,6 +239,7 @@ export class ProductEditorComponent {
   formData.append('stock', raw.stock?.toString() || '0');
   formData.append('isActive', raw.isActive ? 'true' : 'false');
   formData.append('featured', raw.featured ? 'true' : 'false');
+  formData.append('isPortfolio', raw.isPortfolio ? 'true' : 'false');
 
   // Categorías
   const categories = Array.isArray(raw.categories) ? raw.categories : [raw.categories];
