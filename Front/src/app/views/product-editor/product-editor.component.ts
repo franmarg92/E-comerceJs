@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   FormGroup,
@@ -23,6 +23,9 @@ import Swal from 'sweetalert2';
   styleUrl: './product-editor.component.css',
 })
 export class ProductEditorComponent {
+  @ViewChild('imageFileInput')
+  imageInputRef!: ElementRef<HTMLInputElement>;
+
   @Input() initialData?: Product;
   productForm!: FormGroup;
   isEditMode = false;
@@ -77,6 +80,9 @@ export class ProductEditorComponent {
 
     this.fetchProducts();
   }
+
+  
+
 
   get variantControls(): FormArray {
     return this.productForm.get('variants') as FormArray;
@@ -278,7 +284,12 @@ export class ProductEditorComponent {
           subcategories: '',
           isActive: true,
           stock: 0,
+
+          
         });
+          if (this.imageInputRef?.nativeElement) {
+    this.imageInputRef.nativeElement.value = '';
+  }
       }
     },
     error: (err) => {

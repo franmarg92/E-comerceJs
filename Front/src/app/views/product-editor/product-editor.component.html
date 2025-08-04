@@ -163,20 +163,20 @@
     </div>
   </div>
 
-  <!-- Checkboxes de subcategorías -->
-  <div class="mt-3" *ngIf="subcategoryList.length">
-    <label class="form-label">Subcategorías disponibles</label>
-    <div class="form-check" *ngFor="let sub of subcategoryList">
-      <input
-        type="checkbox"
-        class="form-check-input"
-        [value]="sub._id"
-        (change)="sub._id && onSubcategoryToggle(sub._id, $event)"
-        [checked]="productForm.get('subcategories')?.value.includes(sub._id)"
-      />
-      <label class="form-check-label">{{ sub.name }}</label>
-    </div>
-  </div>
+  <!-- Selector de subcategorías -->
+<div class="mt-3" *ngIf="subcategoryList.length">
+  <label class="form-label">Subcategoría</label>
+  <select
+    formControlName="subcategories"
+    class="form-select elegant-input"
+  >
+    <option [value]="null" disabled selected>Elegí una subcategoría</option>
+    <option *ngFor="let sub of subcategoryList" [value]="sub._id">
+      {{ sub.name }}
+    </option>
+  </select>
+</div>
+
 
   <!-- Chips visuales -->
   <div class="mt-2">
