@@ -58,47 +58,49 @@
       </select>
     </div>
     <div class="product-grid">
-      <div
-        class="product-card"
-        *ngFor="let product of filteredProducts"
-        [class.out-of-stock]="product.stock === 0"
-      >
-        <img
-          *ngIf="product.image?.length"
-          [src]="product.image[0]"
-          alt="{{ product.name }}"
-        />
+      <!-- Productos estándar (no portfolio) -->
+      <ng-container *ngFor="let product of filteredProducts">
+        <div
+          class="product-card"
+          *ngIf="!product.isPortfolio"
+          [class.out-of-stock]="product.stock === 0"
+        >
+          <img
+            *ngIf="product.image?.length"
+            [src]="product.image[0]"
+            alt="{{ product.name }}"
+          />
 
-        <hr class="gold-divider" />
-        <h4>{{ product.name }}</h4>
-        <p class="price">{{ product.price | currency : "$" }}</p>
-        <!-- 💎 Stock visual -->
-        <p class="stock-indicator">Stock: {{ product.stock }}</p>
+          <hr class="gold-divider" />
+          <h4>{{ product.name }}</h4>
+          <p class="price">{{ product.price | currency : "$" }}</p>
+          <p class="stock-indicator">Stock: {{ product.stock }}</p>
 
-        <div class="product-buttons">
-          <button (click)="goToProductDetail(product._id)">Ver</button>
+          <div class="product-buttons">
+            <button (click)="goToProductDetail(product._id)">Ver</button>
 
-          <!-- Usuario logueado -->
-          <button
-            class="add-btn"
-            *ngIf="isAuthenticated && product._id"
-            (click)="addToCart(product._id)"
-          >
-            Comprar
-          </button>
+            <button
+              class="add-btn"
+              *ngIf="isAuthenticated && product._id"
+              (click)="addToCart(product._id)"
+            >
+              Comprar
+            </button>
 
-          <!-- Usuario invitado -->
-          <button
-            class="add-btn guest"
-            *ngIf="!isAuthenticated && product._id"
-            (click)="addToAnonymousCart(product._id)"
-          >
-            Comprar
-          </button>
+            <button
+              class="add-btn guest"
+              *ngIf="!isAuthenticated && product._id"
+              (click)="addToAnonymousCart(product._id)"
+            >
+              Comprar
+            </button>
+          </div>
+
+          <small *ngIf="product.stock === 0">Sin stock</small>
         </div>
+      </ng-container>
 
-        <small *ngIf="product.stock === 0">Sin stock</small>
-      </div>
+     
     </div>
 
     <!-- 🧭 Fallback visual -->
