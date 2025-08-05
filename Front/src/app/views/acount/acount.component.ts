@@ -55,7 +55,7 @@ export class AcountComponent {
             lastName: ['', Validators.required],
             dni: ['', Validators.required],
             date_of_birth: ['', Validators.required],
-            phoneNumber:['', Validators.required]
+            phoneNumber: ['', Validators.required],
           }),
     });
   }
@@ -74,7 +74,7 @@ export class AcountComponent {
             this.userRole = res.user.role;
             localStorage.setItem('role', this.userRole);
           }
-
+          this.authService.setAuthState(res.user);
           const user = res.user;
           const role = user?.role;
           const token = res.token;

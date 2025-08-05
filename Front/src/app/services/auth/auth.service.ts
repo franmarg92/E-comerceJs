@@ -16,11 +16,16 @@ export class AuthService {
   private apiUrl = 'https://distinzionejoyas.com/api/auth';
   private jwtHelper = new JwtHelperService();
 
- private userSubject = new BehaviorSubject<User | null>(null);
-public user$ = this.userSubject.asObservable();
+ private authStatusSubject = new BehaviorSubject<boolean>(false);
+authStatus$ = this.authStatusSubject.asObservable();
 
-  private authStatus = new BehaviorSubject<boolean>(this.isAuthenticated());
-  authStatus$ = this.authStatus.asObservable();
+private userSubject = new BehaviorSubject<User | null>(null);
+user$ = this.userSubject.asObservable();
+
+setAuthState(user: User): void {
+this.userSubject.next(user);
+this.authStatusSubject.next(true);
+}
 
   constructor(
     @Inject(PLATFORM_ID) private platformId: Object,
@@ -34,7 +39,7 @@ public user$ = this.userSubject.asObservable();
         this.userSubject.next(JSON.parse(storedUser));
       }
 
-      this.authStatus.next(!!token);
+      this.authStatusSubject.next(!!token);
     }
   }
 
@@ -55,7 +60,7 @@ public user$ = this.userSubject.asObservable();
             localStorage.setItem('role', response.user.role);
 
             this.userSubject.next(response.user);
-            this.authStatus.next(true);
+            this.authStatusSubject.next(true);
           }
         }),
         catchError((error) => {
@@ -73,7 +78,7 @@ public user$ = this.userSubject.asObservable();
     }
 
     this.userSubject.next(null);
-    this.authStatus.next(false);
+    this.authStatusSubject.next(false);
   }
 
   isAuthenticated(): boolean {

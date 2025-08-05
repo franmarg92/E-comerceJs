@@ -5,6 +5,8 @@ import { ContentComponent } from './content/content.component';
 import { WhatsappIconComponent } from './shared/whatsapp-icon/whatsapp-icon.component';
 
 
+
+
 @Component({
   selector: 'app-root',
   standalone:true,

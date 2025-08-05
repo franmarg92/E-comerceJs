@@ -43,21 +43,24 @@ export class HeaderComponent {
 ngOnInit(): void {
   console.log('[Header] ngOnInit');
 
+  // Primero nos suscribimos al estado de autenticación
   this.authService.authStatus$.subscribe((status) => {
     console.log('[Header] authStatus$', status);
     this.isAuthenticated = status;
     this.cdr.detectChanges();
   });
 
-  this.authService.user$.subscribe(user => {
+  // Luego nos suscribimos al usuario
+  this.authService.user$.subscribe((user) => {
     console.log('[Header] user$', user);
     this.user = user;
-    if (this.isAuthenticated && user?._id) {
-      this.cartService.loadCart(user._id);
+
+    if (user?._id) {
+      this.cartService.loadCart(user._id);  // cargar carrito solo si hay user con ID
     }
 
-    this.userRole = this.authService.getUserRole()?.toLowerCase() || '';
-    this.cdr.detectChanges(); 
+    this.userRole = user?.role?.toLowerCase() || '';
+    this.cdr.detectChanges();
   });
 }
 
