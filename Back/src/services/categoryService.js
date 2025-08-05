@@ -46,7 +46,7 @@ const createCategory = async (categoryData) => {
 
 const getAllCategories = async () => {
   try {
-    const categories = await Category.find();
+    const categories = await Category.find({ parent: { $in: [null, undefined] } });
     return { success: true, categories };
   } catch (error) {
     return { success: false, error: error.message };
