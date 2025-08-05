@@ -131,28 +131,8 @@ export class ShopComponent {
     this.cartService.addToCartProduct(productId, this.currentUserId);
   }
 
-  addToAnonymousCart(productId: string): void {
-    const raw = localStorage.getItem('anonymousCart');
-    const cart: { productId: string; quantity: number }[] = raw
-      ? JSON.parse(raw)
-      : [];
-
-    const index = cart.findIndex((item) => item.productId === productId);
-
-    if (index > -1) {
-      cart[index].quantity += 1;
-    } else {
-      cart.push({ productId, quantity: 1 });
-    }
-
-    localStorage.setItem('anonymousCart', JSON.stringify(cart));
-
-    Swal.fire({
-      icon: 'success',
-      title: 'Producto guardado',
-      text: 'Se ha agregado como invitado.',
-      confirmButtonColor: '#d4af37',
-    });
+ addToCartAnonimous(productId: string): void {
+    this.cartService.addToAnonymousCart(productId);
   }
 
   goToProductDetail(productId?: string): void {

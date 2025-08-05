@@ -55,9 +55,11 @@ ngOnInit(): void {
     console.log('[Header] user$', user);
     this.user = user;
 
-    if (user?._id) {
-      this.cartService.loadCart(user._id);  // cargar carrito solo si hay user con ID
-    }
+   if (user?._id) {
+  this.cartService.loadCart(user._id);  // carrito del usuario logueado
+} else {
+  this.cartService.loadCart(); // carrito del visitante
+}
 
     this.userRole = user?.role?.toLowerCase() || '';
     this.cdr.detectChanges();
