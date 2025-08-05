@@ -90,7 +90,7 @@ export class AcountComponent {
           if (role === 'admin') {
             this.router.navigate(['/dashboard']);
           } else {
-            this.router.navigate(['/shop']);
+            this.router.navigate(['/dashboard/profile']);
           }
         },
         error: (err) => {
