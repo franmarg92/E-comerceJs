@@ -25,13 +25,13 @@ export class HomeComponent {
     this.productService.getPortfolioProducts().subscribe((res: Product[]) => {
       this.portfolioProducts = res;
     });
-    console.log(this.portfolioProducts);
+    
   }
 
   private loadFeaturedProducts(): void {
     this.productService.getFeaturedProducts().subscribe((res: Product[]) => {
       this.featuredProducts = res;
     });
-    console.log(this.featuredProducts);
+    
   }
 }

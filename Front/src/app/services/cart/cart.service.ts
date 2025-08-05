@@ -313,7 +313,7 @@ export class CartService {
 
 getAnonymousCart(): CartItem[] {
   if (!this.isBrowser()) {
-    console.warn('🧭 SSR detectado: localStorage no disponible');
+    
     return [];
   }
 
