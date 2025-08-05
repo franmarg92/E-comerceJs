@@ -41,18 +41,18 @@ export class HeaderComponent {
   }
 
 ngOnInit(): void {
-  console.log('[Header] ngOnInit');
+  
 
   // Primero nos suscribimos al estado de autenticación
   this.authService.authStatus$.subscribe((status) => {
-    console.log('[Header] authStatus$', status);
+    
     this.isAuthenticated = status;
     this.cdr.detectChanges();
   });
 
   // Luego nos suscribimos al usuario
   this.authService.user$.subscribe((user) => {
-    console.log('[Header] user$', user);
+    
     this.user = user;
 
    if (user?._id) {
