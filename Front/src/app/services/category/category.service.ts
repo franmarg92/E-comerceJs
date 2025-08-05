@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { CategoryResponse } from '../../models/categoryResponse';
 import { Category } from '../../models/categoryModel';
+import { Subcategory } from '../../models/subcategoryModel';
 
 
 @Injectable({
@@ -26,7 +27,8 @@ export class CategoryService {
     return this.http.get<CategoryResponse[]>(`${this.apiUrl}/`);
   }
 
-  getSubcategories(parentId: string): Observable<any> {
-  return this.http.get(`${this.apiUrl}/${parentId}/subcategories`);
+  getSubcategories(parentId: string): Observable<{ success: boolean; subcategories: Subcategory[] }> {
+  return this.http.get<{ success: boolean; subcategories: Subcategory[] }>(`${this.apiUrl}/${parentId}/subcategories`);
 }
+
 }

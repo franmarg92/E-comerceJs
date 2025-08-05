@@ -116,10 +116,11 @@ export class ProductEditorComponent {
   }
 
   selectForEdit(product: Product): void {
-    this.initialData = product;
-    this.isEditMode = true;
-    this.productForm.patchValue(product);
-  }
+  this.initialData = product;
+  this.isEditMode = true;
+  this.productForm.patchValue(product);
+  this.onCategoryChange(); // 🔁 Actualiza subcategorías según categoría
+}
 
   createCategory(): void {
     if (!this.newCategoryName.trim()) return;
@@ -194,12 +195,34 @@ export class ProductEditorComponent {
     return found?.name || 'Subcategoría';
   }
 
-  onCategoryChange(): void {
-    const selectedCatId = this.productForm.get('categories')?.value;
-    this.subcategoryList = this.availableCategories.filter(
-      (cat) => cat.parent === selectedCatId
-    );
+onCategoryChange(): void {
+  const selectedCatId = this.productForm.get('categories')?.value;
+
+  if (!selectedCatId) {
+    this.subcategoryList = [];
+    return;
   }
+
+  this.categoryService.getSubcategories(selectedCatId).subscribe({
+    next: (res) => {
+      console.log('Subcategorías recibidas:', res.subcategories);
+      this.subcategoryList = Array.isArray(res.subcategories) ? res.subcategories : [];
+    },
+    error: (err) => {
+      console.error('❌ Error al cargar subcategorías:', err.message);
+      this.subcategoryList = [];
+      Swal.fire({
+        icon: 'error',
+        title: 'Error al cargar subcategorías',
+        text: err.message || 'No se pudieron obtener las subcategorías.',
+        confirmButtonColor: '#d4af37',
+      });
+    },
+  });
+}
+
+
+
 
   onSubcategoryToggle(subId: string, event: Event): void {
     const checked = (event.target as HTMLInputElement).checked;
