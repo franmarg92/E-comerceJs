@@ -59,60 +59,38 @@ export class OrderDetailComponent implements OnInit {
       isDefault: [false],
     });
 
-    this.loadUserAddresses();
+     // 🟡 Suscripción reactiva
+  this.addressService.addressesObservable$.subscribe(addresses => {
+    this.addressList = addresses;
+    if (!addresses.length) {
+      Swal.fire('📭 Sin direcciones', 'Podés agregar una para continuar.', 'info');
+    }
+  });
+
+  this.addressService.loadAddresses(this.userId);
   }
 
   // 🏠 Crear nueva dirección
-  onCreateAddress(): void {
-    const addressData = this.addressForm.value;
-    console.log(addressData);
-    this.addressService.createAddress(addressData).subscribe({
-      next: () => {
-        Swal.fire('📍 Dirección agregada', '', 'success');
-        this.addressForm.reset();
-      },
-      error: (err) =>
-        Swal.fire('❌ Error', err.message || 'No se pudo guardar', 'error'),
-    });
-  }
-  loadUserAddresses(): void {
-    if (!this.userId) {
-      console.warn('🛑 userId no definido');
-      Swal.fire(
-        '⚠️ Usuario no definido',
-        'No se puede cargar direcciones.',
-        'warning'
-      );
-      return;
-    }
+onCreateAddress(): void {
+  const addressData = this.addressForm.value;
 
-    console.log('📤 Solicitando direcciones para userId:', this.userId);
+  this.addressService.createAddress(addressData).subscribe({
+    next: (response) => {
+      const nuevaDireccion = response.address;
+      this.selectedAddressId = nuevaDireccion._id; // 👈 la seleccionás automáticamente
 
-    this.addressService.getAddresses(this.userId).subscribe({
-      next: (res) => {
-        this.addressList = res.addresses;
+      Swal.fire('📍 Dirección agregada', '', 'success');
+      this.addressForm.reset();
+      this.mostrarFormulario = false;
 
-        if (!res.addresses.length) {
-          Swal.fire(
-            '📭 Sin direcciones',
-            'Podés agregar una para continuar.',
-            'info'
-          );
-        }
+      this.addressService.loadAddresses(this.userId); // 🔁 recarga el listado
+    },
+    error: (err) =>
+      Swal.fire('❌ Error', err.message || 'No se pudo guardar', 'error'),
+  });
+}
 
-        console.log('📥 Direcciones recibidas:', res.addresses);
-      },
-      error: (err) => {
-        console.error('❌ Error al cargar direcciones:', err);
-        this.addressList = [];
-        Swal.fire(
-          '❌ Error',
-          'No se pudieron cargar las direcciones.',
-          'error'
-        );
-      },
-    });
-  }
+
 
   confirmarOrden(): void {
     if (!this.selectedAddressId || !this.selectedPayment) {

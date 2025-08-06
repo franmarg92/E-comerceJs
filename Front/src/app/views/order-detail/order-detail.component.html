@@ -1,6 +1,5 @@
 <div class="container mt-4">
   <div class="card-gold-wrapper p-4 shadow-sm">
-    
     <h4 class="text-gold mb-4">Resumen de tu compra</h4>
 
     <!-- 🧾 Tabla de productos -->
@@ -29,50 +28,83 @@
     <div class="mb-4">
       <label class="form-label">Dirección de envío</label>
       <select class="form-select" [(ngModel)]="selectedAddressId">
-        <option *ngFor="let dir of addressList" [value]="dir._id" >
+        <option *ngFor="let dir of addressList" [value]="dir._id">
           {{ dir.street }} {{ dir.number }}, {{ dir.city }} {{ dir.zipCode }}
         </option>
       </select>
 
-      <button class="btn btn-outline-gold mt-2" type="button" (click)="mostrarFormulario = true">
+      <button
+        class="btn btn-outline-gold mt-2"
+        type="button"
+        (click)="mostrarFormulario = true"
+      >
         ➕ Agregar nueva dirección
       </button>
     </div>
 
-   <!--  🏠 Formulario para nueva dirección -->
+    <!--  🏠 Formulario para nueva dirección -->
     <div *ngIf="mostrarFormulario" class="card-new-address p-3 mb-4">
-
       <h5 class="text-gold mb-3">Nueva dirección</h5>
 
       <form [formGroup]="addressForm" (ngSubmit)="onCreateAddress()">
         <div class="row">
           <div class="col-md-6 mb-3">
-            <input class="form-control" formControlName="street" placeholder="Calle" />
+            <input
+              class="form-control"
+              formControlName="street"
+              placeholder="Calle"
+            />
           </div>
           <div class="col-md-3 mb-3">
-            <input class="form-control" formControlName="number" placeholder="Número" />
+            <input
+              class="form-control"
+              formControlName="number"
+              placeholder="Número"
+            />
           </div>
           <div class="col-md-3 mb-3">
-            <input class="form-control" formControlName="zipCode" placeholder="Código Postal" />
+            <input
+              class="form-control"
+              formControlName="zipCode"
+              placeholder="Código Postal"
+            />
           </div>
         </div>
 
         <div class="row">
           <div class="col-md-6 mb-3">
-            <input class="form-control" formControlName="city" placeholder="Ciudad" />
+            <input
+              class="form-control"
+              formControlName="city"
+              placeholder="Ciudad"
+            />
           </div>
           <div class="col-md-6 mb-3">
-            <input class="form-control" formControlName="province" placeholder="Provincia" />
+            <input
+              class="form-control"
+              formControlName="province"
+              placeholder="Provincia"
+            />
           </div>
         </div>
 
         <div class="mb-3">
-          <input class="form-control" formControlName="country" placeholder="País" />
+          <input
+            class="form-control"
+            formControlName="country"
+            placeholder="País"
+          />
         </div>
 
         <div class="form-check mb-3">
-          <input type="checkbox" class="form-check-input" formControlName="isDefault" />
-          <label class="form-check-label">Usar como dirección predeterminada</label>
+          <input
+            type="checkbox"
+            class="form-check-input"
+            formControlName="isDefault"
+          />
+          <label class="form-check-label"
+            >Usar como dirección predeterminada</label
+          >
         </div>
 
         <button class="btn btn-gold" type="submit">Guardar dirección</button>
