@@ -7,10 +7,11 @@ import {
   Validators,
 } from '@angular/forms';
 import { AuthService } from '../../services/auth/auth.service';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import Swal from 'sweetalert2';
 import { isPlatformBrowser } from '@angular/common';
 import { PLATFORM_ID, Inject } from '@angular/core';
+import { CartService } from '../../services/cart/cart.service';
 
 @Component({
   selector: 'app-acount',
@@ -26,8 +27,10 @@ export class AcountComponent {
 
   constructor(
     private fb: FormBuilder,
+    private route: ActivatedRoute,
     private authService: AuthService,
     private router: Router,
+    private cartService: CartService,
     @Inject(PLATFORM_ID) private platformId: Object
   ) {
     this.createForm();
@@ -87,17 +90,42 @@ export class AcountComponent {
             timerProgressBar: true,
           });
 
-          if (role === 'admin') {
-            this.router.navigate(['/dashboard']);
+          const redirect = this.route.snapshot.queryParams['redirect'];
+          const anonymousCart = this.cartService.getAnonymousCart();
+
+          if (redirect === 'checkout' && anonymousCart.length > 0) {
+            if (!user?._id) {
+              Swal.fire('Error', 'No se pudo obtener el usuario.', 'error');
+              return;
+            }
+            const mergePayload = {
+              items: anonymousCart,
+              userId: user._id,
+            };
+
+            this.cartService.mergeCart(mergePayload).subscribe({
+              next: () => {
+                localStorage.removeItem('anonymousCart');
+                this.cartService.loadCart(user._id);
+                this.router.navigate(['/order-detail']);
+              },
+              error: () => {
+                Swal.fire('Error', 'No se pudo fusionar el carrito.', 'error');
+              },
+            });
           } else {
-            this.router.navigate(['/dashboard/profile']);
+            if (role === 'admin') {
+              this.router.navigate(['/dashboard']);
+            } else {
+              this.router.navigate(['/dashboard/profile']);
+            }
           }
         },
         error: (err) => {
           Swal.fire({
             icon: 'error',
             title: 'Error al iniciar sesión',
-            text: err.error?.message || 'Verificá tus credenciales',
+            text: err.error?.message || 'Usuario o contraseña no validos',
           });
         },
       });

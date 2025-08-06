@@ -1,6 +1,6 @@
 import { AddToCartResponse } from './../../models/AddToCartResponseModel';
 import { Injectable } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, BehaviorSubject, map } from 'rxjs';
 import { AddToCartPayload } from '../../models/cartPayloadModel';
@@ -10,6 +10,7 @@ import Swal from 'sweetalert2';
 import { Product } from '../../models/productModel';
 import { Inject, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
+import { User } from '../../models/userModel';
 
 @Injectable({
   providedIn: 'root',
@@ -26,9 +27,12 @@ export class CartService {
 
   constructor(
     private http: HttpClient,
+    private route: ActivatedRoute,
     private router: Router,
     @Inject(PLATFORM_ID) private platformId: Object
   ) {}
+
+  // Consumo de apis
 
   addToCart(payload: AddToCartPayload): Observable<AddToCartResponse> {
     return this.http.post<AddToCartResponse>(`${this.apiUrl}/add`, payload);
@@ -49,6 +53,12 @@ export class CartService {
       { quantityChange }
     );
   }
+
+ mergeCart(payload: { items: CartItem[], userId: string }) {
+  return this.http.post(`${this.apiUrl}/merge`, payload);
+}
+
+  // comienzo de funciones
 
   private updateUserCartSubject(): void {
     this.itemsSubject.next(this.items);
@@ -77,11 +87,11 @@ export class CartService {
     }
   }
 
- getItemCount(): Observable<number> {
-  return this.items$.pipe(
-    map(items => items.reduce((acc, item) => acc + item.quantity, 0))
-  );
-}
+  getItemCount(): Observable<number> {
+    return this.items$.pipe(
+      map((items) => items.reduce((acc, item) => acc + item.quantity, 0))
+    );
+  }
 
   getTotal(): number {
     return this.items.reduce(
@@ -208,13 +218,17 @@ export class CartService {
     });
   }
 
+  //Finalizar compra
+
   checkout(): void {
+    const isAnonymous = !this.userId;
+
     const payloadDraft = {
       items: this.items,
       total: this.getTotal(),
     };
 
-    if (!this.userId || this.items.length === 0) {
+    if (this.items.length === 0) {
       Swal.fire(
         '🛑 Carrito vacío',
         'No hay productos para procesar.',
@@ -223,21 +237,27 @@ export class CartService {
       return;
     }
 
-    Swal.fire({
-      title: 'Confirmar compra',
-      text: '¿Querés avanzar con tu pedido?',
-      icon: 'question',
-      showCancelButton: true,
-      confirmButtonColor: '#d4af37',
-      cancelButtonText: 'Cancelar',
-      confirmButtonText: 'Sí, continuar',
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.router.navigate(['/order-detail'], {
-          state: { payloadDraft, userId: this.userId },
-        });
-      }
-    });
+     Swal.fire({
+    title: 'Confirmar compra',
+    text: '¿Querés avanzar con tu pedido?',
+    icon: 'question',
+    showCancelButton: true,
+    confirmButtonColor: '#d4af37',
+    cancelButtonText: 'Cancelar',
+    confirmButtonText: 'Sí, continuar',
+  }).then((result) => {
+    if (!result.isConfirmed) return;
+
+    if (isAnonymous) {
+      this.router.navigate(['/account'], {
+        queryParams: { redirect: 'checkout' }
+      });
+    } else {
+      this.router.navigate(['/order-detail'], {
+        state: { payloadDraft, userId: this.userId },
+      });
+    }
+  });
   }
 
   addToCartProduct(productId: string, userId: string): void {
@@ -311,26 +331,27 @@ export class CartService {
     });
   }
 
-getAnonymousCart(): CartItem[] {
-  if (!this.isBrowser()) {
-    
-    return [];
+  getAnonymousCart(): CartItem[] {
+    if (!this.isBrowser()) {
+      return [];
+    }
+
+    const raw = localStorage.getItem('anonymousCart');
+    const simpleCart: { productId: string; quantity: number }[] = raw
+      ? JSON.parse(raw)
+      : [];
+
+    return simpleCart
+      .map(({ productId, quantity }) => {
+        const product = this.productCatalog.find((p) => p._id === productId);
+        return product ? { productId: product, quantity } : null;
+      })
+      .filter((item): item is CartItem => item !== null);
   }
 
-  const raw = localStorage.getItem('anonymousCart');
-  const simpleCart: { productId: string; quantity: number }[] = raw
-    ? JSON.parse(raw)
-    : [];
-
-  return simpleCart
-    .map(({ productId, quantity }) => {
-      const product = this.productCatalog.find((p) => p._id === productId);
-      return product ? { productId: product, quantity } : null;
-    })
-    .filter((item): item is CartItem => item !== null);
-}
-
-    private isBrowser(): boolean {
+  private isBrowser(): boolean {
     return isPlatformBrowser(this.platformId);
   }
+
+ 
 }

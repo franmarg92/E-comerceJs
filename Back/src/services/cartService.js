@@ -43,24 +43,24 @@ const getCart = async (userId) => {
   }
 };
 
-const mergeCart = async (userId, incomingItems) => {
+const mergeCart = async (userId, anonymousCart) => {
   try {
     let cart = await Cart.findOne({ userId });
 
     if (!cart) {
-      cart = new Cart({ userId, items: incomingItems });
+      cart = new Cart({ userId, items: anonymousCart });
     } else {
-      for (const incomingItem of incomingItems) {
+      for (const item of anonymousCart) {
         const existingIndex = cart.items.findIndex(
-          (item) => item.productId.toString() === incomingItem.productId
+          (item) => item.productId.toString() === anonymousCart.productId
         );
 
         if (existingIndex > -1) {
-          cart.items[existingIndex].quantity += incomingItem.quantity;
+          cart.items[existingIndex].quantity += anonymousCart.quantity;
         } else {
           cart.items.push({
-            productId: incomingItem.productId,
-            quantity: incomingItem.quantity,
+            productId: anonymousCart.productId,
+            quantity: anonymousCart.quantity,
           });
         }
       }
