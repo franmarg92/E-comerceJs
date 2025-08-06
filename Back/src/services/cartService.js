@@ -106,10 +106,21 @@ const updateItemQuantity = async (userId, productId, quantityChange) => {
   return { success: true, cart };
 };
 
+const deleteCart = async (userId) => {
+  try {
+    const result = await Cart.findOneAndDelete({ userId });
+    if (!result) return { success: false, message: "Carrito no encontrado" };
+    return { success: true };
+  } catch (error) {
+    return { success: false, error: error.message };
+  }
+};
+
 module.exports = {
   addToCart,
   getCart,
   mergeCart,
   deleteItemsByProductId,
   updateItemQuantity,
+  deleteCart
 };

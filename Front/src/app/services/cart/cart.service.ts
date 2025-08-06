@@ -58,6 +58,10 @@ export class CartService {
   return this.http.post(`${this.apiUrl}/merge`, payload);
 }
 
+clearCart(userId: string): Observable<any>{
+  return this.http.delete(`${this.apiUrl}/clear/${userId}`)
+}
+
   // comienzo de funciones
 
   private updateUserCartSubject(): void {

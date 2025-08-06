@@ -65,6 +65,17 @@ const updateItemQuantity = async (req, res) => {
   }
 };
 
+const deleteCartController = async (req, res) => {
+  const userId = req.user?._id || req.params.userId;
+  const result = await cartService.deleteCart(userId);
+
+  if (!result.success) {
+    return res.status(500).json({ error: result.error || result.message });
+  }
+
+  res.status(200).json({ message: "Carrito eliminado correctamente" });
+};
+
 
 
 module.exports = {
@@ -73,4 +84,5 @@ module.exports = {
   mergeCartController,
   deleteItemsByProductId,
   updateItemQuantity,
+  deleteCartController
 };

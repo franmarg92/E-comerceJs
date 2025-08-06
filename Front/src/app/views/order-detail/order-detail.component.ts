@@ -13,6 +13,7 @@ import { FormsModule } from '@angular/forms';
 import { AddressServiceService } from '../../services/addressService/address-service.service';
 import { OrderServiceService } from '../../services/orserService/order-service.service';
 import Swal from 'sweetalert2';
+import { CartService } from '../../services/cart/cart.service';
 
 @Component({
   selector: 'app-order-detail',
@@ -36,6 +37,7 @@ export class OrderDetailComponent implements OnInit {
     private router: Router,
     private orderService: OrderServiceService,
     private addressService: AddressServiceService,
+    private cartService: CartService,
     private fb: FormBuilder
   ) {}
 
@@ -44,8 +46,6 @@ export class OrderDetailComponent implements OnInit {
     this.items = state.payloadDraft?.items || [];
     this.total = state.payloadDraft?.total || 0;
     this.userId = state.userId || '';
-
-    
 
     // 🏠 Formulario dirección
     this.addressForm = this.fb.group({
@@ -59,7 +59,7 @@ export class OrderDetailComponent implements OnInit {
       isDefault: [false],
     });
 
-    this.loadUserAddresses()
+    this.loadUserAddresses();
   }
 
   // 🏠 Crear nueva dirección
@@ -75,42 +75,44 @@ export class OrderDetailComponent implements OnInit {
         Swal.fire('❌ Error', err.message || 'No se pudo guardar', 'error'),
     });
   }
- loadUserAddresses(): void {
-  if (!this.userId) {
-    console.warn('🛑 userId no definido');
-    Swal.fire('⚠️ Usuario no definido', 'No se puede cargar direcciones.', 'warning');
-    return;
-  }
-
-  console.log('📤 Solicitando direcciones para userId:', this.userId);
-
-  this.addressService.getAddresses(this.userId).subscribe({
-  next: (res) => {
-    this.addressList = res.addresses;
-
-    if (!res.addresses.length) {
+  loadUserAddresses(): void {
+    if (!this.userId) {
+      console.warn('🛑 userId no definido');
       Swal.fire(
-        '📭 Sin direcciones',
-        'Podés agregar una para continuar.',
-        'info'
+        '⚠️ Usuario no definido',
+        'No se puede cargar direcciones.',
+        'warning'
       );
+      return;
     }
 
-    console.log('📥 Direcciones recibidas:', res.addresses);
-  },
-  error: (err) => {
-    console.error('❌ Error al cargar direcciones:', err);
-    this.addressList = [];
-    Swal.fire(
-      '❌ Error',
-      'No se pudieron cargar las direcciones.',
-      'error'
-    );
+    console.log('📤 Solicitando direcciones para userId:', this.userId);
+
+    this.addressService.getAddresses(this.userId).subscribe({
+      next: (res) => {
+        this.addressList = res.addresses;
+
+        if (!res.addresses.length) {
+          Swal.fire(
+            '📭 Sin direcciones',
+            'Podés agregar una para continuar.',
+            'info'
+          );
+        }
+
+        console.log('📥 Direcciones recibidas:', res.addresses);
+      },
+      error: (err) => {
+        console.error('❌ Error al cargar direcciones:', err);
+        this.addressList = [];
+        Swal.fire(
+          '❌ Error',
+          'No se pudieron cargar las direcciones.',
+          'error'
+        );
+      },
+    });
   }
-});
-
-}
-
 
   confirmarOrden(): void {
     if (!this.selectedAddressId || !this.selectedPayment) {
@@ -127,12 +129,26 @@ export class OrderDetailComponent implements OnInit {
       notes: this.notes,
     };
 
-    
-
     this.orderService.createOrder(payload).subscribe({
       next: () => {
-        Swal.fire('✅ Orden creada', 'Gracias por tu compra!', 'success');
-        this.router.navigate(['/mi-cuenta/ordenes']);
+        this.cartService.clearCart(this.userId).subscribe({
+          next: () => {
+            Swal.fire(
+              '✅ Orden creada',
+              'Gracias por tu compra! 🛍️',
+              'success'
+            );
+            this.router.navigate(['/dashboard/my-purchases']);
+          },
+          error: () => {
+            Swal.fire(
+              '⚠️ Orden creada',
+              'Compra registrada pero el carrito no pudo vaciarse.',
+              'warning'
+            );
+            this.router.navigate(['/dashboard/my-purchases']);
+          },
+        });
       },
       error: () => {
         Swal.fire('❌ Error', 'No se pudo crear la orden.', 'error');

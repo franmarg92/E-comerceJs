@@ -10,6 +10,8 @@ router.delete(
   cartController.deleteItemsByProductId
 );
 router.patch('/:userId/product/:productId', cartController.updateItemQuantity);
+router.delete("/clear/:userId", cartController.deleteCartController);
+
 
 
 module.exports = router;
