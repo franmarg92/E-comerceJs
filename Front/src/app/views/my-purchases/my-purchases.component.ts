@@ -41,6 +41,7 @@ export class MyPurchasesComponent implements OnInit {
   loadOrders(): void {
     this.orderService.getOrderByUserId(this.userId).subscribe({
       next: (res) => {
+        console.log(res.orders)
         this.orders = res.orders || [];
        
       },

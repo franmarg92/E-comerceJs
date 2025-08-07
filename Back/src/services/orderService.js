@@ -56,7 +56,7 @@ const updateOrder = async (orderId, updates) => {
 
 const getOrdersByUserId = async (userId) => {
   return await Order.find({ userId })
-    .populate('items.product', 'name image price')
+    .populate('items.product', 'name image price articleCode')
     .populate('shippingAddress')
     .sort({ createdAt: -1 });
 };
@@ -64,7 +64,7 @@ const getOrdersByUserId = async (userId) => {
 const getOrderById = async (orderId) => {
   return await Order.findById(orderId)
     .populate('userId', 'name email')
-    .populate('items.product', 'name image price')
+    .populate('items.product', 'name image price articleCode')
     .populate('shippingAddress');
 }
 

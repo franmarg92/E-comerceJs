@@ -18,25 +18,30 @@
 
     <hr />
 
-   <h6 class="text-gold mb-2">Productos comprados</h6>
-<table class="table table-bordered table-sm table-striped product-table">
-  <thead>
-    <tr>
-      <th>Producto</th>
-      <th>Cantidad</th>
-      <th>Precio unitario</th>
-      <th>Subtotal</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let item of order.items">
-      <td><strong>{{ item.product.name }}</strong></td>
-      <td>{{ item.quantity }}</td>
-      <td>${{ item.product.price }}</td>
-      <td>${{ item.quantity * item.product.price }}</td>
-    </tr>
-  </tbody>
-</table>
+    <h6 class="text-gold mb-2">Productos comprados</h6>
+    <table class="table table-bordered table-sm table-striped product-table">
+      <thead>
+        <tr>
+          <th>Producto</th>
+          <th>Cantidad</th>
+          <th>Articulo</th>
+          <th>Precio unitario</th>
+          <th>Subtotal</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of order.items">
+          <td>
+            <strong>{{ item.product.name }}</strong>
+          </td>
+
+          <td>{{ item.quantity }}</td>
+          <td>{{ item.product.articleCode }}</td>
+          <td>${{ item.product.price }}</td>
+          <td>${{ item.quantity * item.product.price }}</td>
+        </tr>
+      </tbody>
+    </table>
 
     <hr />
 
@@ -48,7 +53,3 @@
     </p>
   </div>
 </div>
-
-
-
-
