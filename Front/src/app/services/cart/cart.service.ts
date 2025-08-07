@@ -91,6 +91,8 @@ clearCart(userId: string): Observable<any>{
     }
   }
 
+ 
+
   getItemCount(): Observable<number> {
     return this.items$.pipe(
       map((items) => items.reduce((acc, item) => acc + item.quantity, 0))
