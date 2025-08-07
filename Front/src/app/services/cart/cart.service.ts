@@ -2,7 +2,7 @@ import { AddToCartResponse } from './../../models/AddToCartResponseModel';
 import { Injectable } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, BehaviorSubject, map } from 'rxjs';
+import { Observable, BehaviorSubject, map, tap } from 'rxjs';
 import { AddToCartPayload } from '../../models/cartPayloadModel';
 import { Cart } from '../../models/cartModel';
 import { CartItem } from '../../models/cartModel';
@@ -34,9 +34,16 @@ export class CartService {
 
   // Consumo de apis
 
-  addToCart(payload: AddToCartPayload): Observable<AddToCartResponse> {
-    return this.http.post<AddToCartResponse>(`${this.apiUrl}/add`, payload);
-  }
+addToCart(payload: AddToCartPayload): Observable<AddToCartResponse> {
+  return this.http.post<AddToCartResponse>(`${this.apiUrl}/add`, payload).pipe(
+    tap({
+      next: () => this.refreshCart(payload.userId),
+      error: () => console.warn('🛑 Error al agregar al carrito.'),
+    })
+  );
+}
+
+
 
   getCart(userId: string): Observable<Cart> {
     return this.http.get<Cart>(`${this.apiUrl}/${userId}`);
@@ -64,19 +71,37 @@ clearCart(userId: string): Observable<any>{
 
   // comienzo de funciones
 
+  private refreshCart(userId?: string): void {
+  if (!userId) {
+    this.updateAnonymousCartSubject();
+    return;
+  }
+
+  this.getCart(userId).subscribe({
+    next: (cart) => this.itemsSubject.next(cart.items),
+    error: () => console.warn('🛑 No se pudo cargar el carrito del usuario.'),
+  });
+}
+
   private updateUserCartSubject(): void {
     this.itemsSubject.next(this.items);
   }
+
+ loadCartFromBackend(userId: string): void {
+  this.refreshCart(userId);
+}
 
   private updateAnonymousCartSubject(): void {
     const anonymousItems = this.getAnonymousCart();
     this.itemsSubject.next(anonymousItems);
   }
 
+
+
   loadCart(userId?: string): void {
     if (!userId) {
       this.items = this.getAnonymousCart();
-      this.updateAnonymousCartSubject(); // 👈 esto publica los datos anónimos
+      this.updateAnonymousCartSubject(); 
     } else {
       this.userId = userId;
       this.http

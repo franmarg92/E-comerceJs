@@ -12,6 +12,7 @@ import { CartService } from '../../services/cart/cart.service';
 import { CartdropdownComponent } from '../../shared/cartdropdown/cartdropdown.component';
 import { User } from '../../models/userModel';
 import Swal from 'sweetalert2';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-header',
@@ -28,7 +29,8 @@ export class HeaderComponent {
   dropdownOpen = false;
   mobileMenuOpen = false;
   platformId: Object;
-
+  itemCount$!: Observable<number>;
+  
   constructor(
     public authService: AuthService,
     public cartService: CartService,
@@ -42,7 +44,7 @@ export class HeaderComponent {
 
 ngOnInit(): void {
   
-
+    this.itemCount$ = this.cartService.getItemCount();
   // Primero nos suscribimos al estado de autenticación
   this.authService.authStatus$.subscribe((status) => {
     
