@@ -23,14 +23,17 @@ const getCartController = async (req, res) => {
 
 const mergeCartController = async (req, res) => {
   const userId = req.user?._id || req.body.userId;
-  const anonymousCart = req.body.items;
+  const items = req.body.items;
 
-  const result = await cartService.mergeCart(userId, anonymousCart);
+  const result = await cartService.mergeCart(userId, items);
+
   if (!result.success) {
     return res.status(500).json({ message: result.error });
   }
+
   res.status(200).json(result.cart);
 };
+
 
 const deleteItemsByProductId = async (req, res) => {
   try {

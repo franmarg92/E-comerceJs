@@ -1,4 +1,7 @@
 const { Cart, Product } = require("../models");
+const mongoose = require("mongoose");
+const { Types } = mongoose;
+const compareProductIds = require('../helpers/compareIdHelper')
 
 const addToCart = async (userId, productId) => {
   try {
@@ -17,7 +20,7 @@ const addToCart = async (userId, productId) => {
     } else {
       const product = await Product.findById(productId);
       if (!product) {
-        return { success: false, message: 'Producto no encontrado.' };
+        return { success: false, message: "Producto no encontrado." };
       }
 
       cart.items.push({ productId, quantity: 1 });
@@ -30,9 +33,6 @@ const addToCart = async (userId, productId) => {
   }
 };
 
-
-
-
 const getCart = async (userId) => {
   try {
     const cart = await Cart.findOne({ userId }).populate("items.productId");
@@ -43,32 +43,53 @@ const getCart = async (userId) => {
   }
 };
 
-const mergeCart = async (userId, anonymousCart) => {
+
+
+
+const mergeCart = async (userId, incomingItems) => {
   try {
+    if (!userId || !Array.isArray(incomingItems)) {
+      throw new Error('Datos inválidos para la fusión del carrito');
+    }
+
+    
+
     let cart = await Cart.findOne({ userId });
 
     if (!cart) {
-      cart = new Cart({ userId, items: anonymousCart });
+      
+      cart = new Cart({ userId, items: incomingItems });
     } else {
-      for (const item of anonymousCart) {
-        const existingIndex = cart.items.findIndex(
-          (item) => item.productId.toString() === anonymousCart.productId
+      
+
+      for (const incomingItem of incomingItems) {
+       
+
+        const existingIndex = cart.items.findIndex((item) =>
+          compareProductIds.compareProductIds(item.productId, incomingItem.productId)
         );
 
         if (existingIndex > -1) {
-          cart.items[existingIndex].quantity += anonymousCart.quantity;
+         
+          cart.items[existingIndex].quantity += incomingItem.quantity;
+          
         } else {
+          
           cart.items.push({
-            productId: anonymousCart.productId,
-            quantity: anonymousCart.quantity,
+            productId: incomingItem.productId,
+            quantity: incomingItem.quantity,
           });
         }
       }
     }
 
+   
     await cart.save();
+    
+
     return { success: true, cart };
   } catch (error) {
+    console.error('❌ Error en mergeCartService:', error);
     return { success: false, error: error.message };
   }
 };
@@ -122,5 +143,5 @@ module.exports = {
   mergeCart,
   deleteItemsByProductId,
   updateItemQuantity,
-  deleteCart
+  deleteCart,
 };
