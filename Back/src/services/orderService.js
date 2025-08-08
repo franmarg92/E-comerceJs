@@ -1,3 +1,4 @@
+const { now } = require('mongoose');
 const {Product} = require('../models')
 const {Order} = require('../models')
 
@@ -30,7 +31,8 @@ const createOrder = async ({ userId, items, shippingAddressId, paymentDetails })
     totalAmount,
     shippingAddress: shippingAddressId,
     paymentDetails,
-    status: 'pending'
+    status: 'Pendiente',
+    notes
   });
 
   await newOrder.save();
