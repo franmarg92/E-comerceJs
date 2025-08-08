@@ -128,6 +128,15 @@ export class CartService {
     );
   }
 
+  getCartTotal = (cart: { items: { productId: { price?: number }, quantity: number }[] }): number => {
+  if (!cart || !Array.isArray(cart.items)) return 0;
+
+  return cart.items.reduce((acc, item) => {
+    const price = item.productId?.price ?? 0;
+    return acc + price * item.quantity;
+  }, 0);
+};
+
   private syncAnonymousCart(updatedItem: CartItem): void {
     const raw = localStorage.getItem(this.ANON_KEY);
     const simpleCart = raw ? JSON.parse(raw) : [];

@@ -58,7 +58,7 @@ export class OrderDetailComponent implements OnInit {
   this.cartService.getCart(this.userId).subscribe({
     next: (cart) => {
       this.items = cart.items;
-      this.total = this.cartService.getTotal();
+      this.total = this.cartService.getCartTotal(cart);
     },
     error: () => {
       Swal.fire('❌ Error', 'No se pudo cargar el carrito.', 'error');
