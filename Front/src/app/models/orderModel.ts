@@ -8,7 +8,7 @@ export interface Order {
   totalAmount: number;
   paymentMethod: string;
   notes?: string;
-  status?: 'pending'| 'paid'| 'shipped'| 'delivered'| 'cancelled'; 
+  status?: 'Pendiente'| 'Pagado'| 'Entregado '| 'En camino'| 'Cancelado'; 
   createdAt?: string;
   updatedAt?: string;
 }

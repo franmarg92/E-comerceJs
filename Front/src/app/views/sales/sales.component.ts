@@ -14,7 +14,7 @@ import { FormsModule } from '@angular/forms';
 export class SalesComponent {
   orders: OrderWithDetails[] = [];
   searchText: string = '';
-  estadoOptions: string[] = ['pending', 'delivered', 'cancelled'];
+  estadoOptions: string[] = ['Pendiente', 'Pagado', 'Entregado', 'En camino', 'Cancelado'];
 
   constructor(private orderService: OrderServiceService) {}
 
