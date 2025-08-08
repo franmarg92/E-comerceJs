@@ -303,45 +303,46 @@ export class CartService {
   }
 
   addToCartProduct(productId: string, userId: string): void {
-    if (!userId) {
-      console.warn('🛑 Usuario no definido. No se puede agregar al carrito.');
-      return;
-    }
-    const payload = { userId, productId, quantityChange: 1 };
-    console.log(payload);
-    this.addToCart(payload).subscribe({
-      next: () => {
-        Swal.fire({
-          title: '¿Agregar al carrito?',
-          text: '¿Deseás añadir este producto?',
-          icon: 'question',
-          showCancelButton: true,
-          confirmButtonText: 'Sí, agregar',
-          cancelButtonText: 'Cancelar',
-          confirmButtonColor: '#d4af37',
-          cancelButtonColor: '#aaa',
-        }).then((result) => {
-          if (result.isConfirmed) {
-            // ✅ Lógica para agregar al carrito
-            Swal.fire({
-              icon: 'success',
-              title: 'Agregado al carrito',
-              text: 'Producto añadido exitosamente',
-              confirmButtonColor: '#d4af37',
-            });
-          }
-        });
-      },
-      error: (err) => {
-        Swal.fire({
-          icon: 'error',
-          title: 'Error',
-          text: err.message || 'No se pudo agregar al carrito',
-          confirmButtonColor: '#d4af37',
-        });
-      },
-    });
+  if (!userId) {
+    console.warn('🛑 Usuario no definido. No se puede agregar al carrito.');
+    return;
   }
+
+  Swal.fire({
+    title: '¿Agregar al carrito?',
+    text: '¿Deseás añadir este producto?',
+    icon: 'question',
+    showCancelButton: true,
+    confirmButtonText: 'Sí, agregar',
+    cancelButtonText: 'Cancelar',
+    confirmButtonColor: '#d4af37',
+    cancelButtonColor: '#aaa',
+  }).then((result) => {
+    if (result.isConfirmed) {
+      const payload = { userId, productId, quantityChange: 1 };
+
+      this.addToCart(payload).subscribe({
+        next: () => {
+          Swal.fire({
+            icon: 'success',
+            title: 'Agregado al carrito',
+            text: 'Producto añadido exitosamente',
+            confirmButtonColor: '#d4af37',
+          });
+        },
+        error: (err) => {
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: err.message || 'No se pudo agregar al carrito',
+            confirmButtonColor: '#d4af37',
+          });
+        },
+      });
+    }
+  });
+}
+
 
   setProductCatalog(products: Product[]): void {
     this.productCatalog = products;
