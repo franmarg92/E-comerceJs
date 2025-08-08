@@ -2,7 +2,7 @@ import { AddToCartResponse } from './../../models/AddToCartResponseModel';
 import { Injectable } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, BehaviorSubject, map, tap, of } from 'rxjs';
+import { Observable, BehaviorSubject, map, tap, of, catchError } from 'rxjs';
 import { AddToCartPayload } from '../../models/cartPayloadModel';
 import { Cart } from '../../models/cartModel';
 import { CartItem } from '../../models/cartModel';
@@ -63,16 +63,11 @@ export class CartService {
   }
 
   mergeCart(payload: { userId: string; items: CartItem[] }): Observable<Cart> {
-    return this.http.post<Cart>('/api/cart/merge', payload);
+    return this.http.post<Cart>(`${this.apiUrl}/merge`, payload);
   }
 
   clearCart(userId: string): Observable<any> {
-  return this.http.delete(`${this.apiUrl}/clear/${userId}`).pipe(
-    tap(() => {
-      this.itemsSubject.next([]); // ⬅️ actualiza el estado reactivo
-      
-    })
-  );
+  return this.http.delete(`${this.apiUrl}/clear/${userId}`)
 }
 
   // comienzo de funciones
@@ -359,7 +354,7 @@ export class CartService {
     }
 
     localStorage.setItem('anonymousCart', JSON.stringify(cart));
-    this.updateAnonymousCartSubject(); // actualiza observable
+    this.updateAnonymousCartSubject(); 
 
     Swal.fire({
       icon: 'success',
@@ -391,27 +386,40 @@ export class CartService {
     return isPlatformBrowser(this.platformId);
   }
 
-  mergeAnonymousCart(): Observable<void> {
-    const raw = localStorage.getItem('anonymousCart');
-    const userId = this.getUserId();
-    if (!raw || !userId) return of(undefined);
+mergeAnonymousCart(userId: string): Observable<void> {
+  if (!isPlatformBrowser(this.platformId)) return of(undefined);
 
-    try {
-      const { items } = JSON.parse(raw);
-      if (!items?.length) return of(undefined);
+  const rawCart = localStorage.getItem('anonymousCart');
+  console.log('🧾 Ítems a fusionar (raw):', rawCart);
 
-      const payload = { userId, items };
+  let items: any[] = [];
 
-      return this.mergeCart(payload).pipe(
-        tap(() => {
-          localStorage.removeItem('anonymousCart');
-          this.refreshCart(userId);
-        }),
-        map(() => undefined)
-      );
-    } catch {
-      console.warn('❌ Error al parsear anonymousCart');
-      return of(undefined);
-    }
+  try {
+    items = JSON.parse(rawCart || '[]');
+    console.log('🧾 Ítems a fusionar (parsed):', items);
+  } catch (err) {
+    console.error('❌ Error al parsear anonymousCart:', err);
+    return of(undefined);
   }
+
+  if (!items.length) {
+    console.warn('⚠️ El carrito anónimo está vacío');
+    return of(undefined);
+  }
+
+  const payload = { userId, items };
+
+  return this.mergeCart(payload).pipe(
+    tap(() => {
+      localStorage.removeItem('anonymousCart');
+      this.refreshCart(userId);
+    }),
+    catchError(err => {
+      console.error('❌ Error en mergeCart:', err);
+      return of(undefined);
+    }),
+    map(() => undefined)
+  );
+}
+
 }

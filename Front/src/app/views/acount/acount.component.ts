@@ -24,6 +24,7 @@ export class AcountComponent {
   isLoginView = true;
   accountForm!: FormGroup;
   userRole: string = '';
+  userId: string = '';
 
   constructor(
     private fb: FormBuilder,
@@ -75,6 +76,8 @@ export class AcountComponent {
             localStorage.setItem('token', res.token);
             localStorage.setItem('user', JSON.stringify(res.user));
             this.userRole = res.user.role;
+            this.userId = res.user.userId!;
+
             localStorage.setItem('role', this.userRole);
           }
           this.authService.setAuthState(res.user);
@@ -91,14 +94,26 @@ export class AcountComponent {
           });
 
           const redirect = this.route.snapshot.queryParams['redirect'];
-          
 
-           if (redirect === 'checkout') {
-          this.cartService.mergeAnonymousCart().subscribe({
-            next: () => this.router.navigate(['/order-detail']),
-            error: () =>
-              Swal.fire('Error', 'No se pudo fusionar el carrito.', 'error'),
-          });
+          if (redirect === 'checkout') {
+            const userId = res.user.userId;
+
+            if (!userId) {
+              console.error('❌ res.user no tiene _id:', res.user);
+              Swal.fire(
+                'Error',
+                'No se pudo obtener el ID del usuario.',
+                'error'
+              );
+              return;
+            }
+
+            this.cartService.mergeAnonymousCart(userId).subscribe({
+              next: () => this.router.navigate(['/order-detail']),
+              error: () => {
+                Swal.fire('Error', 'No se pudo fusionar el carrito.', 'error');
+              },
+            });
           } else {
             if (role === 'admin') {
               this.router.navigate(['/dashboard']);

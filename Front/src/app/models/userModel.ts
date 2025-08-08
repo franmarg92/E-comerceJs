@@ -1,6 +1,7 @@
 import { Address } from "cluster";
 export interface User {
   _id?: string;
+  userId:string;
   name: string;
   lastName: string;
   dni: number;
