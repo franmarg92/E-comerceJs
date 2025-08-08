@@ -2,7 +2,7 @@ import { AddToCartResponse } from './../../models/AddToCartResponseModel';
 import { Injectable } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, BehaviorSubject, map, tap } from 'rxjs';
+import { Observable, BehaviorSubject, map, tap, of } from 'rxjs';
 import { AddToCartPayload } from '../../models/cartPayloadModel';
 import { Cart } from '../../models/cartModel';
 import { CartItem } from '../../models/cartModel';
@@ -19,6 +19,7 @@ export class CartService {
   items: CartItem[] = [];
   private productCatalog: Product[] = [];
   private userId: string = '';
+
   private readonly ANON_KEY = 'anonymousCart';
   private apiUrl = 'https://distinzionejoyas.com/api/cart';
 
@@ -34,16 +35,16 @@ export class CartService {
 
   // Consumo de apis
 
-addToCart(payload: AddToCartPayload): Observable<AddToCartResponse> {
-  return this.http.post<AddToCartResponse>(`${this.apiUrl}/add`, payload).pipe(
-    tap({
-      next: () => this.refreshCart(payload.userId),
-      error: () => console.warn('🛑 Error al agregar al carrito.'),
-    })
-  );
-}
-
-
+  addToCart(payload: AddToCartPayload): Observable<AddToCartResponse> {
+    return this.http
+      .post<AddToCartResponse>(`${this.apiUrl}/add`, payload)
+      .pipe(
+        tap({
+          next: () => this.refreshCart(payload.userId),
+          error: () => console.warn('🛑 Error al agregar al carrito.'),
+        })
+      );
+  }
 
   getCart(userId: string): Observable<Cart> {
     return this.http.get<Cart>(`${this.apiUrl}/${userId}`);
@@ -61,47 +62,50 @@ addToCart(payload: AddToCartPayload): Observable<AddToCartResponse> {
     );
   }
 
- mergeCart(payload: { items: CartItem[], userId: string }) {
-  return this.http.post(`${this.apiUrl}/merge`, payload);
-}
+  mergeCart(payload: { userId: string; items: CartItem[] }): Observable<Cart> {
+    return this.http.post<Cart>('/api/cart/merge', payload);
+  }
 
-clearCart(userId: string): Observable<any>{
-  return this.http.delete(`${this.apiUrl}/clear/${userId}`)
+  clearCart(userId: string): Observable<any> {
+  return this.http.delete(`${this.apiUrl}/clear/${userId}`).pipe(
+    tap(() => {
+      this.itemsSubject.next([]); // ⬅️ actualiza el estado reactivo
+      
+    })
+  );
 }
 
   // comienzo de funciones
 
   private refreshCart(userId?: string): void {
-  if (!userId) {
-    this.updateAnonymousCartSubject();
-    return;
-  }
+    if (!userId) {
+      this.updateAnonymousCartSubject();
+      return;
+    }
 
-  this.getCart(userId).subscribe({
-    next: (cart) => this.itemsSubject.next(cart.items),
-    error: () => console.warn('🛑 No se pudo cargar el carrito del usuario.'),
-  });
-}
+    this.getCart(userId).subscribe({
+      next: (cart) => this.itemsSubject.next(cart.items),
+      error: () => console.warn('🛑 No se pudo cargar el carrito del usuario.'),
+    });
+  }
 
   private updateUserCartSubject(): void {
     this.itemsSubject.next(this.items);
   }
 
- loadCartFromBackend(userId: string): void {
-  this.refreshCart(userId);
-}
+  loadCartFromBackend(userId: string): void {
+    this.refreshCart(userId);
+  }
 
   private updateAnonymousCartSubject(): void {
     const anonymousItems = this.getAnonymousCart();
     this.itemsSubject.next(anonymousItems);
   }
 
-
-
   loadCart(userId?: string): void {
     if (!userId) {
       this.items = this.getAnonymousCart();
-      this.updateAnonymousCartSubject(); 
+      this.updateAnonymousCartSubject();
     } else {
       this.userId = userId;
       this.http
@@ -109,14 +113,12 @@ clearCart(userId: string): Observable<any>{
         .subscribe({
           next: (res) => {
             this.items = res.items;
-            this.updateUserCartSubject(); // publica los datos del backend
+            this.updateUserCartSubject();
           },
           error: () => {},
         });
     }
   }
-
- 
 
   getItemCount(): Observable<number> {
     return this.items$.pipe(
@@ -249,15 +251,22 @@ clearCart(userId: string): Observable<any>{
     });
   }
 
+  getUserId(): string | null {
+    if (!this.isBrowser()) return null;
+
+    const raw = localStorage.getItem('user');
+    try {
+      const user = raw ? JSON.parse(raw) : null;
+      return user?.userId || null;
+    } catch {
+      return null;
+    }
+  }
+
   //Finalizar compra
 
   checkout(): void {
     const isAnonymous = !this.userId;
-
-    const payloadDraft = {
-      items: this.items,
-      total: this.getTotal(),
-    };
 
     if (this.items.length === 0) {
       Swal.fire(
@@ -268,27 +277,25 @@ clearCart(userId: string): Observable<any>{
       return;
     }
 
-     Swal.fire({
-    title: 'Confirmar compra',
-    text: '¿Querés avanzar con tu pedido?',
-    icon: 'question',
-    showCancelButton: true,
-    confirmButtonColor: '#d4af37',
-    cancelButtonText: 'Cancelar',
-    confirmButtonText: 'Sí, continuar',
-  }).then((result) => {
-    if (!result.isConfirmed) return;
+    Swal.fire({
+      title: 'Confirmar compra',
+      text: '¿Querés avanzar con tu pedido?',
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonColor: '#d4af37',
+      cancelButtonText: 'Cancelar',
+      confirmButtonText: 'Sí, continuar',
+    }).then((result) => {
+      if (!result.isConfirmed) return;
 
-    if (isAnonymous) {
-      this.router.navigate(['/account'], {
-        queryParams: { redirect: 'checkout' }
-      });
-    } else {
-      this.router.navigate(['/order-detail'], {
-        state: { payloadDraft, userId: this.userId },
-      });
-    }
-  });
+      if (isAnonymous) {
+        this.router.navigate(['/account'], {
+          queryParams: { redirect: 'checkout' },
+        });
+      } else {
+        this.router.navigate(['/order-detail'], {});
+      }
+    });
   }
 
   addToCartProduct(productId: string, userId: string): void {
@@ -334,7 +341,7 @@ clearCart(userId: string): Observable<any>{
 
   setProductCatalog(products: Product[]): void {
     this.productCatalog = products;
-    this.updateAnonymousCartSubject(); // actualiza el carrito por si ya había productos
+    this.updateAnonymousCartSubject();
   }
 
   addToAnonymousCart(productId: string): void {
@@ -384,5 +391,27 @@ clearCart(userId: string): Observable<any>{
     return isPlatformBrowser(this.platformId);
   }
 
- 
+  mergeAnonymousCart(): Observable<void> {
+    const raw = localStorage.getItem('anonymousCart');
+    const userId = this.getUserId();
+    if (!raw || !userId) return of(undefined);
+
+    try {
+      const { items } = JSON.parse(raw);
+      if (!items?.length) return of(undefined);
+
+      const payload = { userId, items };
+
+      return this.mergeCart(payload).pipe(
+        tap(() => {
+          localStorage.removeItem('anonymousCart');
+          this.refreshCart(userId);
+        }),
+        map(() => undefined)
+      );
+    } catch {
+      console.warn('❌ Error al parsear anonymousCart');
+      return of(undefined);
+    }
+  }
 }

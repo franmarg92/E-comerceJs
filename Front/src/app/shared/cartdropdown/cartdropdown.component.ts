@@ -14,24 +14,29 @@ import { CartItem } from '../../models/cartModel';
 export class CartdropdownComponent {
   @Output() closeDropdown = new EventEmitter<void>();
   items: CartItem[] = [];
-  constructor(public cartService: CartService, public productService: ProductService) {}
+  constructor(
+    public cartService: CartService,
+    public productService: ProductService
+  ) {}
 
   ngOnInit(): void {
+    const rawUser = localStorage.getItem('user');
+    const userId = rawUser ? JSON.parse(rawUser).userId : undefined;
 
     this.productService.getAllProducts().subscribe((products) => {
-  this.cartService.setProductCatalog(products); // precarga catálogo
-  this.cartService.loadCart(); // carga el carrito según userId
-});
-    const rawUser = localStorage.getItem('user');
-    const userId = rawUser ? JSON.parse(rawUser).userId : '';
+      this.cartService.setProductCatalog(products);
+      this.cartService.loadCart(userId);
+    });
 
-    // Cargar el carrito según si está logueado o no
-    this.cartService.loadCart(userId || undefined);
+   
+    
 
     // Suscribirse a los items reactivos
     this.cartService.items$.subscribe((items) => {
       this.items = items;
     });
+
+    this.cartService.loadCart(userId);
   }
 
   increase(item: CartItem) {

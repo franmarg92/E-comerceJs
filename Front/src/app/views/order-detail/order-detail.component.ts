@@ -7,6 +7,8 @@ import {
   Validators,
   ReactiveFormsModule,
 } from '@angular/forms';
+import { Inject, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { CommonModule } from '@angular/common';
 import { Address } from '../../models/addressModel';
 import { FormsModule } from '@angular/forms';
@@ -38,14 +40,30 @@ export class OrderDetailComponent implements OnInit {
     private orderService: OrderServiceService,
     private addressService: AddressServiceService,
     private cartService: CartService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+  @Inject(PLATFORM_ID) private platformId: Object
   ) {}
 
   ngOnInit(): void {
-    const state = history.state;
-    this.items = state.payloadDraft?.items || [];
-    this.total = state.payloadDraft?.total || 0;
-    this.userId = state.userId || '';
+   if (!isPlatformBrowser(this.platformId)) return;
+
+   this.userId = this.cartService.getUserId() || '';
+ 
+
+  if (!this.userId) {
+    this.router.navigate(['/account']);
+    return;
+  }
+
+  this.cartService.getCart(this.userId).subscribe({
+    next: (cart) => {
+      this.items = cart.items;
+      this.total = this.cartService.getTotal();
+    },
+    error: () => {
+      Swal.fire('❌ Error', 'No se pudo cargar el carrito.', 'error');
+    },
+  });
 
     // 🏠 Formulario dirección
     this.addressForm = this.fb.group({

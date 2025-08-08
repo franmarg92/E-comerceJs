@@ -91,28 +91,14 @@ export class AcountComponent {
           });
 
           const redirect = this.route.snapshot.queryParams['redirect'];
-          const anonymousCart = this.cartService.getAnonymousCart();
+          
 
-          if (redirect === 'checkout' && anonymousCart.length > 0) {
-            if (!user?._id) {
-              Swal.fire('Error', 'No se pudo obtener el usuario.', 'error');
-              return;
-            }
-            const mergePayload = {
-              items: anonymousCart,
-              userId: user._id,
-            };
-
-            this.cartService.mergeCart(mergePayload).subscribe({
-              next: () => {
-                localStorage.removeItem('anonymousCart');
-                this.cartService.loadCart(user._id);
-                this.router.navigate(['/order-detail']);
-              },
-              error: () => {
-                Swal.fire('Error', 'No se pudo fusionar el carrito.', 'error');
-              },
-            });
+           if (redirect === 'checkout') {
+          this.cartService.mergeAnonymousCart().subscribe({
+            next: () => this.router.navigate(['/order-detail']),
+            error: () =>
+              Swal.fire('Error', 'No se pudo fusionar el carrito.', 'error'),
+          });
           } else {
             if (role === 'admin') {
               this.router.navigate(['/dashboard']);

@@ -13,6 +13,7 @@ import { CartdropdownComponent } from '../../shared/cartdropdown/cartdropdown.co
 import { User } from '../../models/userModel';
 import Swal from 'sweetalert2';
 import { Observable } from 'rxjs';
+import { isPlatformBrowser } from '@angular/common';
 
 @Component({
   selector: 'app-header',
@@ -43,27 +44,30 @@ export class HeaderComponent {
   }
 
 ngOnInit(): void {
+  let userId: string | undefined;
+
+  if (isPlatformBrowser(this.platformId)) {
+    const rawUser = localStorage.getItem('user');
+    userId = rawUser ? JSON.parse(rawUser)._id : undefined;
+  }
+this.itemCount$ = this.cartService.getItemCount();
+  this.cartService.loadCart(userId);
+
   
-    this.itemCount$ = this.cartService.getItemCount();
-  // Primero nos suscribimos al estado de autenticación
+
   this.authService.authStatus$.subscribe((status) => {
-    
     this.isAuthenticated = status;
     this.cdr.detectChanges();
   });
 
-  // Luego nos suscribimos al usuario
   this.authService.user$.subscribe((user) => {
-    
     this.user = user;
-
-   if (user?._id) {
-  this.cartService.loadCart(user._id);  // carrito del usuario logueado
-} else {
-  this.cartService.loadCart(); // carrito del visitante
-}
-
     this.userRole = user?.role?.toLowerCase() || '';
+
+    if (user?._id && user?._id !== userId) {
+      this.cartService.loadCart(user._id); // recarga si cambia el usuario
+    }
+
     this.cdr.detectChanges();
   });
 }
