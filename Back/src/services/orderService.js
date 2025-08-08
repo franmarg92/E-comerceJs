@@ -3,7 +3,7 @@ const {Product} = require('../models')
 const {Order} = require('../models')
 
 
-const createOrder = async ({ userId, items, shippingAddressId, paymentDetails }) => {
+const createOrder = async ({ userId, items, shippingAddressId, paymentDetails, notes }) => {
   const processedItems = [];
   let totalAmount = 0;
 
