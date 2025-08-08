@@ -41,8 +41,9 @@ const createOrder = async ({ userId, items, shippingAddressId, paymentDetails })
 const getAllOrders = async () => {
   return await Order.find()
     .populate('userId', 'name email dni lastName')
-    .populate('items.product', 'name image price articleCode')
-    .populate('shippingAddress');
+    .populate('items.product', 'name image price articleCode ')
+    .populate('shippingAddress')
+    .populate('notes')
 };
 
 const updateOrder = async (orderId, updates) => {
