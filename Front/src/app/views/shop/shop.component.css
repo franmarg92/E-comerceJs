@@ -1,5 +1,6 @@
 .shop-layout {
   display: flex;
+  align-items: flex-start;
   gap: 32px;
   padding: 48px 32px;
   font-family: "Playfair Display", serif;
@@ -8,7 +9,7 @@
 .shop-sidebar {
   width: 220px;
   padding: 24px;
-  max-height: 500px;
+  
   background-color: #fafafa;
   border: 1px solid #e2e2e2;
   border-left: 6px solid #d4af37;
