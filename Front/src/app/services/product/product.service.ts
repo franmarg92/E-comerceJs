@@ -14,6 +14,11 @@ export class ProductService {
     return this.http.patch<Product>(`${this.apiUrl}/edit/${id}`, productData);
   }
 
+  editProductWithImage(id: string, productData: FormData): Observable<Product> {
+  return this.http.patch<Product>(`${this.apiUrl}/edit-with-image/${id}`, productData);
+}
+
+
   createProduct(productData: FormData): Observable<Product> {
     const form = new FormData();
 
@@ -35,4 +40,10 @@ export class ProductService {
     getPortfolioProducts(): Observable<Product[]> {
     return this.http.get<Product[]>(`${this.apiUrl}/products/portfolio`);
   }
+
+  editProductSmart(id: string, productData: FormData): Observable<Product> {
+  const hasImage = productData.has("image");
+  const endpoint = hasImage ? "edit-with-image" : "edit";
+  return this.http.patch<Product>(`${this.apiUrl}/${endpoint}/${id}`, productData);
+}
 }

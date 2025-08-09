@@ -280,10 +280,10 @@ onCategoryChange(): void {
     formData.append('image', raw.image);
   }
 
-  console.log(formData)
+ 
 
   const request$ = this.isEditMode && this.initialData?._id
-    ? this.productService.editProduct(this.initialData._id, formData)
+    ? this.productService.editProductSmart(this.initialData._id, formData)
     : this.productService.createProduct(formData);
 
   request$.subscribe({
