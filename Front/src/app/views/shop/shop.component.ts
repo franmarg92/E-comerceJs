@@ -145,8 +145,16 @@ get totalPages(): number {
   }
 
   toggleCategory(catId: string): void {
-    this.expandedCategories[catId] = !this.expandedCategories[catId];
+  const isCurrentlyExpanded = this.expandedCategories[catId];
+
+  // Reiniciar todos a false
+  this.expandedCategories = {};
+
+  // Si no estaba expandida, expandirla
+  if (!isCurrentlyExpanded) {
+    this.expandedCategories[catId] = true;
   }
+}
 
   addToCart(productId: string): void {
     this.cartService.addToCartProduct(productId, this.currentUserId);
