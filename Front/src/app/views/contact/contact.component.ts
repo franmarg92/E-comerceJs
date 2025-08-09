@@ -47,7 +47,7 @@ export class ContactComponent {
     text: 'Por favor esperá un momento.',
     allowOutsideClick: false,
     didOpen: () => {
-      Swal.showLoading();
+      Swal.showLoading(null);
     }
   });
 
