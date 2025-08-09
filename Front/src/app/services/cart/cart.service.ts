@@ -11,6 +11,7 @@ import { Product } from '../../models/productModel';
 import { Inject, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { User } from '../../models/userModel';
+import { ProductService } from '../product/product.service';
 
 @Injectable({
   providedIn: 'root',
@@ -30,6 +31,7 @@ export class CartService {
     private http: HttpClient,
     private route: ActivatedRoute,
     private router: Router,
+    private productService: ProductService,
     @Inject(PLATFORM_ID) private platformId: Object
   ) {}
 
@@ -67,8 +69,13 @@ export class CartService {
   }
 
   clearCart(userId: string): Observable<any> {
-  return this.http.delete(`${this.apiUrl}/clear/${userId}`)
-}
+    return this.http.delete(`${this.apiUrl}/clear/${userId}`).pipe(
+      tap(() => {
+        this.items = [];
+        this.itemsSubject.next([]);
+      })
+    );
+  }
 
   // comienzo de funciones
 
@@ -93,6 +100,10 @@ export class CartService {
   }
 
   private updateAnonymousCartSubject(): void {
+    if (!this.productCatalog.length) {
+      return;
+    }
+
     const anonymousItems = this.getAnonymousCart();
     this.itemsSubject.next(anonymousItems);
   }
@@ -128,14 +139,16 @@ export class CartService {
     );
   }
 
-  getCartTotal = (cart: { items: { productId: { price?: number }, quantity: number }[] }): number => {
-  if (!cart || !Array.isArray(cart.items)) return 0;
+  getCartTotal = (cart: {
+    items: { productId: { price?: number }; quantity: number }[];
+  }): number => {
+    if (!cart || !Array.isArray(cart.items)) return 0;
 
-  return cart.items.reduce((acc, item) => {
-    const price = item.productId?.price ?? 0;
-    return acc + price * item.quantity;
-  }, 0);
-};
+    return cart.items.reduce((acc, item) => {
+      const price = item.productId?.price ?? 0;
+      return acc + price * item.quantity;
+    }, 0);
+  };
 
   private syncAnonymousCart(updatedItem: CartItem): void {
     const raw = localStorage.getItem(this.ANON_KEY);
@@ -303,46 +316,45 @@ export class CartService {
   }
 
   addToCartProduct(productId: string, userId: string): void {
-  if (!userId) {
-    console.warn('🛑 Usuario no definido. No se puede agregar al carrito.');
-    return;
-  }
-
-  Swal.fire({
-    title: '¿Agregar al carrito?',
-    text: '¿Deseás añadir este producto?',
-    icon: 'question',
-    showCancelButton: true,
-    confirmButtonText: 'Sí, agregar',
-    cancelButtonText: 'Cancelar',
-    confirmButtonColor: '#d4af37',
-    cancelButtonColor: '#aaa',
-  }).then((result) => {
-    if (result.isConfirmed) {
-      const payload = { userId, productId, quantityChange: 1 };
-
-      this.addToCart(payload).subscribe({
-        next: () => {
-          Swal.fire({
-            icon: 'success',
-            title: 'Agregado al carrito',
-            text: 'Producto añadido exitosamente',
-            confirmButtonColor: '#d4af37',
-          });
-        },
-        error: (err) => {
-          Swal.fire({
-            icon: 'error',
-            title: 'Error',
-            text: err.message || 'No se pudo agregar al carrito',
-            confirmButtonColor: '#d4af37',
-          });
-        },
-      });
+    if (!userId) {
+      console.warn('🛑 Usuario no definido. No se puede agregar al carrito.');
+      return;
     }
-  });
-}
 
+    Swal.fire({
+      title: '¿Agregar al carrito?',
+      text: '¿Deseás añadir este producto?',
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonText: 'Sí, agregar',
+      cancelButtonText: 'Cancelar',
+      confirmButtonColor: '#d4af37',
+      cancelButtonColor: '#aaa',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        const payload = { userId, productId, quantityChange: 1 };
+
+        this.addToCart(payload).subscribe({
+          next: () => {
+            Swal.fire({
+              icon: 'success',
+              title: 'Agregado al carrito',
+              text: 'Producto añadido exitosamente',
+              confirmButtonColor: '#d4af37',
+            });
+          },
+          error: (err) => {
+            Swal.fire({
+              icon: 'error',
+              title: 'Error',
+              text: err.message || 'No se pudo agregar al carrito',
+              confirmButtonColor: '#d4af37',
+            });
+          },
+        });
+      }
+    });
+  }
 
   setProductCatalog(products: Product[]): void {
     this.productCatalog = products;
@@ -350,7 +362,7 @@ export class CartService {
   }
 
   addToAnonymousCart(productId: string): void {
-    const raw = localStorage.getItem('anonymousCart');
+    const raw = localStorage.getItem(this.ANON_KEY);
     const cart: { productId: string; quantity: number }[] = raw
       ? JSON.parse(raw)
       : [];
@@ -363,8 +375,16 @@ export class CartService {
       cart.push({ productId, quantity: 1 });
     }
 
-    localStorage.setItem('anonymousCart', JSON.stringify(cart));
-    this.updateAnonymousCartSubject(); 
+    localStorage.setItem(this.ANON_KEY, JSON.stringify(cart));
+
+    // 🧠 Verificamos si el catálogo está listo
+    if (!this.productCatalog.length) {
+      this.productService.getAllProducts().subscribe((products) => {
+        this.setProductCatalog(products); // esto ya llama a updateAnonymousCartSubject()
+      });
+    } else {
+      this.updateAnonymousCartSubject();
+    }
 
     Swal.fire({
       icon: 'success',
@@ -396,40 +416,34 @@ export class CartService {
     return isPlatformBrowser(this.platformId);
   }
 
-mergeAnonymousCart(userId: string): Observable<void> {
-  if (!isPlatformBrowser(this.platformId)) return of(undefined);
+  mergeAnonymousCart(userId: string): Observable<void> {
+    if (!isPlatformBrowser(this.platformId)) return of(undefined);
 
-  const rawCart = localStorage.getItem('anonymousCart');
-  console.log('🧾 Ítems a fusionar (raw):', rawCart);
+    const rawCart = localStorage.getItem('anonymousCart');
 
-  let items: any[] = [];
+    let items: any[] = [];
 
-  try {
-    items = JSON.parse(rawCart || '[]');
-    console.log('🧾 Ítems a fusionar (parsed):', items);
-  } catch (err) {
-    console.error('❌ Error al parsear anonymousCart:', err);
-    return of(undefined);
-  }
-
-  if (!items.length) {
-    console.warn('⚠️ El carrito anónimo está vacío');
-    return of(undefined);
-  }
-
-  const payload = { userId, items };
-
-  return this.mergeCart(payload).pipe(
-    tap(() => {
-      localStorage.removeItem('anonymousCart');
-      this.refreshCart(userId);
-    }),
-    catchError(err => {
-      console.error('❌ Error en mergeCart:', err);
+    try {
+      items = JSON.parse(rawCart || '[]');
+    } catch (err) {
       return of(undefined);
-    }),
-    map(() => undefined)
-  );
-}
+    }
 
+    if (!items.length) {
+      return of(undefined);
+    }
+
+    const payload = { userId, items };
+
+    return this.mergeCart(payload).pipe(
+      tap(() => {
+        localStorage.removeItem('anonymousCart');
+        this.refreshCart(userId);
+      }),
+      catchError((err) => {
+        return of(undefined);
+      }),
+      map(() => undefined)
+    );
+  }
 }

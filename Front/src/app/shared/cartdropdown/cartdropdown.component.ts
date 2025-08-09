@@ -27,16 +27,6 @@ export class CartdropdownComponent {
       this.cartService.setProductCatalog(products);
       this.cartService.loadCart(userId);
     });
-
-   
-    
-
-    // Suscribirse a los items reactivos
-    this.cartService.items$.subscribe((items) => {
-      this.items = items;
-    });
-
-    this.cartService.loadCart(userId);
   }
 
   increase(item: CartItem) {

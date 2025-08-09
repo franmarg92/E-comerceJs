@@ -2,7 +2,7 @@
   <h3 class="widget-title">Tu carrito</h3>
 
   <div class="widget-body">
-    <div *ngFor="let item of cartService.items" class="widget-item">
+    <div *ngFor="let item of cartService.items$ | async" class="widget-item">
       <img [src]="item.productId.image[0]" alt="{{ item.productId.name }}" />
 
       <div class="info">
@@ -24,12 +24,21 @@
     </div>
   </div>
 
-  <div class="cart-footer" *ngIf="cartService.items.length > 0">
+<div
+  class="cart-footer"
+  *ngIf="(cartService.items$ | async) as items"
+>
+  <ng-container *ngIf="items.length > 0">
     <p>Total: ${{ getTotal() | number: '1.2-2' }}</p>
     <button class="checkout-btn" (click)="checkout()">Finalizar compra</button>
-  </div>
+  </ng-container>
+</div>
 
-  <div *ngIf="cartService.items.length === 0" class="empty-cart">
+<div
+  *ngIf="(cartService.items$ | async) as items"
+  class="empty-cart"
+>
+  <ng-container *ngIf="items.length === 0">
     Tu carrito está vacío. ¡A buscar joyitas! ✨
-  </div>
+  </ng-container>
 </div>
