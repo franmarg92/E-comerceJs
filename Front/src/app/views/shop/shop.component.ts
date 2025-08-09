@@ -10,6 +10,7 @@ import { PLATFORM_ID } from '@angular/core';
 import { Category } from '../../models/categoryModel';
 import { Product } from '../../models/productModel';
 import { CartItem } from '../../models/cartModel';
+import { shuffleArray, paginateArray } from '../../helpers/productHelper';
 
 @Component({
   selector: 'app-shop',
@@ -31,6 +32,9 @@ export class ShopComponent {
   currentUserId: string = '';
   isAuthenticated = false;
   items: CartItem[] = [];
+  currentPage = 1;
+  pageSize = 12;
+  paginatedProducts: Product[] = [];
 
   constructor(
     private categoryService: CategoryService,
@@ -65,12 +69,17 @@ export class ShopComponent {
   }
 
   private loadProducts(): void {
-    this.productService.getAllProducts().subscribe((res: any) => {
-      const products = Array.isArray(res) ? res : [];
-      this.availableProducts = products;
-      this.filteredProducts = products;
-    });
+     this.productService.getAllProducts().subscribe((res: any) => {
+    const products = Array.isArray(res) ? res : [];
+    this.availableProducts = shuffleArray(products);
+    this.filteredProducts = [...this.availableProducts];
+    this.paginate();
+  });
   }
+
+  paginate(): void {
+  this.paginatedProducts = paginateArray(this.filteredProducts, this.currentPage, this.pageSize);
+}
 
   private loadUser(): void {
     if (isPlatformBrowser(this.platformId)) {
@@ -85,30 +94,42 @@ export class ShopComponent {
     });
   }
 
-  filterByCategory(catId: string | null): void {
-    this.selectedCategoryId = catId;
-    this.selectedSubcategoryId = null;
+ filterByCategory(catId: string | null): void {
+  this.selectedCategoryId = catId;
+  this.selectedSubcategoryId = null;
 
-    this.filteredProducts = catId
-      ? this.availableProducts.filter((p) => p.categories?.includes(catId))
-      : this.availableProducts;
-  }
+  this.filteredProducts = catId
+    ? this.availableProducts.filter((p) => p.categories?.includes(catId))
+    : [...this.availableProducts];
 
-  filterBySubcategory(subId: string): void {
-    this.selectedSubcategoryId = subId;
+  this.currentPage = 1;
+  this.paginate();
+}
 
-    // Expand categoría padre automáticamente si está colapsada
-    this.expandParentOfSubcategory(subId);
+filterBySubcategory(subId: string): void {
+  this.selectedSubcategoryId = subId;
+  this.expandParentOfSubcategory(subId);
 
-    this.filteredProducts = this.availableProducts.filter((p) =>
-      p.subcategories?.includes(subId)
-    );
-  }
+  this.filteredProducts = this.availableProducts.filter((p) =>
+    p.subcategories?.includes(subId)
+  );
+
+  this.currentPage = 1;
+  this.paginate();
+}
+
+goToPage(page: number): void {
+  this.currentPage = page;
+  this.paginate();
+}
+get totalPages(): number {
+  return Math.ceil(this.filteredProducts.length / this.pageSize);
+}
 
   onCategoryClick(catId: string): void {
-  this.toggleCategory(catId);         
-  this.filterByCategory(catId);        
-}
+    this.toggleCategory(catId);
+    this.filterByCategory(catId);
+  }
 
   expandParentOfSubcategory(subId: string): void {
     for (const parentId in this.subcategoriesMap) {
@@ -131,7 +152,7 @@ export class ShopComponent {
     this.cartService.addToCartProduct(productId, this.currentUserId);
   }
 
- addToCartAnonimous(productId: string): void {
+  addToCartAnonimous(productId: string): void {
     this.cartService.addToAnonymousCart(productId);
   }
 

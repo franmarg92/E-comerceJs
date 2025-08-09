@@ -59,7 +59,7 @@
     </div>
     <div class="product-grid">
       <!-- Productos estándar (no portfolio) -->
-      <ng-container *ngFor="let product of filteredProducts">
+      <ng-container *ngFor="let product of paginatedProducts">
         <div
           class="product-card"
           *ngIf="!product.isPortfolio"
@@ -99,8 +99,32 @@
           <small *ngIf="product.stock === 0">Sin stock</small>
         </div>
       </ng-container>
+    </div>
+    <div class="pagination-controls" *ngIf="filteredProducts.length > pageSize">
+      <div class="pagination-buttons">
+        <button
+          (click)="goToPage(currentPage - 1)"
+          [disabled]="currentPage === 1"
+        >
+          ← Anterior
+        </button>
 
-     
+        <span>Página {{ currentPage }} de {{ totalPages }}</span>
+
+        <button
+          (click)="goToPage(currentPage + 1)"
+          [disabled]="currentPage >= totalPages"
+        >
+          Siguiente →
+        </button>
+      </div>
+
+      <div>
+        <p class="product-count">
+          Mostrando {{ paginatedProducts.length }} de
+          {{ filteredProducts.length }} productos
+        </p>
+      </div>
     </div>
 
     <!-- 🧭 Fallback visual -->

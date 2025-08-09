@@ -5,6 +5,7 @@ export interface Variant {
 }
 
 export interface Product {
+  
   _id?: string;
   articleCode: string;
   name: string;
