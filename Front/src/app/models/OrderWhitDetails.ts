@@ -14,6 +14,7 @@ export interface OrderWithDetails {
     email: string;
     dni:number
   };
+  notes:string;
   items: OrderItem[];
   totalAmount: number;
   paymentMethod: string;
