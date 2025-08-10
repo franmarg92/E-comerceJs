@@ -15,6 +15,7 @@ const {
   cartRouter,
   orderRouter,
   addressRouter,
+  mercadoPagoRouter
 } = require("./src/routes");
 
 const app = express();
@@ -51,6 +52,7 @@ app.use("/api/category", categoryRouter);
 app.use("/api/cart", cartRouter);
 app.use("/api/order", orderRouter);
 app.use("/api/address", addressRouter);
+app.use("/api/mercadoPago", mercadoPagoRouter);
 
 
 

@@ -6,6 +6,7 @@ const productRouter = require("./productRoutes");
 const roleRouter = require("./roleRoutes");
 const userRouter = require('./userRoutes')
 const authRouter = require('./authRoutes')
+const mercadoPagoRouter = require('./mercadoPagoRoutes');
 module.exports = {
 
   addressRouter,
@@ -15,5 +16,6 @@ module.exports = {
   productRouter,
   roleRouter,
   userRouter,
-  authRouter
+  authRouter,
+  mercadoPagoRouter
 };
