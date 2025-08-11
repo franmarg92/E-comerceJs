@@ -1,6 +1,7 @@
 const { mercadopago } = require('../helpers/mercadoPagoCliente');
 const { Preference } = require('mercadopago');
 
+
 const preferenceClient = new Preference(mercadopago);
 
 const createPreference = async (cartItems, buyerEmail) => {

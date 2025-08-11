@@ -16,6 +16,7 @@ import { AddressServiceService } from '../../services/addressService/address-ser
 import { OrderServiceService } from '../../services/orserService/order-service.service';
 import Swal from 'sweetalert2';
 import { CartService } from '../../services/cart/cart.service';
+import { MercadoPagoService } from '../../services/mercadoPago/mercado-pago.service';
 
 @Component({
   selector: 'app-order-detail',
@@ -41,6 +42,7 @@ export class OrderDetailComponent implements OnInit {
     private addressService: AddressServiceService,
     private cartService: CartService,
     private fb: FormBuilder,
+    private mercadoPagoService: MercadoPagoService,
   @Inject(PLATFORM_ID) private platformId: Object
   ) {}
 
@@ -111,44 +113,28 @@ onCreateAddress(): void {
 
 
   confirmarOrden(): void {
-    if (!this.selectedAddressId || !this.selectedPayment) {
-      Swal.fire('Atención', 'Completá dirección y método de pago.', 'warning');
-      return;
-    }
-
-    const payload = {
-      userId: this.userId,
-      shippingAddressId: this.selectedAddressId,
-      items: this.items,
-      totalAmount: this.total, // ⬅️ este es el nombre correcto
-      paymentMethod: this.selectedPayment,
-      notes: this.notes,
-    };
-
-    this.orderService.createOrder(payload).subscribe({
-      next: () => {
-        this.cartService.clearCart(this.userId).subscribe({
-          next: () => {
-            Swal.fire(
-              '✅ Orden creada',
-              'Gracias por tu compra! 🛍️',
-              'success'
-            );
-            this.router.navigate(['/dashboard/my-purchases']);
-          },
-          error: () => {
-            Swal.fire(
-              '⚠️ Orden creada',
-              'Compra registrada pero el carrito no pudo vaciarse.',
-              'warning'
-            );
-            this.router.navigate(['/dashboard/my-purchases']);
-          },
-        });
-      },
-      error: () => {
-        Swal.fire('❌ Error', 'No se pudo crear la orden.', 'error');
-      },
-    });
+  if (!this.selectedAddressId || !this.selectedPayment) {
+    Swal.fire('Atención', 'Completá dirección y método de pago.', 'warning');
+    return;
   }
+
+  const payload = {
+    userId: this.userId,
+    shippingAddressId: this.selectedAddressId,
+    items: this.items,
+    totalAmount: this.total,
+    paymentMethod: this.selectedPayment,
+    notes: this.notes,
+  };
+
+  this.mercadoPagoService.createPreference(payload).subscribe({
+    next: (url) => {
+      window.location.href = url; // Redirige al checkout de Mercado Pago
+    },
+    error: () => {
+      Swal.fire('❌ Error', 'No se pudo iniciar el pago.', 'error');
+    }
+  });
+}
+
 }
