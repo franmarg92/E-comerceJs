@@ -27,7 +27,7 @@ const createPreference = async (
     userId,
     shippingAddressId,
     items: cartItems.map((item) => ({
-      productId: item.productId,
+      productId: item.productId.toString(),
       quantity: item.quantity,
     })),
     notes,
