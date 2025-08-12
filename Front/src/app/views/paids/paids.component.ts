@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { decodeExternalReference } from '../../helpers/decodeExternalReference';
+import { OrderData } from '../../models/orderData';
 @Component({
   selector: 'app-paids',
   standalone: true,
@@ -9,19 +11,19 @@ import { CommonModule } from '@angular/common';
   styleUrl: './paids.component.css',
 })
 export class PaidsComponent implements OnInit {
-  orderData: any = null;
+orderData: OrderData | null = null;
 
   constructor(private route: ActivatedRoute) {}
 
   ngOnInit(): void {
-    this.route.queryParams.subscribe((params) => {
-      const encodedRef = params['external_reference'];
-      if (encodedRef) {
-        try {
-          this.orderData = JSON.parse(decodeURIComponent(encodedRef));
-        } catch (err) {
-          console.error('Error decoding external_reference', err);
-        }
+    this.route.queryParamMap.subscribe((params) => {
+      const encodedRef = params.get('external_reference');
+      this.orderData = encodedRef ? decodeExternalReference(encodedRef) : null;
+
+      if (!this.orderData) {
+        console.warn('⚠️ external_reference inválido o malformado');
+      } else {
+        console.log('✅ Orden decodificada:', this.orderData);
       }
     });
   }

@@ -1,4 +1,3 @@
-<!-- paids.component.html -->
 <div class="card" *ngIf="orderData">
   <div class="icon">
     <svg
@@ -20,15 +19,23 @@
   <h2>¡Pago exitoso!</h2>
   <p>Gracias por tu compra. Tu pedido está siendo procesado.</p>
 
-  <ul>
-    <li><strong>Usuario:</strong> {{ orderData.userId }}</li>
-    <li><strong>Dirección de envío:</strong> {{ orderData.shippingAddressId }}</li>
-    <li><strong>Productos:</strong></li>
-    <ul>
-      <li *ngFor="let item of orderData.items">
-        Producto: {{ item.productId }} — Cantidad: {{ item.quantity }}
-      </li>
-    </ul>
-    <li *ngIf="orderData.notes"><strong>Notas:</strong> {{ orderData.notes }}</li>
-  </ul>
+  <div class="order-details">
+    <p><strong>Usuario:</strong> {{ orderData.userId }}</p>
+    <p><strong>Dirección de envío:</strong> {{ orderData.shippingAddressId }}</p>
+
+    <div *ngIf="orderData.items?.length">
+      <p><strong>Productos:</strong></p>
+      <ul>
+        <li *ngFor="let item of orderData.items">
+          Producto: {{ item.productId }} — Cantidad: {{ item.quantity }}
+        </li>
+      </ul>
+    </div>
+
+    <p *ngIf="orderData.notes"><strong>Notas:</strong> {{ orderData.notes }}</p>
+  </div>
+</div>
+<div class="error" *ngIf="!orderData">
+  <h2>Error al procesar el pago</h2>
+  <p>Por favor, intenta nuevamente o contacta al soporte.</p>
 </div>
