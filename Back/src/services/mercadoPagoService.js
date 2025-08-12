@@ -40,26 +40,31 @@ const createPreference = async (
     JSON.stringify(externalReferencePayload)
   );
 
-  const preference = {
-    items,
-    payer: { email: buyerEmail },
-    external_reference: externalReference,
-    back_urls: {
-      success: "https://www.distinzionejoyas.com/pago-exitoso",
-      failure: "https://www.distinzionejoyas.com/pago-fallido",
-      pending: "",
-    },
-    auto_return: "approved",
-  };
+const preference = {
+  items,
+  payer: { email: buyerEmail },
+  external_reference: externalReference,
+  back_urls: {
+    success: "https://www.distinzionejoyas.com/pago-exitoso",
+    failure: "https://www.distinzionejoyas.com/pago-fallido",
+    pending: "",
+  },
+  auto_return: "approved",
+  notification_url: "https://www.distinzionejoyas.com/mercadoPago/webhook" 
+};
 
   const response = await preferenceClient.create({ body: preference });
   return response.init_point;
 };
 
-
 const processApprovedPayment = async (paymentId) => {
   const payment = await mercadopago.payment.findById(paymentId);
-  const { status, external_reference, transaction_amount, payment_method_id } = payment.body;
+  const { status, external_reference, transaction_amount, payment_method_id } =
+    payment.body;
+  console.log("📦 Procesando pago:", {
+    paymentId,
+    status,
+  });
 
   if (status !== "approved") {
     console.log("⚠️ Pago no aprobado:", status);
