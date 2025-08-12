@@ -28,7 +28,7 @@ const createPreference = async (
     userId,
     shippingAddressId,
     items: cartItems.map((item) => ({
-      productId: normalizeProductId(item.productId),
+      productId: normalizeProductId.normalizeProductIds(item.productId),
       quantity: item.quantity,
     })),
     notes,
