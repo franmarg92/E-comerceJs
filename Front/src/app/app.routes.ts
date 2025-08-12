@@ -13,6 +13,7 @@ import { OrderDetailComponent } from './views/order-detail/order-detail.componen
 import { MyPurchasesComponent } from './views/my-purchases/my-purchases.component';
 import { SalesComponent } from './views/sales/sales.component';
 import { EditProductComponent } from './views/edit-product/edit-product.component';
+import {PaidsComponent} from './views/paids/paids.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -22,6 +23,7 @@ export const routes: Routes = [
   { path: 'contact', component: ContactComponent },
   { path: 'product-detail/:id', component: ProductDetailComponent },
   { path: 'order-detail', component: OrderDetailComponent },
+  {path: 'pago-exitoso', component: PaidsComponent},
   {
     path: 'dashboard',
     component: DashboardComponent,
