@@ -45,8 +45,8 @@ const preference = {
   payer: { email: buyerEmail },
   external_reference: externalReference,
   back_urls: {
-    success: "https://www.distinzionejoyas.com/pago-exitoso",
-    failure: "https://www.distinzionejoyas.com/pago-fallido",
+    success: "https://distinzionejoyas.com/pago-exitoso",
+    failure: "https://distinzionejoyas.com/pago-exitoso",
     pending: "",
   },
   auto_return: "approved",
