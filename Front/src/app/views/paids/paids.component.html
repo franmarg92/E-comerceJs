@@ -1,0 +1,34 @@
+<!-- paids.component.html -->
+<div class="card" *ngIf="orderData">
+  <div class="icon">
+    <svg
+      width="32"
+      height="32"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="#4CAF50"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    >
+      <path d="M3 21v-2a4 4 0 014-4h10a4 4 0 014 4v2" />
+      <circle cx="12" cy="7" r="4" />
+      <path d="M12 11v4" />
+    </svg>
+  </div>
+
+  <h2>¡Pago exitoso!</h2>
+  <p>Gracias por tu compra. Tu pedido está siendo procesado.</p>
+
+  <ul>
+    <li><strong>Usuario:</strong> {{ orderData.userId }}</li>
+    <li><strong>Dirección de envío:</strong> {{ orderData.shippingAddressId }}</li>
+    <li><strong>Productos:</strong></li>
+    <ul>
+      <li *ngFor="let item of orderData.items">
+        Producto: {{ item.productId }} — Cantidad: {{ item.quantity }}
+      </li>
+    </ul>
+    <li *ngIf="orderData.notes"><strong>Notas:</strong> {{ orderData.notes }}</li>
+  </ul>
+</div>
