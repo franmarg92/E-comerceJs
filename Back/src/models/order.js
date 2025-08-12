@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const orderSchema = new mongoose.Schema(
   {
-    userId: {
+    user: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
       required: true,
@@ -15,17 +15,17 @@ const orderSchema = new mongoose.Schema(
           required: true,
         },
         quantity: { type: Number, required: true },
+        price: { type: Number, required: true }, // necesario para calcular total
         variant: {
           size: String,
           color: String,
         },
-         
       },
     ],
-    totalAmount: { type: Number, required: true, min: 0},
+    totalAmount: { type: Number, required: true, min: 0 },
     status: {
       type: String,
-      enum: ['Pendiente', 'Pagado', 'Entregado', 'En camino', 'Cancelado'],
+      enum: ['Pendiente', 'Pagado', 'En camino', 'Entregado', 'Cancelado', 'paid'],
       default: 'Pendiente',
     },
     shippingAddress: {
@@ -33,14 +33,21 @@ const orderSchema = new mongoose.Schema(
       ref: 'Address',
       required: true,
     },
+    paymentId: {
+      type: String,
+      unique: true,
+      sparse: true,
+    },
     paymentDetails: {
       method: String,
-      transactionId: String,
+      transactionAmount: Number,
+      status: String,
+      raw: Object,
     },
     notes: {
       type: String,
       trim: true,
-    }
+    },
   },
   { timestamps: true }
 );
