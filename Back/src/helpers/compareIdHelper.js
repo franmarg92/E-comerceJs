@@ -4,4 +4,11 @@ const compareProductIds = (a, b) => {
   return idA === idB;
 };
 
-module.exports={compareProductIds}
+
+
+const normalizeProductIds = (product) => {
+  if (!product) return '';
+  if (typeof product === 'object' && product._id) return product._id.toString();
+  return product.toString?.() || '';
+};
+module.exports={compareProductIds, normalizeProductIds}

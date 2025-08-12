@@ -2,6 +2,7 @@ const { mercadopago } = require("../helpers/mercadoPagoCliente");
 const { Preference } = require("mercadopago");
 const { User, Product, Address, Order } = require("../models");
 const orderService = require("../services");
+const normalizeProductId = require("../helpers/compareIdHelper");
 
 const preferenceClient = new Preference(mercadopago);
 
@@ -27,7 +28,7 @@ const createPreference = async (
     userId,
     shippingAddressId,
     items: cartItems.map((item) => ({
-      productId: item.productId.toString(),
+      productId: normalizeProductId(item.productId),
       quantity: item.quantity,
     })),
     notes,
