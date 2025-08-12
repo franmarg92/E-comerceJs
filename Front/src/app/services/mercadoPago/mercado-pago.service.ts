@@ -7,7 +7,7 @@ import { Order } from '../../models/orderModel';
   providedIn: 'root'
 })
 export class MercadoPagoService {
-private apiUrl = 'http://localhost:3000/api/mercadoPago';
+private apiUrl = 'https://distinzionejoyas.com/api/mercadoPago';
   constructor(private http:HttpClient) { }
 
 createPreference(data: Order): Observable<string> {
