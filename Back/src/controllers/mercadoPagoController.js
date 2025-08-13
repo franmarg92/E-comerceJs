@@ -21,30 +21,30 @@ const createPreferenceController = async (req, res) => {
   }
 };
 
+
 const mercadoPagoWebhookController = async (req, res) => {
   try {
     console.log("📩 Webhook recibido:", req.body);
-    console.log("📩 Webhook recibido:", {
-      action: req.body?.action,
-      id: req.body?.data?.id,
-    });
-    const action = req.body?.action || req.body?.type;
 
-if (action !== "payment" && action !== "payment.updated") {
-  console.warn("⚠️ Webhook ignorado:", action);
-  return res.status(200).send("Ignorado");
-}
+    const eventType = req.body?.type || req.body?.action || "";
+    const paymentId = req.body?.data?.id;
 
-const paymentId = req.body?.data?.id;
+    if (!eventType) {
+      console.error("❌ Falta type/action en webhook");
+      return res.status(400).json({ error: "Falta type/action" });
+    }
 
-if (!paymentId) {
-  console.error("❌ Falta payment_id en webhook");
-  return res.status(400).json({ error: "Falta payment_id" });
-}
+    if (!["payment", "payment.updated", "payment.created"].includes(eventType)) {
+      console.warn("⚠️ Webhook ignorado:", eventType);
+      return res.status(200).send("Ignorado");
+    }
 
+    if (!paymentId) {
+      console.error("❌ Falta payment_id en webhook");
+      return res.status(400).json({ error: "Falta payment_id" });
+    }
 
-
-await mercadoPagoService.processApprovedPayment(paymentId);
+    await mercadoPagoService.processApprovedPayment(paymentId);
     res.status(200).send("Orden procesada");
   } catch (err) {
     console.error("❌ Error en webhook:", err);
