@@ -92,18 +92,7 @@ const processWebhook = async (body) => {
     return { status: "ignorado", estado: paymentData.status };
   }
 
-  // 🧾 Persistencia
-  const newPayment = new payment({
-    mp_id: paymentId,
-    status: paymentData.status,
-    amount: paymentData.transaction_amount,
-    payer_email: paymentData.payer?.email,
-    created_at: new Date(),
-  });
-
-  await newPayment.save();
-
-  return { status: "procesado", id: paymentId };
+  
 };
 
 
