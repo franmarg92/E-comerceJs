@@ -38,7 +38,7 @@ const createPreference = async (cartItems, buyerEmail, userId, shippingAddressId
       pending: "",
     },
     auto_return: "approved",
-    notification_url: "https://www.distinzionejoyas.com/api/mercadoPago/webhook",
+    notification_url: "https://www.distinzionejoyas.com/api/mercado-pago/webhook",
   };
 
   const response = await preferenceClient.create({ body: preference });
