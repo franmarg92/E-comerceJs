@@ -28,7 +28,11 @@ const mercadoPagoWebhookController = async (req, res) => {
       action: req.body?.action,
       id: req.body?.data?.id,
     });
-    const action = req.body?.action;
+    const action = req.body?.action || req.body?.type;
+    if (!action) {
+      console.error("❌ Falta action en webhook");
+      return res.status(400).json({ error: "Falta action" });
+    }
     const paymentId = req.body?.data?.id;
 
     if (action !== "payment.created") {
