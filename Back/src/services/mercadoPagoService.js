@@ -1,28 +1,15 @@
-// En tu archivo: src/services/mercadoPagoService.js
-
-// 1. IMPORTACIONES
-// Importamos las clases necesarias del SDK de Mercado Pago
 const { MercadoPagoConfig, Payment, Preference } = require("mercadopago");
 const { User, Product, Address, Order } = require("../models");
 const orderService = require("../services");
 const normalizeProductId = require("../helpers/compareIdHelper");
 
-// 2. CONFIGURACIÓN DEL CLIENTE
-// Creamos una instancia del cliente de Mercado Pago
 const client = new MercadoPagoConfig({ accessToken: process.env.MP_ACCESS_TOKEN });
-
-// Creamos instancias de los servicios que vamos a usar
 const paymentClient = new Payment(client);
 const preferenceClient = new Preference(client);
 
-// 3. FUNCIÓN PARA CREAR PREFERENCIA
-const createPreference = async (
-  cartItems,
-  buyerEmail,
-  userId,
-  shippingAddressId,
-  notes = ""
-) => {
+const delay = (ms) => new Promise((res) => setTimeout(res, ms));
+
+const createPreference = async (cartItems, buyerEmail, userId, shippingAddressId, notes = "") => {
   if (!userId || !shippingAddressId || !cartItems?.length) {
     throw new Error("Datos incompletos para generar preferencia");
   }
@@ -46,9 +33,7 @@ const createPreference = async (
 
   console.log("External Reference Payload:", externalReferencePayload);
 
-  const externalReference = encodeURIComponent(
-    JSON.stringify(externalReferencePayload)
-  );
+  const externalReference = encodeURIComponent(JSON.stringify(externalReferencePayload));
 
   const preference = {
     items,
@@ -60,83 +45,82 @@ const createPreference = async (
       pending: "",
     },
     auto_return: "approved",
-    notification_url: "https://www.distinzionejoyas.com/mercadoPago/webhook",
+    notification_url: "https://www.distinzionejoyas.com/api/mercadoPago/webhook",
   };
 
   const response = await preferenceClient.create({ body: preference });
   return response.init_point;
 };
 
-// 4. FUNCIÓN PARA PROCESAR PAGOS APROBADOS (WEBHOOK)
-const processApprovedPayment = async (paymentId) => {
-  try {
-    // ⚠️ ATENCIÓN: Aquí está la corrección clave para usar el nuevo SDK
-    const payment = await paymentClient.get({ id: paymentId });
-
-    if (!payment?.body) {
-      console.error("❌ No se encontró el pago con ID:", paymentId);
-      return;
-    }
-
-    const { status, external_reference, transaction_amount, payment_method_id } = payment.body;
-
-    if (status !== "approved") {
-      console.warn("⚠️ Pago no aprobado:", status);
-      return;
-    }
-
-    if (!external_reference) {
-      console.error("Falta external_reference en el pago con ID:", paymentId);
-      return;
-    }
-
-    let decoded;
+const processApprovedPayment = async (paymentId, retries = 3) => {
+  for (let attempt = 1; attempt <= retries; attempt++) {
     try {
-      decoded = JSON.parse(decodeURIComponent(external_reference));
+      const payment = await paymentClient.get({ id: paymentId });
+
+      if (!payment?.body) throw new Error("No body en respuesta de pago");
+
+      const { status, external_reference, transaction_amount, payment_method_id } = payment.body;
+
+      if (status !== "approved") {
+        console.warn("⚠️ Pago no aprobado:", status);
+        return;
+      }
+
+      if (!external_reference) {
+        console.error("Falta external_reference en el pago:", paymentId);
+        return;
+      }
+
+      let decoded;
+      try {
+        decoded = JSON.parse(decodeURIComponent(external_reference));
+      } catch (err) {
+        console.error("No se pudo parsear external_reference:", err);
+        return;
+      }
+
+      const { userId, shippingAddressId, items, notes } = decoded;
+
+      if (!userId || !shippingAddressId) {
+        console.error("userId o shippingAddressId faltan en external_reference");
+        return;
+      }
+
+      const user = await User.findById(userId);
+      const address = await Address.findById(shippingAddressId);
+
+      if (!user || !address) {
+        console.error("Usuario o dirección no válidos");
+        return;
+      }
+
+      const existingOrder = await Order.findOne({ "paymentDetails.transactionId": paymentId });
+      if (existingOrder) {
+        console.log("🔁 Orden ya existe:", existingOrder._id);
+        return;
+      }
+
+      const order = await orderService.createOrder({
+        userId,
+        items,
+        shippingAddressId,
+        notes,
+        paymentDetails: {
+          method: payment_method_id,
+          transactionId: paymentId,
+          transactionAmount: transaction_amount,
+          status,
+          raw: payment.body,
+        },
+      });
+
+      console.log("✅ Orden creada:", order._id);
+      return;
     } catch (err) {
-      console.error("No se pudo parsear external_reference para el pago:", paymentId);
-      return;
+      console.error(`❌ Intento ${attempt} fallido para paymentId ${paymentId}:`, err);
+      if (attempt < retries) await delay(1000);
+      else throw err;
     }
-
-    const { userId, shippingAddressId, items, notes } = decoded;
-
-    if (!userId || !shippingAddressId) {
-      console.error("userId o shippingAddressId faltan en external_reference para el pago:", paymentId);
-      return;
-    }
-
-    const user = await User?.findById?.(userId);
-    const address = await Address?.findById?.(shippingAddressId);
-
-    if (!user || !address) {
-      console.error("Usuario o dirección no válidos para el pago:", paymentId);
-      return;
-    }
-
-    const existingOrder = await Order.findOne({ "paymentDetails.transactionId": paymentId });
-    if (existingOrder) {
-      console.log("🔁 Orden ya existe:", existingOrder._id);
-      return;
-    }
-
-    const order = await orderService.createOrder({
-      userId,
-      items,
-      shippingAddressId,
-      notes,
-      paymentDetails: {
-        method: payment_method_id,
-        transactionId: paymentId,
-        transactionAmount: transaction_amount,
-        status,
-        raw: payment.body,
-      },
-    });
-
-    console.log("✅ Orden creada:", order._id);
-  } catch (err) {
-    console.error("❌ Error en processApprovedPayment:", err);
-    throw err;
   }
 };
 

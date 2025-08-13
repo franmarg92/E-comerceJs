@@ -1,6 +1,5 @@
-const {mercadoPagoService} = require('../services');
-const {mercadoPagoMaperHelper} = require('../helpers/mercadoPagoMaperHelper');
-
+const { mercadoPagoService } = require("../services");
+const { mercadoPagoMaperHelper } = require("../helpers/mercadoPagoMaperHelper");
 
 const createPreferenceController = async (req, res) => {
   try {
@@ -22,11 +21,25 @@ const createPreferenceController = async (req, res) => {
   }
 };
 
-
 const mercadoPagoWebhookController = async (req, res) => {
   try {
+    console.log("📩 Webhook recibido:", req.body);
+    console.log("📩 Webhook recibido:", {
+      action: req.body?.action,
+      id: req.body?.data?.id,
+    });
+    const action = req.body?.action;
     const paymentId = req.body?.data?.id;
-    if (!paymentId) return res.status(400).json({ error: "Falta payment_id" });
+
+    if (action !== "payment.created") {
+      console.warn("⚠️ Webhook ignorado, no es payment.created");
+      return res.status(200).send("Ignorado");
+    }
+
+    if (!paymentId) {
+      console.error("❌ Falta payment_id en webhook");
+      return res.status(400).json({ error: "Falta payment_id" });
+    }
 
     await mercadoPagoService.processApprovedPayment(paymentId);
     res.status(200).send("Orden procesada");
@@ -36,4 +49,4 @@ const mercadoPagoWebhookController = async (req, res) => {
   }
 };
 
-module.exports = { createPreferenceController, mercadoPagoWebhookController}
+module.exports = { createPreferenceController, mercadoPagoWebhookController };
