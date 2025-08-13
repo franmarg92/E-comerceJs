@@ -22,13 +22,8 @@ const createPreferenceController = async (req, res) => {
 };
 
 const handleWebhook = async (req, res) => {
-const logId = Date.now();
-  console.log(`🔔 [${logId}] Webhook recibido:`);
-  console.dir(req.body, { depth: null });
-
-  res.status(200).send('OK');
+  console.log("Webhook recibido:", req.body);
+  res.status(200).send("Webhook recibido");
 };
-
-
 
 module.exports = { createPreferenceController, handleWebhook };
