@@ -1,8 +1,8 @@
-const { MercadoPagoConfig, Payment, Preference } = require("mercadopago");
+// Importa directamente el objeto 'preference' que ya tiene el cliente configurado
+const { preference } = require("../helpers/mercadoPagoCliente"); 
 const { User, Address, Order } = require("../models");
 const orderService = require("../services");
 const normalizeProductId = require("../helpers/compareIdHelper");
-const preferenceClient = new Preference(MercadoPagoConfig);
 
 const createPreference = async (cartItems, buyerEmail, userId, shippingAddressId, notes = "") => {
   if (!userId || !shippingAddressId || !cartItems?.length) {
@@ -28,7 +28,7 @@ const createPreference = async (cartItems, buyerEmail, userId, shippingAddressId
 
   const externalReference = encodeURIComponent(JSON.stringify(externalReferencePayload));
 
-  const preference = {
+  const body = { // Renombrado a 'body' para evitar la confusión de nombres
     items,
     payer: { email: buyerEmail },
     external_reference: externalReference,
@@ -41,10 +41,9 @@ const createPreference = async (cartItems, buyerEmail, userId, shippingAddressId
     notification_url: "https://www.distinzionejoyas.com/api/mercado-pago/webhook",
   };
 
- const response = await preferenceClient.create({ body: preference });
+  // Usa directamente el objeto 'preference' que ya está inicializado
+  const response = await preference.create({ body });
   return response.init_point;
 };
-
-
 
 module.exports = { createPreference };
