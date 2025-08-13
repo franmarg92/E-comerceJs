@@ -23,9 +23,9 @@ const createPreferenceController = async (req, res) => {
 
 
 const webhookClientController = async (req, res) => { 
-    
-    const eventType = body.eventType || req.body.event_type;
-    const body = req.body || req.body.data || req.body;
+    const body = req.body 
+    const eventType = body.eventType || req.body.action;
+   
     if (!body) {
       console.error("❌ No body found in webhook request");
       return res.status(400).json({ error: "Bad Request" });
