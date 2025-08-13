@@ -23,35 +23,34 @@ const createPreferenceController = async (req, res) => {
 
 
 const mercadoPagoWebhookController = async (req, res) => {
-  try {
-    console.log("📩 Webhook recibido:", req.body);
-
-    const eventType = req.body?.action || req.body?.type;
-    const paymentId = req.body?.data?.id;
-
-   if (!eventType) {
-      console.error("❌ Falta type/action en webhook");
-      return res.status(400).json({ error: "Falta type/action" });
-    }
-
-    // Procesar solo eventos con pago ya disponible
-    if (!["payment", "payment.updated"].includes(eventType)) {
-      console.warn("⚠️ Webhook ignorado:", eventType);
-      return res.status(200).send("Ignorado");
-    }
-
-    if (!paymentId) {
-      console.error("❌ Falta payment_id en webhook");
-      return res.status(400).json({ error: "Falta payment_id" });
-    }
-
-    await mercadoPagoService.processApprovedPayment(paymentId);
-    res.status(200).send("Orden procesada");
-  } catch (err) {
-    console.error("❌ Error en webhook:", err);
-    res.status(500).send("Error interno");
-  }
   
-};
+    const { body } = req;
+    console.log("Webhook received:", body);   
+    const eventType = body.type || body.action;
+    const paymentId = body.data.id;
+    
+    if(!eventType || !paymentId) {
+      console.error("❌ Missing event type or payment ID in webhook payload");
+      return res.status(400).json({ error: "Bad Request" });
+    }
 
+    if (eventType === "payment.created" || eventType === "payment.updated") {
+      try {
+        const payment = await mercadoPagoService.processApprovedPayment(paymentId);
+        if (!payment) {
+          console.error(`❌ Payment with ID ${paymentId} not found`);
+          return res.status(404).json({ error: "Payment not found" });
+        }
+
+        // Process the payment as needed
+        console.log("Payment details:", payment);
+        
+        // Respond with success
+        return res.status(200).json({ message: "Webhook processed successfully" });
+      } catch (error) {
+        console.error("❌ Error processing webhook:", error);
+        return res.status(500).json({ error: "Internal Server Error" });
+      }
+    }
+}
 module.exports = { createPreferenceController, mercadoPagoWebhookController };
