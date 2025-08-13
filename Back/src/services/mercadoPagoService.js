@@ -93,7 +93,7 @@ const processWebhook = async (body) => {
   }
 
   // 🧾 Persistencia
-  const newPayment = new Payment({
+  const newPayment = new payment({
     mp_id: paymentId,
     status: paymentData.status,
     amount: paymentData.transaction_amount,
