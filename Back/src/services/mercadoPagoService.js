@@ -62,52 +62,49 @@ const createPreference = async (cartItems, buyerEmail, userId, shippingAddressId
 /**
  * Procesa el webhook recibido desde Mercado Pago
  */
-const processWebhook = async (query) => {
-  console.log("¿payment está definido?", typeof payment);
-  const { type, data } = query;
+const processWebhook = async (body) => {
+  const { action, data, type } = body;
 
-  if (type !== "payment" || !data?.id) {
-    throw new Error("Webhook inválido o sin ID de pago");
+  // 🛡️ Validación básica
+  if (!data?.id || type !== "payment") {
+    throw new Error("Payload inválido: falta ID o tipo incorrecto");
   }
 
-  const paymentData = await payment.get({ id: data.id });
-  if (!paymentData || paymentData.status !== "approved") {
-    throw new Error("Pago no aprobado o no encontrado");
+  const paymentId = data.id;
+
+  // 🔁 Evitar duplicados
+  const existing = await Payment.findOne({ mp_id: paymentId });
+  if (existing) {
+    return { status: "duplicado", id: paymentId };
   }
 
-  const reference = decodeURIComponent(paymentData.external_reference);
-  const { userId, shippingAddressId, items, notes } = JSON.parse(reference);
-
-  const user = await User.findById?.(userId) || await User.findByPk?.(userId);
-  const address = await Address.findById?.(shippingAddressId) || await Address.findByPk?.(shippingAddressId);
-  if (!user || !address) {
-    throw new Error("Usuario o dirección no válidos");
-  }
-
-  const existingOrder = await Order.findOne({ paymentId: paymentData.id });
-  if (existingOrder) {
-    logger?.warn("Orden ya procesada", { paymentId: paymentData.id });
-    return;
-  }
-
-  const paymentDetails = {
-    transactionId: paymentData.id,
-    status: paymentData.status,
-    method: paymentData.payment_method_id,
-    amount: paymentData.transaction_amount,
-    payerEmail: paymentData.payer?.email,
-  };
-
-  const newOrder = await orderService.createOrder({
-    userId,
-    items,
-    shippingAddressId,
-    paymentDetails,
-    notes,
+  // 📡 Consulta a Mercado Pago
+  const mpResponse = await axios.get(`https://api.mercadopago.com/v1/payments/${paymentId}`, {
+    headers: {
+      Authorization: `Bearer ${process.env.MP_ACCESS_TOKEN}`,
+    },
   });
 
+  const paymentData = mpResponse.data;
 
-  return newOrder;
+  // ✅ Validación de estado
+  if (paymentData.status !== "approved") {
+    return { status: "ignorado", estado: paymentData.status };
+  }
+
+  // 🧾 Persistencia
+  const newPayment = new Payment({
+    mp_id: paymentId,
+    status: paymentData.status,
+    amount: paymentData.transaction_amount,
+    payer_email: paymentData.payer?.email,
+    created_at: new Date(),
+  });
+
+  await newPayment.save();
+
+  return { status: "procesado", id: paymentId };
 };
+
 
 module.exports = { createPreference, processWebhook };

@@ -22,8 +22,14 @@ const createPreferenceController = async (req, res) => {
 };
 
 const handleWebhook = async (req, res) => {
-  console.log("Webhook recibido:", req.body);
-  res.status(200).send("Webhook recibido");
+  try {
+    const result = await mercadoPagoService.processWebhook(req.body);
+    console.log("✅ Webhook procesado:", result);
+    res.status(200).send("Webhook recibido");
+  } catch (err) {
+    console.error("❌ Error en webhook:", err);
+    res.status(500).send("Error interno");
+  }
 };
 
 module.exports = { createPreferenceController, handleWebhook };
