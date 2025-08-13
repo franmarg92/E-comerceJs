@@ -29,12 +29,13 @@ const mercadoPagoWebhookController = async (req, res) => {
     const eventType = req.body?.action || req.body?.type;
     const paymentId = req.body?.data?.id;
 
-    if (!eventType) {
+   if (!eventType) {
       console.error("❌ Falta type/action en webhook");
       return res.status(400).json({ error: "Falta type/action" });
     }
 
-    if (!["payment", "payment.updated", "payment.created"].includes(eventType)) {
+    // Procesar solo eventos con pago ya disponible
+    if (!["payment", "payment.updated"].includes(eventType)) {
       console.warn("⚠️ Webhook ignorado:", eventType);
       return res.status(200).send("Ignorado");
     }
@@ -50,6 +51,7 @@ const mercadoPagoWebhookController = async (req, res) => {
     console.error("❌ Error en webhook:", err);
     res.status(500).send("Error interno");
   }
+  
 };
 
 module.exports = { createPreferenceController, mercadoPagoWebhookController };
