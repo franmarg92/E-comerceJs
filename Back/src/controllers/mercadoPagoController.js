@@ -42,8 +42,7 @@ if (!paymentId) {
   return res.status(400).json({ error: "Falta payment_id" });
 }
 
-// Esperar unos segundos antes de consultar
-await delay(2000);
+
 
 await mercadoPagoService.processApprovedPayment(paymentId);
     res.status(200).send("Orden procesada");
