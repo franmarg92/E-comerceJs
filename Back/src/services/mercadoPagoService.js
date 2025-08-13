@@ -45,11 +45,6 @@ const createPreference = async (cartItems, buyerEmail, userId, shippingAddressId
   return response.init_point;
 };
 
-const webhookClient = async (paymentId) => {
-  if (!paymentId) throw new Error("Falta payment_id en el webhook");
 
-  const payment = await paymentClient.get(paymentId);
-  return payment;
-}
 
-module.exports = { createPreference, webhookClient };
+module.exports = { createPreference };
