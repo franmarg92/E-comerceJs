@@ -22,7 +22,11 @@ const createPreferenceController = async (req, res) => {
 };
 
 const handleWebhook = async (req, res) => {
-consle.log(req.body);
+const logId = Date.now();
+  console.log(`🔔 [${logId}] Webhook recibido:`);
+  console.dir(req.body, { depth: null });
+
+  res.status(200).send('OK');
 };
 
 
