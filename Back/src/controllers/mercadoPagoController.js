@@ -26,7 +26,7 @@ const mercadoPagoWebhookController = async (req, res) => {
   try {
     console.log("📩 Webhook recibido:", req.body);
 
-    const eventType = req.body?.type || req.body?.action || "";
+    const eventType = req.body?.action || req.body?.type;
     const paymentId = req.body?.data?.id;
 
     if (!eventType) {
