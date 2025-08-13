@@ -24,9 +24,14 @@ const createPreferenceController = async (req, res) => {
 
 const mercadoPagoWebhookController = async (req, res) => {
   
-    const { body } = req;
-    console.log("Webhook received:", body);   
-    const eventType = body.type || body.action;
+    
+      
+    const eventType = body.eventType || req.body.event_type;
+    const body = req.body || req.body.data || req.body;
+    if (!body) {
+      console.error("❌ No body found in webhook request");
+      return res.status(400).json({ error: "Bad Request" });
+    } 
     const paymentId = body.data.id;
     
     if(!eventType || !paymentId) {
