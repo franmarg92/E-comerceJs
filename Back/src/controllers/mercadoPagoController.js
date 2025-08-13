@@ -22,15 +22,19 @@ const createPreferenceController = async (req, res) => {
 };
 
 const handleWebhook = async (req, res) => {
-  try {
-    const { query } = req;
-    logger?.info("Webhook recibido", { query });
+ try {
+    const { type, data, action } = req.body;
 
-    await mercadoPagoService.processWebhook(query);
-    return res.status(200).send("OK");
+    if (type !== "payment" || !data?.id || action !== "payment.updated") {
+      console.warn("Webhook ignorado por formato inválido");
+      return res.status(400).send("Payload inválido");
+    }
+
+    await mercadoPagoService.processWebhook(req.body);
+    return res.status(200).send("Webhook procesado");
   } catch (error) {
-    logger?.error("Error en webhook", { error });
-    return res.status(500).send("Error procesando webhook");
+    console.error("Error procesando webhook:", error);
+    return res.status(500).send("Error interno");
   }
 };
 

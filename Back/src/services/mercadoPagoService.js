@@ -63,6 +63,7 @@ const createPreference = async (cartItems, buyerEmail, userId, shippingAddressId
  * Procesa el webhook recibido desde Mercado Pago
  */
 const processWebhook = async (query) => {
+  console.log("¿payment está definido?", typeof payment);
   const { type, data } = query;
 
   if (type !== "payment" || !data?.id) {

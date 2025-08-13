@@ -56,6 +56,8 @@ app.use("/api/mercadoPago", mercadoPagoRouter);
 
 
 
+
+
 // Servir archivos estáticos
 app.use('/imgs', express.static(path.join(__dirname, "../Back/storage")));
 

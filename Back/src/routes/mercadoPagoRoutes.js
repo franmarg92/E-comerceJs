@@ -4,4 +4,5 @@ const { mercadoPagoController } = require("../controllers");
 
 router.post("/create-preference", mercadoPagoController.createPreferenceController);
 router.post("/webhook", mercadoPagoController.handleWebhook);
+
 module.exports = router;
