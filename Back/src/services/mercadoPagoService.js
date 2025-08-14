@@ -88,10 +88,10 @@ const processWebhookEvent = async (query, body) => {
     // Guardar orden en la DB
     await orderService.createOrder (orderData);
 
-    // Actualizar stock
+    /*Actualizar stock
     for (const item of orderData.items) {
       await productService.decreaseStock(item.productId, item.quantity);
-    }
+    }*/
 
     console.log("✅ Orden guardada y stock actualizado");
   }
