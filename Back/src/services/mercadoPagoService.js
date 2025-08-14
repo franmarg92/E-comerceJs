@@ -1,10 +1,7 @@
 const { mercadopago } = require("../helpers/mercadoPagoCliente");
-const { Preference } = require("mercadopago");
-const { User, Product, Address, Order } = require("../models");
-const orderService = require("../services");
-const normalizeProductId = require("../helpers/compareIdHelper");
+const { preference } = require("../helpers/mercadoPagoCliente");
 
-const preferenceClient = new Preference(mercadopago);
+const normalizeProductId = require("../helpers/compareIdHelper");
 
 const createPreference = async (
   cartItems,
@@ -34,26 +31,24 @@ const createPreference = async (
     notes,
   };
 
-  console.log("External Reference Payload:", externalReferencePayload);
-
   const externalReference = encodeURIComponent(
     JSON.stringify(externalReferencePayload)
   );
 
-const preference = {
-  items,
-  payer: { email: buyerEmail },
-  external_reference: externalReference,
-  back_urls: {
-    success: "https://distinzionejoyas.com/pago-exitoso",
-    failure: "https://distinzionejoyas.com/pago-exitoso",
-    pending: "",
-  },
-  auto_return: "approved",
-  notification_url: "https://www.distinzionejoyas.com/mercadoPago/webhook" 
-};
+  const preferenceData = {
+    items,
+    payer: { email: buyerEmail },
+    external_reference: externalReference,
+    back_urls: {
+      success: "https://distinzionejoyas.com/pago-exitoso",
+      failure: "https://distinzionejoyas.com/pago-fallido",
+      pending: "https://distinzionejoyas.com/pago-pendiente",
+    },
+    auto_return: "approved",
+    notification_url: "https://www.distinzionejoyas.com/mercadoPago/mP/webhook",
+  };
 
-  const response = await preferenceClient.create({ body: preference });
+  const response = await preference.create({ body: preferenceData });
   return response.init_point;
 };
 /**
@@ -92,5 +87,4 @@ const processWebhook = async (body) => {
   
 };*/
 
-
-module.exports = { createPreference, /*processWebhook*/ };
+module.exports = { createPreference /*processWebhook*/ };

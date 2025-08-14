@@ -4,6 +4,7 @@ const { mercadoPagoMaperHelper } = require("../helpers/mercadoPagoMaperHelper");
 const createPreferenceController = async (req, res) => {
   try {
     const order = req.body;
+
     const payload = await mercadoPagoMaperHelper(order);
 
     const url = await mercadoPagoService.createPreference(
