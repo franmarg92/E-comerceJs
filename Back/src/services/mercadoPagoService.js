@@ -1,5 +1,4 @@
 const { preference, payment } = require("../helpers/mercadoPagoCliente");
-const { User, Address, Product, Order } = require("../models");
 const orderService = require("../services/orderService");
 const normalizeProductId = require("../helpers/compareIdHelper");
 
@@ -48,7 +47,7 @@ const createPreference = async (cartItems, buyerEmail, userId, shippingAddressId
       pending: "",
     },
     auto_return: "approved",
-    notification_url: "https://www.distinzionejoyas.com/api/mercadoPago/webhook",
+    notification_url: "https://www.distinzionejoyas.com/api/mercadoPago/mP/webhook",
   };
 
   const response = await preference.create({ body });
@@ -61,7 +60,7 @@ const createPreference = async (cartItems, buyerEmail, userId, shippingAddressId
 
 /**
  * Procesa el webhook recibido desde Mercado Pago
- */
+ 
 const processWebhook = async (body) => {
   const { action, data, type } = body;
 
@@ -93,7 +92,7 @@ const processWebhook = async (body) => {
   }
 
   
-};
+};*/
 
 
-module.exports = { createPreference, processWebhook };
+module.exports = { createPreference, /*processWebhook*/ };
