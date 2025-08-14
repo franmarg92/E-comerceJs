@@ -27,7 +27,7 @@ const createOrder = async ({
   }
 
   const newOrder = new Order({
-    user: userId,
+    userId: userId,
     items: processedItems,
     totalAmount,
     shippingAddress: shippingAddressId,
