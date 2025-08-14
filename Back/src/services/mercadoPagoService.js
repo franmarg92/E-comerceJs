@@ -1,28 +1,28 @@
-const { preference, payment } = require("../helpers/mercadoPagoCliente");
-const orderService = require("../services/orderService");
+const { mercadopago } = require("../helpers/mercadoPagoCliente");
+const { Preference } = require("mercadopago");
+const { User, Product, Address, Order } = require("../models");
+const orderService = require("../services");
 const normalizeProductId = require("../helpers/compareIdHelper");
 
+const preferenceClient = new Preference(mercadopago);
 
-/**
- * Crea una preferencia de pago en Mercado Pago
- */
-const createPreference = async (cartItems, buyerEmail, userId, shippingAddressId, notes = "") => {
-  if (!userId || !shippingAddressId || !Array.isArray(cartItems) || cartItems.length === 0) {
+const createPreference = async (
+  cartItems,
+  buyerEmail,
+  userId,
+  shippingAddressId,
+  notes = ""
+) => {
+  if (!userId || !shippingAddressId || !cartItems?.length) {
     throw new Error("Datos incompletos para generar preferencia");
   }
 
-  const items = cartItems.map((item) => {
-    if (!item.name || !item.quantity || !item.price) {
-      throw new Error("Item del carrito incompleto");
-    }
-
-    return {
-      title: item.name,
-      quantity: item.quantity,
-      unit_price: item.price,
-      currency_id: "ARS",
-    };
-  });
+  const items = cartItems.map((item) => ({
+    title: item.name,
+    quantity: item.quantity,
+    unit_price: item.price,
+    currency_id: "ARS",
+  }));
 
   const externalReferencePayload = {
     userId,
@@ -30,34 +30,32 @@ const createPreference = async (cartItems, buyerEmail, userId, shippingAddressId
     items: cartItems.map((item) => ({
       productId: normalizeProductId.normalizeProductIds(item.productId),
       quantity: item.quantity,
-      variant: item.variant || {},
     })),
     notes,
   };
 
-  const externalReference = encodeURIComponent(JSON.stringify(externalReferencePayload));
+  console.log("External Reference Payload:", externalReferencePayload);
 
-  const body = {
-    items,
-    payer: { email: buyerEmail },
-    external_reference: externalReference,
-    back_urls: {
-      success: "https://distinzionejoyas.com/pago-exitoso",
-      failure: "https://distinzionejoyas.com/pago-exitoso",
-      pending: "",
-    },
-    auto_return: "approved",
-    notification_url: "https://www.distinzionejoyas.com/api/mercadoPago/mP/webhook",
-  };
+  const externalReference = encodeURIComponent(
+    JSON.stringify(externalReferencePayload)
+  );
 
-  const response = await preference.create({ body });
-  if (!response?.init_point) {
-    throw new Error("No se pudo generar el init_point");
-  }
-
-  return response.init_point;
+const preference = {
+  items,
+  payer: { email: buyerEmail },
+  external_reference: externalReference,
+  back_urls: {
+    success: "https://distinzionejoyas.com/pago-exitoso",
+    failure: "https://distinzionejoyas.com/pago-exitoso",
+    pending: "",
+  },
+  auto_return: "approved",
+  notification_url: "https://www.distinzionejoyas.com/mercadoPago/webhook" 
 };
 
+  const response = await preferenceClient.create({ body: preference });
+  return response.init_point;
+};
 /**
  * Procesa el webhook recibido desde Mercado Pago
  
