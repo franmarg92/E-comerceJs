@@ -182,11 +182,20 @@ const getPortfolio = async () => {
   }
 };
 
+const decreaseStock = async (productId, quantity) => {
+  const product = await Product.findByPk(productId);
+  if (product) {
+    product.stock = Math.max(product.stock - quantity, 0);
+    await product.save();
+  }
+};
+
 module.exports = {
   createProduct,
   getAllProducts,
   editProduct,
   getAllProductsById,
   getFeaturedProduct,
-  getPortfolio
+  getPortfolio,
+  decreaseStock
 };

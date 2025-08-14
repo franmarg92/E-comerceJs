@@ -6,7 +6,10 @@ router.post(
   "/create-preference",
   mercadoPagoController.createPreferenceController
 );
-//router.post("/webhook", mercadoPagoController.handleWebhook);
+router.post(
+  "/webhook",
+  mercadoPagoController.mercadoPagoWebhook
+);
 router.post("/mP/webhook", (req, res) => {
     const body = req.body;
   console.log("Webhook recibido:", body);

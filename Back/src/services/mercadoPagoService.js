@@ -1,6 +1,7 @@
 const { mercadopago } = require("../helpers/mercadoPagoCliente");
-const { preference } = require("../helpers/mercadoPagoCliente");
-
+const { preference, payment } = require("../helpers/mercadoPagoCliente");
+const  orderService  = require("../services");
+const productService = require("../services");
 const normalizeProductId = require("../helpers/compareIdHelper");
 
 const createPreference = async (
@@ -45,46 +46,57 @@ const createPreference = async (
       pending: "https://distinzionejoyas.com/pago-pendiente",
     },
     auto_return: "approved",
-    notification_url: "https://distinzionejoyas.com/api/mercadoPago/mP/webhook",
+    notification_url: "https://distinzionejoyas.com/api/mercadoPago/webhook",
   };
 
   const response = await preference.create({ body: preferenceData });
   return response.init_point;
 };
-/**
- * Procesa el webhook recibido desde Mercado Pago
- 
-const processWebhook = async (body) => {
-  const { action, data, type } = body;
 
-  // 🛡️ Validación básica
-  if (!data?.id || type !== "payment") {
-    throw new Error("Payload inválido: falta ID o tipo incorrecto");
+
+
+const processWebhookEvent = async (query, body) => {
+  console.log("📩 Webhook recibido:", query, body);
+
+  let paymentId;
+
+  // MP puede mandar el id en distintas formas
+  if (query["data.id"]) {
+    paymentId = query["data.id"];
+  } else if (query.id && query.topic === "payment") {
+    paymentId = query.id;
+  } else if (body?.data?.id) {
+    paymentId = body.data.id;
   }
 
-  const paymentId = data.id;
-
-  // 🔁 Evitar duplicados
-  const existing = await Payment.findOne({ mp_id: paymentId });
-  if (existing) {
-    return { status: "duplicado", id: paymentId };
+  if (!paymentId) {
+    console.warn("⚠️ No se recibió paymentId");
+    return;
   }
 
-  // 📡 Consulta a Mercado Pago
-  const mpResponse = await axios.get(`https://api.mercadopago.com/v1/payments/${paymentId}`, {
-    headers: {
-      Authorization: `Bearer ${process.env.MP_ACCESS_TOKEN}`,
-    },
-  });
+  // Obtener detalles del pago desde MP
+  const paymentData = await payment.get({ id: paymentId });
+  console.log("💳 Detalles del pago:", paymentData);
 
-  const paymentData = mpResponse.data;
+  if (paymentData.status === "approved") {
+    // Decodificar external_reference
+    const decoded = decodeURIComponent(paymentData.external_reference);
+    const orderData = JSON.parse(decoded);
 
-  // ✅ Validación de estado
-  if (paymentData.status !== "approved") {
-    return { status: "ignorado", estado: paymentData.status };
+    console.log("📦 Datos de la orden:", orderData);
+
+    // Guardar orden en la DB
+    await orderService.orderService.createOrder (orderData);
+
+    // Actualizar stock
+    for (const item of orderData.items) {
+      await productService.productService.decreaseStock(item.productId, item.quantity);
+    }
+
+    console.log("✅ Orden guardada y stock actualizado");
   }
+};
 
-  
-};*/
 
-module.exports = { createPreference /*processWebhook*/ };
+
+module.exports = { createPreference, processWebhookEvent  };
