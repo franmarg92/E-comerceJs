@@ -1,7 +1,7 @@
 const { mercadopago } = require("../helpers/mercadoPagoCliente");
 const { preference, payment } = require("../helpers/mercadoPagoCliente");
-const  orderService  = require("../services");
-const productService = require("../services");
+const  orderService  = require("../services/orderService");
+const productService = require("../services/productService");
 const normalizeProductId = require("../helpers/compareIdHelper");
 
 const createPreference = async (
@@ -86,11 +86,11 @@ const processWebhookEvent = async (query, body) => {
     console.log("📦 Datos de la orden:", orderData);
 
     // Guardar orden en la DB
-    await orderService.orderService.createOrder (orderData);
+    await orderService.createOrder (orderData);
 
     // Actualizar stock
     for (const item of orderData.items) {
-      await productService.productService.decreaseStock(item.productId, item.quantity);
+      await productService.decreaseStock(item.productId, item.quantity);
     }
 
     console.log("✅ Orden guardada y stock actualizado");
