@@ -45,7 +45,7 @@ const createPreference = async (
       pending: "https://distinzionejoyas.com/pago-pendiente",
     },
     auto_return: "approved",
-    notification_url: "https://www.distinzionejoyas.com/mercadoPago/mP/webhook",
+    notification_url: "https://distinzionejoyas.com/api/mercadoPago/mP/webhook",
   };
 
   const response = await preference.create({ body: preferenceData });
