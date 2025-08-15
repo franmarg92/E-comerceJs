@@ -54,8 +54,17 @@ const createPreference = async (
 const processWebhookEvent = async (query, body) => {
   console.log("📩 Webhook recibido:", query, body);
 
+  const topic = query.topic || body.topic;
+  const type = query.type || body.type;
+
   let paymentId;
-  let paymentStatus
+  let paymentStatus;
+
+  // 🔒 Filtro defensivo: ignorar si no es de tipo payment
+  if (topic !== "payment" && type !== "payment") {
+    console.log("⏸️ Webhook ignorado: no es de tipo payment");
+    return;
+  }
 
   // MP puede mandar el id en distintas formas
   if (query["data.id"]) {
@@ -74,24 +83,20 @@ const processWebhookEvent = async (query, body) => {
   // Obtener detalles del pago desde MP
   const paymentData = await payment.get({ id: paymentId });
 
-  console.log("imprimiendo datos ", paymentId)
+  console.log("🧾 Detalles del pago recibidos:", paymentId);
 
   if (paymentData.status === "approved") {
     // Decodificar external_reference
     const decoded = decodeURIComponent(paymentData.external_reference);
     const orderData = JSON.parse(decoded);
 
-   
-
-  
     paymentStatus = paymentData.status;
 
     const enrichedOrderData = {
-  ...orderData,
-  paymentId,
-  paymentStatus
-};
-
+      ...orderData,
+      paymentId,
+      paymentStatus
+    };
 
     // Guardar orden en la DB
     await orderService.createOrder(enrichedOrderData);
@@ -99,5 +104,6 @@ const processWebhookEvent = async (query, body) => {
     console.log("✅ Orden guardada y stock actualizado");
   }
 };
+
 
 module.exports = { createPreference, processWebhookEvent };
