@@ -84,7 +84,7 @@ const processWebhookEvent = async (query, body) => {
     console.log("💰 Monto del pago:", paymentData.transaction_amount);
     console.log("paymentData", paymentData);
     console.log('📝 Detalles del pago:', paymentId)
-    console.log('📝 Detalles del pago:', id)
+    console.log('📝 Detalle del pago:', id)
 
     // Guardar orden en la DB
     await orderService.createOrder(orderData);
