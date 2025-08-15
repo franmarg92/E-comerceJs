@@ -45,12 +45,7 @@ const orderSchema = new mongoose.Schema(
       unique: true,
       sparse: true,
     },
-    paymentDetails: {
-      method: String,
-      transactionAmount: Number,
-      status: String,
-      raw: Object,
-    },
+   
     notes: {
       type: String,
       trim: true,
