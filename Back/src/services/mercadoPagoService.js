@@ -1,7 +1,5 @@
-const { mercadopago } = require("../helpers/mercadoPagoCliente");
 const { preference, payment } = require("../helpers/mercadoPagoCliente");
-const  orderService  = require("../services/orderService");
-const productService = require("../services/productService");
+const orderService = require("../services/orderService");
 const normalizeProductId = require("../helpers/compareIdHelper");
 
 const createPreference = async (
@@ -53,8 +51,6 @@ const createPreference = async (
   return response.init_point;
 };
 
-
-
 const processWebhookEvent = async (query, body) => {
   console.log("📩 Webhook recibido:", query, body);
 
@@ -74,6 +70,12 @@ const processWebhookEvent = async (query, body) => {
     return;
   }
 
+    const alreadyExists = await orderExists(paymentId);
+  if (alreadyExists) {
+    console.warn("⚠️ Orden ya existe para este paymentId:", paymentId);
+    return;
+  }
+
   // Obtener detalles del pago desde MP
   const paymentData = await payment.get({ id: paymentId });
   console.log("💳 Detalles del pago:", paymentData);
@@ -86,17 +88,12 @@ const processWebhookEvent = async (query, body) => {
     console.log("📦 Datos de la orden:", orderData);
 
     // Guardar orden en la DB
-    await orderService.createOrder (orderData);
+    await orderService.createOrder(orderData);
 
-    /*Actualizar stock
-    for (const item of orderData.items) {
-      await productService.decreaseStock(item.productId, item.quantity);
-    }*/
+  
 
-    console.log("✅ Orden guardada y stock actualizado");
+    console.log("✅ Orden guardada con éxito");
   }
 };
 
-
-
-module.exports = { createPreference, processWebhookEvent  };
+module.exports = { createPreference, processWebhookEvent };

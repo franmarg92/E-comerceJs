@@ -23,10 +23,17 @@ const orderSchema = new mongoose.Schema(
       },
     ],
     totalAmount: { type: Number, required: true, min: 0 },
-    status: {
+     paymentStatus: {
       type: String,
-      enum: ['Pendiente', 'Pagado', 'En camino', 'Entregado', 'Cancelado', 'paid'],
-      default: 'Pendiente',
+      enum: ['pending', 'approved', 'rejected', 'in_process'],
+      default: 'pending',
+    },
+
+    
+    orderStatus: {
+      type: String,
+      enum: ['pendiente', 'preparando', 'en_camino', 'entregado', 'cancelado'],
+      default: 'pendiente',
     },
     shippingAddress: {
       type: mongoose.Schema.Types.ObjectId,
@@ -48,7 +55,12 @@ const orderSchema = new mongoose.Schema(
       type: String,
       trim: true,
     },
+       // Datos de envío
+    shippingId: { type: String, default: null }, // ej: número de seguimiento
+    shippingProvider: { type: String, default: null }, // Correo Argentino, OCA, etc.
+    shippingDate: { type: Date, default: null },
   },
+  
   { timestamps: true }
 );
 
