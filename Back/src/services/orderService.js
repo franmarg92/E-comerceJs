@@ -5,7 +5,8 @@ const createOrder = async ({
   userId,
   items,
   shippingAddressId,
-  paymentDetails,
+  paymentId,
+  paymentStatus = "pending",
   notes,
 }) => {
   const processedItems = [];
@@ -32,7 +33,6 @@ const createOrder = async ({
     totalAmount,
     shippingAddress: shippingAddressId,
     paymentId: paymentId,
-    paymentDetails,
     paymentStatus: "paid",
     notes,
   });
