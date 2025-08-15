@@ -31,9 +31,9 @@ const createOrder = async ({
     items: processedItems,
     totalAmount,
     shippingAddress: shippingAddressId,
-    paymentId: paymentDetails?.transactionId,
+    paymentId: paymentId,
     paymentDetails,
-    status: "paid", 
+    paymentStatus: "paid",
     notes,
   });
 
