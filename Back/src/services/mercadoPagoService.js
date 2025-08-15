@@ -82,14 +82,15 @@ const processWebhookEvent = async (query, body) => {
     console.log("📦 Datos de la orden:", orderData);
 
     
-    
+    const paymentStatus = paymentData.status;
+    const paymentId = paymentData.id;
 
     
 
     
 
     // Guardar orden en la DB
-    await orderService.createOrder(orderData, paymentData.id, paymentData.status);
+    await orderService.createOrder(orderData, paymentId, paymentStatus);
 
     console.log("✅ Orden guardada y stock actualizado");
   }
