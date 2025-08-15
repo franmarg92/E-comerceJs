@@ -55,7 +55,7 @@ const getAllOrders = async () => {
     .populate("items.product", "name image price articleCode ")
     .populate("shippingAddress")
     .populate("notes")
-    .populate("paymentId, paymentStatus");
+    
 };
 
 const updateOrder = async (orderId, updates) => {

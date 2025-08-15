@@ -21,9 +21,10 @@ export class SalesComponent {
   ngOnInit(): void {
     this.orderService.getAllOrder().subscribe({
       next: (res) => {
-        
+        console.log('✅ Órdenes cargadas:', res);
 
         this.orders = res.orders || [];
+        
        
       },
       error: (err) => {

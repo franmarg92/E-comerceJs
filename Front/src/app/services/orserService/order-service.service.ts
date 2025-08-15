@@ -7,7 +7,7 @@ import { OrderWithDetails } from '../../models/OrderWhitDetails';
   providedIn: 'root',
 })
 export class OrderServiceService {
-  private apiUrl = 'https://distinzionejoyas.com/api/order';
+  private apiUrl = 'http://localhost:3000/api/order';
   constructor(private http: HttpClient) {}
 
   createOrder(dataOrder: Order): Observable<Order> {

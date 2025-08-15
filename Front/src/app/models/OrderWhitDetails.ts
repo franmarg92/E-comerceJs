@@ -1,5 +1,5 @@
-import { Product } from "./productModel";
-import { Address } from "./addressModel";
+import { Product } from './productModel';
+import { Address } from './addressModel';
 export interface OrderItem {
   product: Product;
   quantity: number;
@@ -10,11 +10,11 @@ export interface OrderWithDetails {
   userId: {
     _id: string;
     name: string;
-    lastName:string;
+    lastName: string;
     email: string;
-    dni:number
+    dni: number;
   };
-  notes:string;
+  notes: string;
   items: OrderItem[];
   totalAmount: number;
   paymentMethod: string;
@@ -22,4 +22,15 @@ export interface OrderWithDetails {
   createdAt: string;
   updatedAt: string;
   shippingAddress: Address;
+  orderStatus?:
+    | 'Pendiente'
+    | 'Pagado'
+    | 'Entregado '
+    | 'En camino'
+    | 'Cancelado';
+  paymentId: string;
+  paymentStatus: 'pending' | 'approved' | 'rejected' | 'in_process';
+  shippingId?: string;
+  shippingProvider: string;
+  shippingDate: string;
 }
