@@ -81,16 +81,20 @@ const processWebhookEvent = async (query, body) => {
     const decoded = decodeURIComponent(paymentData.external_reference);
     const orderData = JSON.parse(decoded);
 
-   console.log("paymentData", paymentId)
+   
 
   
     paymentStatus = paymentData.status;
 
-    console.log("Datos de la orden:", paymentStatus)
+    const enrichedOrderData = {
+  ...orderData,
+  paymentId,
+  paymentStatus
+};
 
 
     // Guardar orden en la DB
-    await orderService.createOrder(orderData, paymentId, paymentStatus);
+    await orderService.createOrder(enrichedOrderData);
 
     console.log("✅ Orden guardada y stock actualizado");
   }
