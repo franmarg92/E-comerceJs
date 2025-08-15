@@ -59,14 +59,15 @@ const processWebhookEvent = async (query, body) => {
   let paymentStatus;
 
   // MP puede mandar el id en distintas formas
-  if (query["data.id"]) {
+  /*if (query["data.id"]) {
     paymentId = query["data.id"];
     console.log("📩 Webhook recibido:", query, body);
-  } 
+  } */
   
-  /*else if (query.id && topic === "payment") {
+   if (query.id && topic === "payment") {
     paymentId = query.id;
-  } else if (body?.data?.id) {
+  } 
+  /*else if (body?.data?.id) {
     paymentId = body.data.id;
   }
  
