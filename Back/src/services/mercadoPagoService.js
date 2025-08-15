@@ -63,11 +63,12 @@ const processWebhookEvent = async (query, body) => {
     paymentId = query["data.id"];
     console.log("📩 Webhook recibido:", query, body);
   } 
-  
-   if (query.id && topic === "payment") {
+  /*
+   else if (query.id && topic === "payment") {
     paymentId = query.id;
+    console.log("📩 Webhook2 recibido:", query, body);
   } 
-  /*else if (body?.data?.id) {
+  else if (body?.data?.id) {
     paymentId = body.data.id;
   }
  
@@ -83,7 +84,7 @@ const processWebhookEvent = async (query, body) => {
   }*/
 
   // Obtener detalles del pago desde MP
-  const paymentData = await payment.get({ id: paymentId });
+  const paymentData = await payment.get(paymentId);
 
   console.log("🧾 Detalles del pago recibidos:", paymentId);
 
