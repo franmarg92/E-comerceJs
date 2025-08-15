@@ -1,6 +1,5 @@
 const { Product } = require("../models");
 const { Order } = require("../models");
-const orderExists = require("../helpers/orderExists");
 
 const createOrder = async ({
   userId,
@@ -9,30 +8,12 @@ const createOrder = async ({
   paymentDetails,
   notes,
 }) => {
-
-   // 🛡️ Validación defensiva
-  if (paymentDetails?.transactionId) {
-    const exists = await orderExists(paymentDetails.transactionId);
-    if (exists) {
-      throw new Error(`Orden ya existe para paymentId ${paymentDetails.transactionId}`);
-    }
-  }
-
   const processedItems = [];
   let totalAmount = 0;
 
   for (const item of items) {
     const product = await Product.findById(item.productId);
     if (!product) throw new Error(`Producto ${item.productId} no encontrado`);
-
-     // 🛡️ Validación de stock
-  if (product.stock < item.quantity) {
-    throw new Error(`Stock insuficiente para ${product.name}`);
-  }
-
-  // 🧮 Descuento de stock
-  product.stock -= item.quantity;
-  await product.save(); // 👈 Persistimos el cambio
 
     const price = product.price;
     totalAmount += price * item.quantity;
@@ -46,31 +27,19 @@ const createOrder = async ({
   }
 
   const newOrder = new Order({
-    userId,
+    userId: userId,
     items: processedItems,
     totalAmount,
     shippingAddress: shippingAddressId,
-
-    // 🔑 Guardamos datos de pago pero el status lo manejamos aparte
-    paymentId: paymentDetails?.transactionId || null,
+    paymentId: paymentDetails?.transactionId,
     paymentDetails,
-    paymentStatus: paymentDetails ? "paid" : "pending", // 👈 separado
-
-    // 🔑 Estado de la orden
-    orderStatus: "pendiente", // "pendiente", "preparando", "en_camino", "entregado"
-
-    // 🔑 Datos de envío
-    shippingId: null,
-    shippingProvider: null,
-    shippingDate: null,
-
+    status: "paid", 
     notes,
   });
 
   await newOrder.save();
   return newOrder;
 };
-
 
 const getAllOrders = async () => {
   return await Order.find()

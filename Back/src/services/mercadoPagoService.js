@@ -1,7 +1,6 @@
 const { preference, payment } = require("../helpers/mercadoPagoCliente");
 const orderService = require("../services/orderService");
 const normalizeProductId = require("../helpers/compareIdHelper");
-const {orderExists} = require("../helpers/orderExists");
 
 const createPreference = async (
   cartItems,
@@ -68,12 +67,6 @@ const processWebhookEvent = async (query, body) => {
 
   if (!paymentId) {
     console.warn("⚠️ No se recibió paymentId");
-    return;
-  }
-
-    const alreadyExists = await orderExists(paymentId);
-  if (alreadyExists) {
-    console.warn("⚠️ Orden ya existe para este paymentId:", paymentId);
     return;
   }
 
