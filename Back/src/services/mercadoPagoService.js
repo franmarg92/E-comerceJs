@@ -73,6 +73,8 @@ const processWebhookEvent = async (query, body) => {
   // Obtener detalles del pago desde MP
   const paymentData = await payment.get({ id: paymentId });
 
+  console.log("imprimiendo datos ", paymentId, paymentStatus)
+
   if (paymentData.status === "approved") {
     // Decodificar external_reference
     const decoded = decodeURIComponent(paymentData.external_reference);
@@ -80,18 +82,12 @@ const processWebhookEvent = async (query, body) => {
 
    console.log("paymentData", paymentId, paymentStatus)
 
-    // Fusionar datos
-    const enrichedOrderData = {
-      ...orderData,
-      paymentId: paymentData.id,
-      paymentStatus: paymentData.status,
-    };
-
-    console.log(enrichedOrderData)
+  
+ 
 
 
     // Guardar orden en la DB
-    await orderService.createOrder(enrichedOrderData);
+    await orderService.createOrder(orderData);
 
     console.log("✅ Orden guardada y stock actualizado");
   }
