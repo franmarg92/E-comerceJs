@@ -55,6 +55,7 @@ const processWebhookEvent = async (query, body) => {
   console.log("📩 Webhook recibido:", query, body);
 
   let paymentId;
+  let paymentStatus
 
   // MP puede mandar el id en distintas formas
   if (query["data.id"]) {
@@ -83,11 +84,13 @@ const processWebhookEvent = async (query, body) => {
    console.log("paymentData", paymentId)
 
   
- 
+    paymentStatus = paymentData.status;
+
+    console.log("Datos de la orden:", paymentStatus)
 
 
     // Guardar orden en la DB
-    await orderService.createOrder(orderData, paymentId);
+    await orderService.createOrder(orderData, paymentId, paymentStatus);
 
     console.log("✅ Orden guardada y stock actualizado");
   }
