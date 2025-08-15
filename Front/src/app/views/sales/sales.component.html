@@ -25,6 +25,7 @@
       {{ order.shippingAddress.province }}, {{ order.shippingAddress.country }}
     </p>
     <p><strong>Notas:</strong> {{order.notes}}</p>
+    <p><strong>Estado de pago:</strong> {{order.paymentStatus}}</p>
     <p>
       <strong>Estado:</strong>
       <span
@@ -35,7 +36,7 @@
           'badge bg-info': order.status === 'Pagado',
           'badge bg-primary': order.status === 'Entregado'
         }"
-        >{{ order.status | uppercase }}</span
+        >{{ order.orderStatus | uppercase }}</span
       >
     </p>
     <select

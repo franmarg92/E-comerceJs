@@ -72,7 +72,7 @@ const getOrdersByUserId = async (userId) => {
   return await Order.find({ userId })
     .populate("items.product", "name image price articleCode")
     .populate("shippingAddress")
-    .populate("paymentId, paymentStatus")
+    
     .sort({ createdAt: -1 });
 };
 
@@ -81,7 +81,7 @@ const getOrderById = async (orderId) => {
     .populate("userId", "name email")
     .populate("items.product", "name image price articleCode")
     .populate("shippingAddress")
-    .populate("paymentId, paymentStatus");
+    
 };
 
 
