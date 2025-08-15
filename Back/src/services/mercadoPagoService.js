@@ -108,7 +108,7 @@ const processWebhookEvent = async (query, body) => {
 
     console.log("✅ Orden guardada y stock actualizado");
 
-    await cartService.clearCart(orderData.userId);
+    await cartService.deleteCart(orderData.userId);
     console.log("🛒 Carrito limpiado para el usuario:", orderData.userId)
    
   }
