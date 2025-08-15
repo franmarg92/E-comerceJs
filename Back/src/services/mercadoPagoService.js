@@ -82,15 +82,12 @@ const processWebhookEvent = async (query, body) => {
     console.log("📦 Datos de la orden:", orderData);
 
     // Enriquecer con datos de pago
-    orderData.paymentDetails = {
-      transactionId: paymentData.id,
-      method: paymentData.payment_method_id,
-      transactionAmount: paymentData.transaction_amount,
-
-      raw: paymentData,
+    orderData = {
+      paymentId: paymentId,
+      paymentStatus : "paid"
     };
 
-    orderData.paymentStatus = "paid";
+    
 
     // Guardar orden en la DB
     await orderService.createOrder(orderData);
