@@ -1,7 +1,7 @@
 const { preference, payment } = require("../helpers/mercadoPagoCliente");
 const orderService = require("../services/orderService");
 const normalizeProductId = require("../helpers/compareIdHelper");
-
+const cartService = require("../services/cartService");
 const createPreference = async (
   cartItems,
   buyerEmail,
@@ -108,6 +108,9 @@ const processWebhookEvent = async (query, body) => {
 
     console.log("✅ Orden guardada y stock actualizado");
   }
+
+  await cartService.deleteCartByUserId(orderData.userId);
+  console.log("🧹 Carrito eliminado para el usuario:", orderData.userId);
 };
 
 
