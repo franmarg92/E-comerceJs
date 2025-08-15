@@ -73,6 +73,7 @@ const processWebhookEvent = async (query, body) => {
   // Obtener detalles del pago desde MP
   const paymentData = await payment.get({ id: paymentId });
   console.log("💳 Detalles del pago:", paymentData);
+  
 
   if (paymentData.status === "approved") {
     // Decodificar external_reference
@@ -80,14 +81,15 @@ const processWebhookEvent = async (query, body) => {
     const orderData = JSON.parse(decoded);
 
     console.log("📦 Datos de la orden:", orderData);
+    console.log("💰 Monto del pago:", paymentData.transaction_amount);
+    console.log("paymentData", paymentData);
+    console.log('📝 Detalles del pago:', paymentId)
+    console.log('📝 Detalles del pago:', id)
 
     // Guardar orden en la DB
     await orderService.createOrder(orderData);
 
-    /*Actualizar stock
-    for (const item of orderData.items) {
-      await productService.decreaseStock(item.productId, item.quantity);
-    }*/
+
 
     console.log("✅ Orden guardada y stock actualizado");
   }
