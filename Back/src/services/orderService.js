@@ -54,7 +54,8 @@ const getAllOrders = async () => {
     .populate("userId", "name email dni lastName")
     .populate("items.product", "name image price articleCode ")
     .populate("shippingAddress")
-    .populate("notes");
+    .populate("notes")
+    .populate("paymentId, paymentStatus");
 };
 
 const updateOrder = async (orderId, updates) => {
@@ -71,6 +72,7 @@ const getOrdersByUserId = async (userId) => {
   return await Order.find({ userId })
     .populate("items.product", "name image price articleCode")
     .populate("shippingAddress")
+    .populate("paymentId, paymentStatus")
     .sort({ createdAt: -1 });
 };
 
@@ -78,7 +80,8 @@ const getOrderById = async (orderId) => {
   return await Order.findById(orderId)
     .populate("userId", "name email")
     .populate("items.product", "name image price articleCode")
-    .populate("shippingAddress");
+    .populate("shippingAddress")
+    .populate("paymentId, paymentStatus");
 };
 
 
