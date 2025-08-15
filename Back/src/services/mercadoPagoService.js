@@ -57,7 +57,12 @@ const processWebhookEvent = async (query, body) => {
   const topic = query.topic || body.topic;
   const type = query.type || body.type;
 
-  
+  console.log("🔍 Tipo de evento:", topic || type);
+  console.log("🔍 Query params:", query);
+  console.log("🔍 Body:", body) ;
+  console.log("topic:", topic); 
+console.log("type:", type);
+  let paymentId;
   let paymentStatus;
 
   // MP puede mandar el id en distintas formas
@@ -69,25 +74,11 @@ const processWebhookEvent = async (query, body) => {
     paymentId = body.data.id;
   }
 
-  
-
-  const idFromTopic = query.id || body.id;
-  const idFromData = query["data.id"] || body["data.id"] || body?.data?.id;
-
-  // 🔍 Comparar IDs si ambos existen
-  if (idFromTopic && idFromData && idFromTopic !== idFromData) {
-    console.warn("⚠️ Los IDs no coinciden:", { idFromTopic, idFromData });
+  // 🔒 Filtro defensivo: ignorar si no es de tipo payment o falta paymentId
+  if ((topic !== "payment" && type !== "payment") || !paymentId) {
+    console.log("⏸️ Webhook ignorado: no es de tipo payment o falta paymentId");
     return;
   }
-
-  // 🔒 Filtro defensivo: ignorar si no es de tipo payment y no hay ID válido
-  if ((topic !== "payment" && type !== "payment") && !idFromData && !idFromTopic) {
-    console.log("⏸️ Webhook ignorado: no es de tipo payment y no hay ID");
-    return;
-  }
-
-  // ✅ Usar el ID que esté presente
-  const paymentId = idFromData || idFromTopic;
 
   if (!paymentId) {
     console.warn("⚠️ No se recibió paymentId");
