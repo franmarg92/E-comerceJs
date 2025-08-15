@@ -54,14 +54,7 @@ const createPreference = async (
 const processWebhookEvent = async (query, body) => {
   console.log("📩 Webhook recibido:", query, body);
 
-  const topic = query.topic || body.topic;
-  const type = query.type || body.type;
-
-  console.log("🔍 Tipo de evento:", topic || type);
-  console.log("🔍 Query params:", query);
-  console.log("🔍 Body:", body) ;
-  console.log("topic:", topic); 
-console.log("type:", type);
+ 
   let paymentId;
   let paymentStatus;
 
@@ -78,12 +71,12 @@ console.log("type:", type);
   if ((topic !== "payment" && type !== "payment") || !paymentId) {
     console.log("⏸️ Webhook ignorado: no es de tipo payment o falta paymentId");
     return;
-  }*/
+  }
 
   if (!paymentId) {
     console.warn("⚠️ No se recibió paymentId");
     return;
-  }
+  }*/
 
   // Obtener detalles del pago desde MP
   const paymentData = await payment.get({ id: paymentId });
