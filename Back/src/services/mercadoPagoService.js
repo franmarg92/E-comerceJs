@@ -52,19 +52,16 @@ const createPreference = async (
 };
 
 const processWebhookEvent = async (query, body) => {
- 
-
- 
   let paymentId;
   let paymentStatus;
-  console.log("🔔 Webhook recibido:", query)
+  console.log("🔔 Webhook recibido:", query);
   console.log("🔔 Webhook body:", body);
 
   // MP puede mandar el id en distintas formas
   if (query["data.id"]) {
     paymentId = query["data.id"];
     console.log("📩 Webhook recibido:", query, body);
-  } 
+  }
   /*
    else if (query.id && topic === "payment") {
     paymentId = query.id;
@@ -100,18 +97,16 @@ const processWebhookEvent = async (query, body) => {
     const enrichedOrderData = {
       ...orderData,
       paymentId,
-      paymentStatus
+      paymentStatus,
     };
 
     // Guardar orden en la DB
     await orderService.createOrder(enrichedOrderData);
 
     console.log("✅ Orden guardada y stock actualizado");
+    await cartService.deleteCartByUserId(orderData.userId);
+    console.log("🧹 Carrito eliminado para el usuario:", orderData.userId);
   }
-
-  await cartService.deleteCartByUserId(orderData.userId);
-  console.log("🧹 Carrito eliminado para el usuario:", orderData.userId);
 };
-
 
 module.exports = { createPreference, processWebhookEvent };
