@@ -60,19 +60,19 @@ const processWebhookEvent = async (query, body) => {
   let paymentId;
   let paymentStatus;
 
-  // 🔒 Filtro defensivo: ignorar si no es de tipo payment
-  if (topic !== "payment" && type !== "payment") {
-    console.log("⏸️ Webhook ignorado: no es de tipo payment");
-    return;
-  }
-
   // MP puede mandar el id en distintas formas
   if (query["data.id"]) {
     paymentId = query["data.id"];
-  } else if (query.id && query.topic === "payment") {
+  } else if (query.id && topic === "payment") {
     paymentId = query.id;
   } else if (body?.data?.id) {
     paymentId = body.data.id;
+  }
+
+  // 🔒 Filtro defensivo: ignorar si no es de tipo payment o falta paymentId
+  if ((topic !== "payment" && type !== "payment") || !paymentId) {
+    console.log("⏸️ Webhook ignorado: no es de tipo payment o falta paymentId");
+    return;
   }
 
   if (!paymentId) {
