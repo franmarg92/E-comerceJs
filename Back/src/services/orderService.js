@@ -12,12 +12,20 @@ const createOrder = async ({
   const processedItems = [];
   let totalAmount = 0;
 
-  for (const item of items) {
+    for (const item of items) {
     const product = await Product.findById(item.productId);
     if (!product) throw new Error(`Producto ${item.productId} no encontrado`);
 
+    if (product.stock < item.quantity) {
+      throw new Error(`Stock insuficiente para el producto ${product.name}`);
+    }
+
     const price = product.price;
     totalAmount += price * item.quantity;
+
+    // Descontar stock
+    product.stock -= item.quantity;
+    await product.save();
 
     processedItems.push({
       product: product._id,
