@@ -73,14 +73,14 @@ const processWebhookEvent = async (query, body) => {
   // Obtener detalles del pago desde MP
   const paymentData = await payment.get({ id: paymentId });
 
-  console.log("imprimiendo datos ", paymentId, paymentStatus)
+  console.log("imprimiendo datos ", paymentId)
 
   if (paymentData.status === "approved") {
     // Decodificar external_reference
     const decoded = decodeURIComponent(paymentData.external_reference);
     const orderData = JSON.parse(decoded);
 
-   console.log("paymentData", paymentId, paymentStatus)
+   console.log("paymentData", paymentId)
 
   
  
