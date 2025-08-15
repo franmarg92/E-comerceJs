@@ -33,7 +33,7 @@ const createOrder = async ({
     totalAmount,
     shippingAddress: shippingAddressId,
     paymentId: paymentId,
-    paymentStatus: "approved",
+    paymentStatus: paymentStatus,
     notes,
   });
 
