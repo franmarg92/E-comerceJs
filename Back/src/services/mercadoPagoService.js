@@ -52,7 +52,7 @@ const createPreference = async (
 };
 
 const processWebhookEvent = async (query, body) => {
-  console.log("📩 Webhook recibido:", query, body);
+ 
 
  
   let paymentId;
@@ -61,12 +61,15 @@ const processWebhookEvent = async (query, body) => {
   // MP puede mandar el id en distintas formas
   if (query["data.id"]) {
     paymentId = query["data.id"];
-  } /*else if (query.id && topic === "payment") {
+    console.log("📩 Webhook recibido:", query, body);
+  } 
+  
+  /*else if (query.id && topic === "payment") {
     paymentId = query.id;
   } else if (body?.data?.id) {
     paymentId = body.data.id;
   }
-
+ 
   // 🔒 Filtro defensivo: ignorar si no es de tipo payment o falta paymentId
   if ((topic !== "payment" && type !== "payment") || !paymentId) {
     console.log("⏸️ Webhook ignorado: no es de tipo payment o falta paymentId");
