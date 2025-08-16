@@ -6,6 +6,6 @@ router.post("/create-address", addressController.createAddressController);
 router.get("/:userId", addressController.getUserAddressesByUserIdController);
 router.patch("/defautl/:id", addressController.setDefaultAddressController);
 router.delete('/delete/:addressId', addressController.deleteAddressController)
-router.put('/edit/:addressId', addressController.editAddressController)
+router.patch('/edit/:id', addressController.editAddressController)
 
 module.exports = router;

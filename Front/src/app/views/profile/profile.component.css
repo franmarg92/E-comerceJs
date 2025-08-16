@@ -48,6 +48,15 @@
   background-color: #bca034;
 }
 
+.gold-divider {
+  border: none;
+  height: 2px;
+  background: linear-gradient(to right, #d4af37, #f5e6b2);
+  margin: 12px auto;
+  width: 60%;
+  border-radius: 1px;
+}
+
 @media (max-width: 768px) {
   .row {
     flex-direction: column;

@@ -41,7 +41,7 @@ const editAddress = async (addressId, userId, updates) => {
     throw new Error('No se encontró la dirección para editar');
   }
 
-  Object.assign(address, updates); // Aplica los cambios
+  Object.assign(address, updates); 
 
   return await address.save();
 };

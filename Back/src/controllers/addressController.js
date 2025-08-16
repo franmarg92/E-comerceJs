@@ -35,11 +35,18 @@ const setDefaultAddressController = async (req, res) => {
 
 const editAddressController = async (req, res) => {
   try {
-    const { addressId } = req.params;
+    const { id: addressId } = req.params;
     const { userId, ...updates } = req.body;
 
-    const updated = await editAddress(addressId, userId, updates);
-    res.status(200).json(updated);
+    const updated = await addressService.editAddress(
+      addressId,
+      userId,
+      updates
+    );
+    res.status(200).json({
+      message: "Dirección editada correctamente",
+      data: updated,
+    });
   } catch (err) {
     res
       .status(500)

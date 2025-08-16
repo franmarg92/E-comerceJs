@@ -5,6 +5,7 @@ import {
   FormGroup,
   Validators,
   ReactiveFormsModule,
+  FormsModule,
 } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { AddressServiceService } from '../../services/addressService/address-service.service';
@@ -14,7 +15,7 @@ import { Address } from '../../models/addressModel';
 @Component({
   selector: 'app-profile',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.css',
 })
@@ -24,6 +25,7 @@ export class ProfileComponent {
   addressForm!: FormGroup;
   userId: string = '';
   addressList: Address[] = [];
+  selectedAddressId: string = '';
 
   constructor(
     private fb: FormBuilder,
@@ -33,37 +35,35 @@ export class ProfileComponent {
 
   ngOnInit(): void {
     const userlocal = JSON.parse(localStorage.getItem('user') || '{}');
-   this.userId = userlocal.userId;
+    this.userId = userlocal.userId;
 
     // Inicializás el formulario vacío en ngOnInit()
-this.userForm = this.fb.group({
-  userId: this.userId,
-  name: ['', Validators.required],
-  lastName: [''],
-  dni: [''],
-  email: ['', [Validators.required, Validators.email]],
-  phoneNumber: ['']
-});
+    this.userForm = this.fb.group({
+      userId: this.userId,
+      name: ['', Validators.required],
+      lastName: [''],
+      dni: [{ value: '', disabled: true }],
+      email: ['', [Validators.required, Validators.email]],
+      phoneNumber: [''],
+    });
 
-// Luego cargás los datos reales con patchValue
-this.userService.getUserById(this.userId).subscribe(res => {
-  this.userForm.patchValue({
-    name: res.user.name,
-    lastName: res.user.lastName,
-    dni: res.user.dni,
-    email: res.user.email,
-    phoneNumber: res.user.phoneNumber || ''
-  });
-});
+    // Luego cargás los datos reales con patchValue
+    this.userService.getUserById(this.userId).subscribe((res) => {
+      this.userForm.patchValue({
+        name: res.user.name,
+        lastName: res.user.lastName,
+        dni: res.user.dni,
+        email: res.user.email,
+        phoneNumber: res.user.phoneNumber || '',
+      });
+    });
 
     // 🔒 Formulario contraseña
     this.passwordForm = this.fb.group({
       currentPassword: ['', Validators.required],
       newPassword: ['', [Validators.required, Validators.minLength(6)]],
-      confirmPassword: ['', Validators.required]
+      confirmPassword: ['', Validators.required],
     });
-
-
 
     // 🏠 Formulario dirección
     this.addressForm = this.fb.group({
@@ -76,14 +76,19 @@ this.userService.getUserById(this.userId).subscribe(res => {
       country: ['', Validators.required],
       isDefault: [false],
     });
+
+    this.addressService.addressesObservable$.subscribe((addresses) => {
+      this.addressList = addresses;
+    });
+
+    this.addressService.loadAddresses(this.userId);
   }
 
   // 🧍 Guardar datos personales
   onUpdateUser(): void {
     const formData = this.userForm.value;
     console.log(formData);
-    this.userService.editUser( formData).subscribe({
-      
+    this.userService.editUser(formData).subscribe({
       next: () => Swal.fire('✅ Actualizado', 'Datos guardados.', 'success'),
       error: () =>
         Swal.fire('❌ Error', 'No se pudo guardar el perfil.', 'error'),
@@ -91,71 +96,73 @@ this.userService.getUserById(this.userId).subscribe(res => {
   }
 
   // 🔐 Cambiar contraseña
-changePassword(): void {
-  const { currentPassword, newPassword, confirmPassword} =  this.passwordForm.value;
-  
+  changePassword(): void {
+    const { currentPassword, newPassword, confirmPassword } =
+      this.passwordForm.value;
 
-  if (!this.userId) {
-    Swal.fire({
-      icon: 'error',
-      title: 'Error',
-      text: 'Usuario no encontrado.',
-      toast: true,
-      position: 'top-end',
-      showConfirmButton: false,
-      timer: 1500,
-      timerProgressBar: true,
-    });
-    return;
-  }
-
-  if (newPassword !== confirmPassword) {
-    Swal.fire({
-      icon: 'error',
-      title: 'Error',
-      text: 'Las contraseñas no coinciden.',
-      toast: true,
-      position: 'top-end',
-      showConfirmButton: false,
-      timer: 1500,
-      timerProgressBar: true,
-    });
-    return;
-  }
-
-  this.userService.changePassword(this.userId, currentPassword, newPassword).subscribe({
-    next: () => {
-      Swal.fire({
-        icon: 'success',
-        title: 'Éxito',
-        text: 'Contraseña actualizada correctamente.',
-        toast: true,
-        position: 'top-end',
-        showConfirmButton: false,
-        timer: 1500,
-        timerProgressBar: true,
-      });
-    },
-    error: (err) => {
+    if (!this.userId) {
       Swal.fire({
         icon: 'error',
         title: 'Error',
-        text: err.error.message || 'Hubo un problema al cambiar la contraseña.',
+        text: 'Usuario no encontrado.',
         toast: true,
         position: 'top-end',
         showConfirmButton: false,
         timer: 1500,
         timerProgressBar: true,
       });
+      return;
     }
-  });
-}
 
+    if (newPassword !== confirmPassword) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Las contraseñas no coinciden.',
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 1500,
+        timerProgressBar: true,
+      });
+      return;
+    }
+
+    this.userService
+      .changePassword(this.userId, currentPassword, newPassword)
+      .subscribe({
+        next: () => {
+          Swal.fire({
+            icon: 'success',
+            title: 'Éxito',
+            text: 'Contraseña actualizada correctamente.',
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 1500,
+            timerProgressBar: true,
+          });
+        },
+        error: (err) => {
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text:
+              err.error.message || 'Hubo un problema al cambiar la contraseña.',
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 1500,
+            timerProgressBar: true,
+          });
+        },
+      });
+  }
 
   // 🏠 Crear nueva dirección
   onCreateAddress(): void {
     const addressData = this.addressForm.value;
-    console.log(addressData)
+    console.log(addressData);
     this.addressService.createAddress(addressData).subscribe({
       next: () => {
         Swal.fire('📍 Dirección agregada', '', 'success');
@@ -166,39 +173,66 @@ changePassword(): void {
     });
   }
 
-  loadUserAddresses(): void {
-    if (!this.userId) {
-      console.warn('🛑 userId no definido');
-      Swal.fire('⚠️ Usuario no definido', 'No se puede cargar direcciones.', 'warning');
+  // editar direccion
+
+  onAddressSelect(addressId: string | null) {
+    if (!addressId) {
+      this.addressForm.reset();
+      this.addressForm.enable();
       return;
     }
-  
-    console.log('📤 Solicitando direcciones para userId:', this.userId);
-  
-    this.addressService.getAddresses(this.userId).subscribe({
-    next: (res) => {
-      this.addressList = res.addresses;
-  
-      if (!res.addresses.length) {
-        Swal.fire(
-          '📭 Sin direcciones',
-          'Podés agregar una para continuar.',
-          'info'
-        );
-      }
-  
-      console.log('📥 Direcciones recibidas:', res.addresses);
-    },
-    error: (err) => {
-      console.error('❌ Error al cargar direcciones:', err);
-      this.addressList = [];
-      Swal.fire(
-        '❌ Error',
-        'No se pudieron cargar las direcciones.',
-        'error'
-      );
+
+    const selected = this.addressList.find((addr) => addr._id === addressId);
+    if (!selected) {
+      return;
     }
-  });
-  
+
+    this.addressForm.patchValue({
+      street: selected.street,
+      number: selected.number,
+      city: selected.city,
+      province: selected.province,
+      zipCode: selected.zipCode,
+      country: selected.country,
+      isDefault: selected.isDefault ?? false,
+    });
+
+    this.addressForm.enable(); // Por si estaba deshabilitado
+  }
+
+  onSaveAddress(): void {
+    const addressData = this.addressForm.value;
+
+    if (!this.selectedAddressId) {
+      // Crear nueva
+      this.addressService.createAddress(addressData).subscribe({
+        next: () => {
+          Swal.fire('📍 Dirección agregada', '', 'success');
+          this.addressForm.reset();
+          this.addressService.loadAddresses(this.userId); // Refrescar lista
+        },
+        error: (err) =>
+          Swal.fire('❌ Error', err.message || 'No se pudo guardar', 'error'),
+      });
+    } else {
+      // Editar existente
+      this.addressService
+        .updateAddress(this.selectedAddressId, this.userId, addressData)
+        .subscribe({
+          next: () => {
+            console.log(addressData);
+            console.log(this.selectedAddressId);
+            console.log(this.userId);
+            Swal.fire('✏️ Dirección actualizada', '', 'success');
+            this.addressService.loadAddresses(this.userId); // Refrescar lista
+          },
+          error: (err) =>
+            Swal.fire(
+              '❌ Error',
+              err.message || 'No se pudo actualizar',
+              'error'
+            ),
+        });
+    }
   }
 }

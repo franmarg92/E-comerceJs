@@ -1,5 +1,4 @@
 <div class="profile-wrapper">
-
   <!-- 🧍 Datos personales -->
   <div class="card-section">
     <h3>🧍 Información Personal</h3>
@@ -28,19 +27,33 @@
 
       <div class="mb-3">
         <label>Teléfono</label>
-        <input type="text" formControlName="phoneNumber" class="form-control" placeholder="+54 9 ..." />
+        <input
+          type="text"
+          formControlName="phoneNumber"
+          class="form-control"
+          placeholder="+54 9 ..."
+        />
       </div>
 
-      <button type="submit" class="btn btn-gold w-100">Guardar datos personales</button>
+      <button type="submit" class="btn btn-gold w-100">
+        Guardar datos personales
+      </button>
     </form>
   </div>
-
- 
 
   <!-- 📍 Dirección -->
   <div class="card-section">
     <h3>📍 Domicilio</h3>
-    <form [formGroup]="addressForm" (ngSubmit)="onCreateAddress()">
+    <label class="form-label">Direcciones Existentes</label>
+    <select class="form-select" [(ngModel)]="selectedAddressId" (ngModelChange)="onAddressSelect($event)">
+      <option [value]="null"> Nueva dirección</option>
+      <option *ngFor="let dir of addressList" [value]="dir._id">
+        {{ dir.street }} {{ dir.number }}, {{ dir.city }} {{ dir.zipCode }}
+      </option>
+    </select>
+    <hr class="gold-divider" />
+
+    <form [formGroup]="addressForm" (ngSubmit)="onSaveAddress()">
       <div class="row">
         <div class="col-md-6 mb-3">
           <label>Calle</label>
@@ -74,32 +87,51 @@
       </div>
 
       <div class="form-check mb-3">
-        <input type="checkbox" class="form-check-input" formControlName="isDefault" />
+        <input
+          type="checkbox"
+          class="form-check-input"
+          formControlName="isDefault"
+        />
         <label class="form-check-label">Marcar como dirección principal</label>
       </div>
 
-      <button type="submit" class="btn btn-gold w-100">Guardar domicilio</button>
+      <button type="submit" class="btn btn-gold w-100">
+        Guardar domicilio
+      </button>
     </form>
   </div>
 
-   <!-- 🔒 Cambio de contraseña -->
+  <!-- 🔒 Cambio de contraseña -->
   <div class="card-section">
     <h3>🔒 Cambiar Contraseña</h3>
     <form [formGroup]="passwordForm" (ngSubmit)="changePassword()">
       <div class="mb-3">
         <label>Contraseña actual</label>
-        <input type="password" formControlName="currentPassword" class="form-control" />
+        <input
+          type="password"
+          formControlName="currentPassword"
+          class="form-control"
+        />
       </div>
       <div class="mb-3">
         <label>Nueva contraseña</label>
-        <input type="password" formControlName="newPassword" class="form-control" />
+        <input
+          type="password"
+          formControlName="newPassword"
+          class="form-control"
+        />
       </div>
       <div class="mb-3">
         <label>Confirmar contraseña</label>
-        <input type="password" formControlName="confirmPassword" class="form-control" />
+        <input
+          type="password"
+          formControlName="confirmPassword"
+          class="form-control"
+        />
       </div>
-      <button type="submit" class="btn btn-gold w-100">Actualizar contraseña</button>
+      <button type="submit" class="btn btn-gold w-100">
+        Actualizar contraseña
+      </button>
     </form>
   </div>
-
 </div>
