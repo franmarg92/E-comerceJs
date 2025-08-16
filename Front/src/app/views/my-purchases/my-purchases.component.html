@@ -2,7 +2,7 @@
   <div class="card-body">
     <h5 class="text-gold">Orden #{{ order._id }}</h5>
     <p>
-      <strong>Estado:</strong>
+      <strong>Estado: </strong>
       <span
         [ngClass]="{
           'badge bg-warning': order.status === 'Pendiente',
@@ -11,9 +11,11 @@
           'badge bg-info': order.status === 'Pagado',
           'badge bg-primary': order.status === 'Entregado'
         }"
-        >{{ order.status | uppercase }}</span
+        >{{ order.orderStatus | uppercase }}</span
       >
     </p>
+    <p><strong>Estado de pago: </strong>{{order.paymentStatus}}</p>
+    <p><strong>ID pago Mercado pago: </strong>{{order.paymentId}}</p>
 
     <p><strong>Fecha:</strong> {{ order.createdAt | date : "medium" }}</p>
     <p><strong>Total:</strong> ${{ order.totalAmount }}</p>

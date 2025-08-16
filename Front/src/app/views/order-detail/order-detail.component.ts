@@ -82,9 +82,7 @@ export class OrderDetailComponent implements OnInit {
      // 🟡 Suscripción reactiva
   this.addressService.addressesObservable$.subscribe(addresses => {
     this.addressList = addresses;
-    if (!addresses.length) {
-      Swal.fire('📭 Sin direcciones', 'Podés agregar una para continuar.', 'info');
-    }
+   
   });
 
   this.addressService.loadAddresses(this.userId);
@@ -114,7 +112,7 @@ onCreateAddress(): void {
 
   confirmarOrden(): void {
   if (!this.selectedAddressId || !this.selectedPayment) {
-    Swal.fire('Atención', 'Completá dirección y método de pago.', 'warning');
+    Swal.fire('Atención', 'Completá dirección y/o método de pago.', 'warning');
     return;
   }
 
