@@ -124,10 +124,25 @@ onCreateAddress(): void {
     paymentMethod: this.selectedPayment,
     notes: this.notes,
   };
+  console.log(payload)
 
   this.mercadoPagoService.createPreference(payload).subscribe({
     next: (url) => {
-      window.location.href = url; // Redirige al checkout de Mercado Pago
+      console.log(payload)
+      Swal.fire({
+        title: 'Redirigiendo a Mercado Pago...',
+        text: 'Serás redirigido para completar el pago.',
+        icon: 'info',
+        allowOutsideClick: false,
+        allowEscapeKey: false,
+        showConfirmButton: false,
+        didOpen: () => {
+          Swal.showLoading(null);
+          setTimeout(() => {
+            window.location.href = url;
+          }, 1000); // Pequeño delay para que el usuario vea el mensaje
+        }
+      });
     },
     error: () => {
       Swal.fire('❌ Error', 'No se pudo iniciar el pago.', 'error');
