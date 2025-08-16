@@ -42,7 +42,7 @@ export class SalesComponent {
 
     return orders.filter((order) => {
       const client = order.userId;
-      const status = order.status || '';
+      const status = order.orderStatus || '';
 
       return (
         client.name.toLowerCase().includes(text) ||
@@ -60,7 +60,7 @@ cambiarEstado(orderId: string, event: Event): void {
   this.orderService.updateOrderStatus(orderId, nuevoEstado).subscribe({
     next: (res) => {
       const index = this.orders.findIndex(o => o._id === orderId);
-      if (index !== -1) this.orders[index].status = nuevoEstado;
+      if (index !== -1) this.orders[index].orderStatus = nuevoEstado;
       console.log('✅ Estado actualizado:', res);
     },
     error: (err) => {

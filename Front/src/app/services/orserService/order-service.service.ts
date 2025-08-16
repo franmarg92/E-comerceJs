@@ -34,9 +34,10 @@ export class OrderServiceService {
 
   updateOrderStatus(
     orderId: string,
-    status: string
+    orderStatus: string
   ): Observable<OrderWithDetails> {
-    const body = { status };
+    const body = {     orderStatus
+ };
 
     return this.http.patch<OrderWithDetails>(
       `${this.apiUrl}/update-order/${orderId}`,

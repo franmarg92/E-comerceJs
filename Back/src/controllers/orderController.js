@@ -21,10 +21,10 @@ const getAllOrdersController = async (req, res) => {
 const updateOrderController = async (req, res) => {
   try {
     const orderId = req.params.id;
-    const { status, paymentDetails } = req.body;
+    const { orderStatus, paymentDetails } = req.body;
 
     const updatedOrder = await orderService.updateOrder(orderId, {
-      status,
+      orderStatus,
       paymentDetails,
     });
 

@@ -18,16 +18,10 @@ export interface OrderWithDetails {
   items: OrderItem[];
   totalAmount: number;
   paymentMethod: string;
-  status: string;
+  orderStatus: string;
   createdAt: string;
   updatedAt: string;
   shippingAddress: Address;
-  orderStatus?:
-    | 'Pendiente'
-    | 'Pagado'
-    | 'Entregado '
-    | 'En camino'
-    | 'Cancelado';
   paymentId: string;
   paymentStatus: 'pending' | 'approved' | 'rejected' | 'in_process';
   shippingId?: string;
