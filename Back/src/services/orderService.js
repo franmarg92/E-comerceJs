@@ -61,7 +61,7 @@ const getAllOrders = async () => {
 const updateOrder = async (orderId, updates) => {
   const updatePayload = {};
 
-  if (updates.status) updatePayload.status = updates.status;
+  if (updates.orderStatus) updatePayload.orderStatus = updates.orderStatus;
   if (updates.paymentDetails)
     updatePayload.paymentDetails = updates.paymentDetails;
 
