@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { decodeExternalReference } from '../../helpers/decodeExternalReference';
 import { OrderData } from '../../models/orderData';
+
 @Component({
   selector: 'app-paids',
   standalone: true,
@@ -13,7 +14,7 @@ import { OrderData } from '../../models/orderData';
 export class PaidsComponent implements OnInit {
 orderData: OrderData | null = null;
 
-  constructor(private route: ActivatedRoute) {}
+  constructor(private route: ActivatedRoute, private router: Router) {}
 
   ngOnInit(): void {
     this.route.queryParamMap.subscribe((params) => {
@@ -22,9 +23,15 @@ orderData: OrderData | null = null;
 
       if (!this.orderData) {
         console.warn('⚠️ external_reference inválido o malformado');
-      } else {
-        console.log('✅ Orden decodificada:', this.orderData);
-      }
+      } 
     });
   }
+
+goToMyOrders(): void {
+  this.router.navigate(['/dashboard/my-purchases']);
+}
+
+goToShop(): void {
+  this.router.navigate(['/shop']);
+}
 }

@@ -1,4 +1,4 @@
-<div class="card" *ngIf="orderData">
+<div class="thank-you-card">
   <div class="icon">
     <svg
       width="32"
@@ -15,27 +15,22 @@
       <path d="M12 11v4" />
     </svg>
   </div>
+  <h2>✨ ¡Gracias por elegirnos!</h2>
+  <p>
+    Tu compra fue procesada con éxito. Pronto recibirás novedades sobre el
+    envío.
+  </p>
+  <p>
+    Mientras tanto, podés revisar tus compras o seguir explorando nuestras
+    joyas.
+  </p>
 
-  <h2>¡Pago exitoso!</h2>
-  <p>Gracias por tu compra. Tu pedido está siendo procesado.</p>
-
-  <div class="order-details">
-    <p><strong>Usuario:</strong> {{ orderData.userId }}</p>
-    <p><strong>Dirección de envío:</strong> {{ orderData.shippingAddressId }}</p>
-
-    <div *ngIf="orderData.items?.length">
-      <p><strong>Productos:</strong></p>
-      <ul>
-        <li *ngFor="let item of orderData.items">
-          Producto: {{ item.productId }} — Cantidad: {{ item.quantity }}
-        </li>
-      </ul>
-    </div>
-
-    <p *ngIf="orderData.notes"><strong>Notas:</strong> {{ orderData.notes }}</p>
+  <div class="actions">
+    <button class="btn btn-primary" (click)="goToMyOrders()">
+      Ver mis compras
+    </button>
+    <button class="btn btn-secondary" (click)="goToShop()">
+      Seguir explorando
+    </button>
   </div>
-</div>
-<div class="error" *ngIf="!orderData">
-  <h2>Error al procesar el pago</h2>
-  <p>Por favor, intenta nuevamente o contacta al soporte.</p>
 </div>
