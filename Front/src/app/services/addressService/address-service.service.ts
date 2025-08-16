@@ -9,7 +9,7 @@ import Swal from 'sweetalert2';
   providedIn: 'root',
 })
 export class AddressServiceService {
-  private apiUrl = 'https://distinzionejoyas.com/api/address';
+  private apiUrl = 'http://localhost:3000/api/address';
   private userId: string = '';
   public addresses$ = new BehaviorSubject<Address[]>([]);
   public  addressesObservable$ = this.addresses$.asObservable();
@@ -47,9 +47,11 @@ export class AddressServiceService {
 
   updateAddress(
     addressId: string,
+    userId: string,
     data: Partial<Address>
   ): Observable<Address> {
-    return this.http.patch<Address>(`${this.apiUrl}/${addressId}`, data);
+    const payload = { ...data, userId };
+    return this.http.patch<Address>(`${this.apiUrl}/edit/${addressId}`, payload);
   }
 
   confirmSave(): void {
