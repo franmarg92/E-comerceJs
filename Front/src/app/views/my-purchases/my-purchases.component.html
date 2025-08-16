@@ -5,11 +5,11 @@
       <strong>Estado: </strong>
       <span
         [ngClass]="{
-          'badge bg-warning': order.status === 'Pendiente',
-          'badge bg-success': order.status === 'En camino',
-          'badge bg-danger': order.status === 'Cancelado',
-          'badge bg-info': order.status === 'Pagado',
-          'badge bg-primary': order.status === 'Entregado'
+          'badge bg-warning': order.orderStatus === 'Pendiente',
+          'badge bg-success': order.orderStatus === 'En camino',
+          'badge bg-danger': order.orderStatus === 'Cancelado',
+          'badge bg-info': order.orderStatus === 'Pagado',
+          'badge bg-primary': order.orderStatus === 'Entregado'
         }"
         >{{ order.orderStatus | uppercase }}</span
       >
