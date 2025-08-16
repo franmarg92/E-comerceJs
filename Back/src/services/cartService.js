@@ -108,24 +108,50 @@ const deleteItemsByProductId = async (userId, productId) => {
 
 const updateItemQuantity = async (userId, productId, quantityChange) => {
   const cart = await Cart.findOne({ userId });
-  if (!cart) throw new Error("Carrito no encontrado");
+  if (!cart) throw new Error("🛒 Carrito no encontrado");
+
+  const product = await Product.findById(productId);
+  if (!product) throw new Error("❌ Producto no existe en la base de datos");
 
   const itemIndex = cart.items.findIndex(
     (item) => item.productId.toString() === productId
   );
 
-  if (itemIndex === -1) throw new Error("Producto no encontrado en el carrito");
+  const currentQuantity = itemIndex !== -1 ? cart.items[itemIndex].quantity : 0;
+  const newQuantity = currentQuantity + quantityChange;
 
-  cart.items[itemIndex].quantity += quantityChange;
+  // 🔒 Control de stock
+  if (newQuantity > product.stock) {
+    throw new Error(`🚫 Stock insuficiente. Máximo permitido: ${product.stock}`);
+  }
 
-  // Eliminar si la cantidad baja a 0
-  if (cart.items[itemIndex].quantity <= 0) {
-    cart.items.splice(itemIndex, 1);
+  if (newQuantity <= 0) {
+    // 🧹 Eliminar si la cantidad baja a 0
+    if (itemIndex !== -1) cart.items.splice(itemIndex, 1);
+  } else {
+    if (itemIndex !== -1) {
+      cart.items[itemIndex].quantity = newQuantity;
+    } else {
+      // 🆕 Agregar nuevo ítem si no existe
+      cart.items.push({
+        productId,
+        quantity: newQuantity
+      });
+    }
   }
 
   await cart.save();
-  return { success: true, cart };
+  return {
+    success: true,
+    message: itemIndex === -1
+      ? "🆕 Producto agregado al carrito"
+      : newQuantity <= 0
+        ? "🧹 Producto eliminado del carrito"
+        : "✅ Cantidad actualizada correctamente",
+    cart
+  };
 };
+
 
 const deleteCart = async (userId) => {
   try {

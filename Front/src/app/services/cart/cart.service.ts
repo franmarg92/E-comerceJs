@@ -164,34 +164,46 @@ export class CartService {
     }
   }
 
-  increaseQuantity(item: CartItem): void {
-    const productId = item.productId._id;
-    if (!productId) return;
 
-    if (!this.userId) {
-      // 🧠 Anónimo: localStorage
-      item.quantity++;
-      this.syncAnonymousCart(item);
-      this.updateAnonymousCartSubject();
-      return;
-    }
+increaseQuantity(item: CartItem): void {
+  const productId = item.productId._id;
+  const stock = item.productId.stock;
 
-    // 🔐 Logueado: API
-    const payload: AddToCartPayload = {
-      userId: this.userId,
-      productId,
-      quantityChange: 1,
-    };
+  if (!productId) return;
 
-    this.updateQuantity(payload).subscribe({
-      next: () => {
-        item.quantity++;
-        this.updateUserCartSubject();
-      },
-      error: () =>
-        Swal.fire('Error', 'No se pudo aumentar la cantidad.', 'error'),
-    });
+  // 🔒 Validación de stock
+  if (stock === undefined) {
+    Swal.fire('🚫 Stock no disponible', 'No se pudo verificar el stock del producto.', 'warning');
+    return;
   }
+  if (item.quantity >= stock) {
+    Swal.fire('🚫 Stock máximo alcanzado', `Solo hay ${stock} unidades disponibles`, 'warning');
+    return;
+  }
+
+  if (!this.userId) {
+    item.quantity++;
+    this.syncAnonymousCart(item);
+    this.updateAnonymousCartSubject();
+    return;
+  }
+
+  const payload: AddToCartPayload = {
+    userId: this.userId,
+    productId,
+    quantityChange: 1,
+  };
+
+  this.updateQuantity(payload).subscribe({
+    next: () => {
+      item.quantity++;
+      this.updateUserCartSubject();
+    },
+    error: (err) => {
+      Swal.fire('❌ Error', err.error?.message || 'No se pudo aumentar la cantidad.', 'error');
+    },
+  });
+}
 
   decreaseQuantity(item: CartItem): void {
     const productId = item.productId._id;
