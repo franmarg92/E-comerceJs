@@ -48,8 +48,8 @@ const createProduct = async (productData) => {
       subcategories: subcategories,
       ...(variantList ? { variants: variantList } : {}),
       isActive: isActive !== undefined ? isActive : true,
-      isPortfolio: isPortfolio !== undefined ? isActive : true,
-      featured: featured !== undefined ? isActive : true,
+      isPortfolio: isPortfolio !== undefined ? isPortfolio : false,
+      featured: featured !== undefined ? featured : false,
 
     });
 
