@@ -73,7 +73,7 @@
 
           <hr class="gold-divider" />
           <h4>{{ product.name }}</h4>
-          <p class="price">{{ product.price | currency : "$" }}</p>
+          <p *ngIf="product.price > 0" class="price">{{ product.price | currency : "$" }}</p>
           <p class="stock-indicator">Stock: {{ product.stock }}</p>
 
           <div class="product-buttons">
