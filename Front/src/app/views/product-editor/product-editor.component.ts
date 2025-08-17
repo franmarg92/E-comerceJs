@@ -298,20 +298,7 @@ onCategoryChange(): void {
       });
 
       if (!this.isEditMode) {
-        this.productForm.reset({
-          name: '',
-          
-          price: 0,
-          cost:0,
-          description: '',
-          image: null,
-          categories: '',
-          subcategories: '',
-          isActive: true,
-          stock: 0,
-
-          
-        });
+        this.productForm.reset();
           if (this.imageInputRef?.nativeElement) {
     this.imageInputRef.nativeElement.value = '';
   }
