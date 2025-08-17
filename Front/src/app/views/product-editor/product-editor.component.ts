@@ -247,14 +247,14 @@ onCategoryChange(): void {
 }
 
 
-  onSubmit(): void {
+ onSubmit(): void {
   if (this.productForm.invalid) return;
 
   const raw = this.productForm.value;
   const formData = new FormData();
 
   // Campos simples
-  formData.append('articleCode', raw.articleCode|| '');
+  formData.append('articleCode', raw.articleCode || '');
   formData.append('name', raw.name || '');
   formData.append('price', raw.price?.toString() || '0');
   formData.append('cost', raw.cost?.toString() || '0');
@@ -280,7 +280,15 @@ onCategoryChange(): void {
     formData.append('image', raw.image);
   }
 
- 
+  // Mostrar cartel de espera
+  Swal.fire({
+    title: this.isEditMode ? 'Guardando cambios...' : 'Registrando producto...',
+    html: 'Por favor espera un momento.',
+    allowOutsideClick: false,
+    didOpen: () => {
+      Swal.showLoading(null);
+    },
+  });
 
   const request$ = this.isEditMode && this.initialData?._id
     ? this.productService.editProductSmart(this.initialData._id, formData)
@@ -288,6 +296,8 @@ onCategoryChange(): void {
 
   request$.subscribe({
     next: () => {
+      Swal.close(); // Cerrar el loader
+
       Swal.fire({
         icon: 'success',
         title: this.isEditMode ? 'Producto editado' : 'Producto creado',
@@ -299,12 +309,14 @@ onCategoryChange(): void {
 
       if (!this.isEditMode) {
         this.productForm.reset();
-          if (this.imageInputRef?.nativeElement) {
-    this.imageInputRef.nativeElement.value = '';
-  }
+        if (this.imageInputRef?.nativeElement) {
+          this.imageInputRef.nativeElement.value = '';
+        }
       }
     },
     error: (err) => {
+      Swal.close(); // Cerrar el loader
+
       Swal.fire({
         icon: 'error',
         title: this.isEditMode ? 'Error al editar' : 'Error al crear',
@@ -314,5 +326,6 @@ onCategoryChange(): void {
     },
   });
 }
+
 
 }
