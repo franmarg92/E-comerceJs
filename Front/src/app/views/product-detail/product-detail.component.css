@@ -47,11 +47,18 @@
   color: #222;
 }
 
-.installments,
-.tax-note {
+.installments
+ {
   font-size: 1rem;
   color: #777;
   margin-top: 0.25rem;
+}
+
+.tax-note {
+  font-size: 0.9rem;
+  color: #d4af37;
+  margin-top: 0.5rem;
+  text-decoration: none;
 }
 
 .badges {

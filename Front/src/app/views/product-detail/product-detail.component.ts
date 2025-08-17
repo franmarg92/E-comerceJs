@@ -1,5 +1,5 @@
 import { Component, Inject } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { ProductService } from '../../services/product/product.service';
 import { Product } from '../../models/productModel';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
@@ -9,7 +9,7 @@ import { PLATFORM_ID } from '@angular/core';
 @Component({
   selector: 'app-product-detail',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterLink],
   templateUrl: './product-detail.component.html',
   styleUrl: './product-detail.component.css'
 })
