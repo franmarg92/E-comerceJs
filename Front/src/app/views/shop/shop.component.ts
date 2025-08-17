@@ -25,7 +25,7 @@ export class ShopComponent {
   selectedCategoryId: string | null = null;
   selectedSubcategoryId: string | null = null;
   expandedCategories: { [catId: string]: boolean } = {};
-
+  selectedImageUrl: string | null = null;
   availableProducts: Product[] = [];
   filteredProducts: Product[] = [];
 
@@ -69,17 +69,21 @@ export class ShopComponent {
   }
 
   private loadProducts(): void {
-     this.productService.getAllProducts().subscribe((res: any) => {
-    const products = Array.isArray(res) ? res : [];
-    this.availableProducts = shuffleArray(products);
-    this.filteredProducts = [...this.availableProducts];
-    this.paginate();
-  });
+    this.productService.getAllProducts().subscribe((res: any) => {
+      const products = Array.isArray(res) ? res : [];
+      this.availableProducts = shuffleArray(products);
+      this.filteredProducts = [...this.availableProducts];
+      this.paginate();
+    });
   }
 
   paginate(): void {
-  this.paginatedProducts = paginateArray(this.filteredProducts, this.currentPage, this.pageSize);
-}
+    this.paginatedProducts = paginateArray(
+      this.filteredProducts,
+      this.currentPage,
+      this.pageSize
+    );
+  }
 
   private loadUser(): void {
     if (isPlatformBrowser(this.platformId)) {
@@ -94,37 +98,37 @@ export class ShopComponent {
     });
   }
 
- filterByCategory(catId: string | null): void {
-  this.selectedCategoryId = catId;
-  this.selectedSubcategoryId = null;
+  filterByCategory(catId: string | null): void {
+    this.selectedCategoryId = catId;
+    this.selectedSubcategoryId = null;
 
-  this.filteredProducts = catId
-    ? this.availableProducts.filter((p) => p.categories?.includes(catId))
-    : [...this.availableProducts];
+    this.filteredProducts = catId
+      ? this.availableProducts.filter((p) => p.categories?.includes(catId))
+      : [...this.availableProducts];
 
-  this.currentPage = 1;
-  this.paginate();
-}
+    this.currentPage = 1;
+    this.paginate();
+  }
 
-filterBySubcategory(subId: string): void {
-  this.selectedSubcategoryId = subId;
-  this.expandParentOfSubcategory(subId);
+  filterBySubcategory(subId: string): void {
+    this.selectedSubcategoryId = subId;
+    this.expandParentOfSubcategory(subId);
 
-  this.filteredProducts = this.availableProducts.filter((p) =>
-    p.subcategories?.includes(subId)
-  );
+    this.filteredProducts = this.availableProducts.filter((p) =>
+      p.subcategories?.includes(subId)
+    );
 
-  this.currentPage = 1;
-  this.paginate();
-}
+    this.currentPage = 1;
+    this.paginate();
+  }
 
-goToPage(page: number): void {
-  this.currentPage = page;
-  this.paginate();
-}
-get totalPages(): number {
-  return Math.ceil(this.filteredProducts.length / this.pageSize);
-}
+  goToPage(page: number): void {
+    this.currentPage = page;
+    this.paginate();
+  }
+  get totalPages(): number {
+    return Math.ceil(this.filteredProducts.length / this.pageSize);
+  }
 
   onCategoryClick(catId: string): void {
     this.toggleCategory(catId);
@@ -145,16 +149,16 @@ get totalPages(): number {
   }
 
   toggleCategory(catId: string): void {
-  const isCurrentlyExpanded = this.expandedCategories[catId];
+    const isCurrentlyExpanded = this.expandedCategories[catId];
 
-  // Reiniciar todos a false
-  this.expandedCategories = {};
+    // Reiniciar todos a false
+    this.expandedCategories = {};
 
-  // Si no estaba expandida, expandirla
-  if (!isCurrentlyExpanded) {
-    this.expandedCategories[catId] = true;
+    // Si no estaba expandida, expandirla
+    if (!isCurrentlyExpanded) {
+      this.expandedCategories[catId] = true;
+    }
   }
-}
 
   addToCart(productId: string): void {
     this.cartService.addToCartProduct(productId, this.currentUserId);
@@ -171,4 +175,12 @@ get totalPages(): number {
       console.error('ID de producto inválido');
     }
   }
+
+  openImageModal(url: string): void {
+  this.selectedImageUrl = url;
+}
+
+closeImageModal(): void {
+  this.selectedImageUrl = null;
+}
 }

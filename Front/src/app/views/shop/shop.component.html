@@ -69,11 +69,15 @@
             *ngIf="product.image?.length"
             [src]="product.image[0]"
             alt="{{ product.name }}"
+            (click)="openImageModal(product.image[0])"
+            class="clickable-image"
           />
 
           <hr class="gold-divider" />
           <h4>{{ product.name }}</h4>
-          <p *ngIf="product.price > 0" class="price">{{ product.price | currency : "$" }}</p>
+          <p *ngIf="product.price > 0" class="price">
+            {{ product.price | currency : "$" }}
+          </p>
           <p class="stock-indicator">Stock: {{ product.stock }}</p>
 
           <div class="product-buttons">
@@ -99,6 +103,13 @@
           <small *ngIf="product.stock === 0">Sin stock</small>
         </div>
       </ng-container>
+      <div
+        class="image-modal"
+        *ngIf="selectedImageUrl"
+        (click)="closeImageModal()"
+      >
+        <img [src]="selectedImageUrl" alt="Imagen ampliada" />
+      </div>
     </div>
     <div class="pagination-controls" *ngIf="filteredProducts.length > pageSize">
       <div class="pagination-buttons">
