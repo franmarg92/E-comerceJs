@@ -30,7 +30,7 @@
     <div class="product-buttons" *ngIf="!product.isPortfolio">
       <button (click)="goToProductDetail(product._id)">Ver</button>
 
-      <button
+   <!--   <button
         class="add-btn"
         *ngIf="isAuthenticated && product._id"
         (click)="addToCart(product._id)"
@@ -44,7 +44,7 @@
         (click)="addToCartAnonimous(product._id)"
       >
         Comprar
-      </button>
+      </button>-->
     </div>
   </div>
     <div

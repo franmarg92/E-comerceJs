@@ -82,7 +82,7 @@
 
           <div class="product-buttons">
             <button (click)="goToProductDetail(product._id)">Ver</button>
-
+<!--
             <button
               class="add-btn"
               *ngIf="isAuthenticated && product._id"
@@ -98,7 +98,7 @@
               (click)="addToCartAnonimous(product._id)"
             >
               Comprar
-            </button>
+            </button>-->
           </div>
 
           <small *ngIf="product.stock === 0">Sin stock</small>
