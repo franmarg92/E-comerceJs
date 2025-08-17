@@ -42,29 +42,47 @@
     </div>
   </section>
 
-  <section class="featured-products">
+<section class="featured-products">
   <h2>Diseños Exclusivos</h2>
-  <div class="product-grid" *ngIf="portfolioProducts.length > 0">
-  <app-cards
-    *ngFor="let product of portfolioProducts"
-    [product]="product"
-  ></app-cards>
-
-  
-</div>
+  <swiper-container
+    effect="coverflow"
+    grab-cursor="true"
+    centered-slides="true"
+    slides-per-view="auto"
+    autoplay="false"
+    loop="true"
+    pagination="true"
+    navigation="true"
+    class="carrusel-coverflow"
+    *ngIf="portfolioProducts.length > 0"
+  >
+    <swiper-slide *ngFor="let product of portfolioProducts">
+      <app-cards [product]="product"></app-cards>
+    </swiper-slide>
+  </swiper-container>
 </section>
 
 <section class="featured-products">
   <h2>Destacados</h2>
-  <div class="product-grid" *ngIf="featuredProducts.length > 0">
-  <app-cards
-    *ngFor="let product of featuredProducts"
-    [product]="product"
-  ></app-cards>
-
-  
-</div>
+  <swiper-container
+    effect="coverflow"
+    grab-cursor="true"
+    centered-slides="true"
+    slides-per-view="auto"
+    
+    autoplay="false"
+    loop="true"
+    pagination="true"
+    navigation="true"
+    class="carrusel-coverflow"
+    *ngIf="featuredProducts.length > 0"
+  >
+    <swiper-slide *ngFor="let product of featuredProducts">
+      <app-cards [product]="product"></app-cards>
+    </swiper-slide>
+  </swiper-container>
 </section>
+
 
   <section class="payment-methods">
     <h2>Medios de Pago</h2>

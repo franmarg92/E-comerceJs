@@ -86,6 +86,7 @@
             <button
               class="add-btn"
               *ngIf="isAuthenticated && product._id"
+              disabled
               (click)="addToCart(product._id)"
             >
               Comprar

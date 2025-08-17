@@ -1,12 +1,14 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { Product } from '../../models/productModel';
 import { ProductService } from '../../services/product/product.service';
 import { CardsComponent } from '../../shared/cards/cards.component';
 
+
 @Component({
   selector: 'app-home',
   standalone: true,
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
   imports: [CommonModule, CardsComponent],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css',

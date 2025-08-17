@@ -235,6 +235,40 @@
   margin-inline: auto;
 }
 
+.carrusel-coverflow {
+  width: 100%;
+  max-width: 960px;
+  margin: auto;
+  padding: 40px 0;
+  --swiper-navigation-color: #333;
+  --swiper-pagination-color: #333;
+}
+
+swiper-slide {
+  width: 280px !important;
+  height: 420px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: none !important;
+}
+
+app-cards {
+  width: 280px;
+  max-width: 90%;
+  transform: scale(0.9);
+  transition: transform 0.3s ease;
+  background: none !important;
+}
+
+swiper-slide.swiper-slide-active app-cards {
+  transform: scale(1.05);
+  background: none !important;
+  
+}
+
+
+
 /* Responsive */
 @media (max-width: 768px) {
   .hero-overlay h1 {

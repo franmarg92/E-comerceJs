@@ -17,6 +17,7 @@ export class CardsComponent {
   @Input() product!: Product;
   currentUserId: string = '';
   isAuthenticated = false;
+  selectedImageUrl: string | null = null;
 
   constructor(
     private cartService: CartService,
@@ -59,4 +60,12 @@ export class CardsComponent {
       console.error('ID de producto inválido');
     }
   }
+
+    openImageModal(url: string): void {
+  this.selectedImageUrl = url;
+}
+
+closeImageModal(): void {
+  this.selectedImageUrl = null;
+}
 }
