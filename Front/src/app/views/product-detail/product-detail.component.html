@@ -20,7 +20,21 @@
       <span class="badge stock"><i class="fa-solid fa-lock"> </i > Compra protegida</span>
     </div>
 
-   <!-- <button class="cta-button" (click)="addToCart()">Agregar al carrito</button>-->
+     <button
+        class="cta-button"
+        *ngIf="isAuthenticated && product._id"
+        (click)="addToCart(product._id)"
+      >
+        Comprar
+      </button>
+
+      <button
+        class="cta-button"
+        *ngIf="!isAuthenticated && product._id"
+        (click)="addToCartAnonimous(product._id)"
+      >
+        Comprar
+      </button>
   </div>
 </div>
 

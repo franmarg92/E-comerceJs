@@ -150,4 +150,8 @@ onCreateAddress(): void {
   });
 }
 
+abrirWhatsApp() {
+  window.open('https://wa.me/5493515194113?text=Hola! Quisiera consultar por envíos al interior desde Distinzione 💎', '_blank');
+}
+
 }

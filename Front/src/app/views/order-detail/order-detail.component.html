@@ -27,6 +27,7 @@
     <!-- 📍 Selector de direcciones -->
     <div class="mb-4">
       <label class="form-label">Dirección de envío</label>
+
       <select class="form-select" [(ngModel)]="selectedAddressId">
         <option *ngFor="let dir of addressList" [value]="dir._id">
           {{ dir.street }} {{ dir.number }}, {{ dir.city }} {{ dir.zipCode }}
@@ -42,7 +43,7 @@
       </button>
     </div>
 
-    <!--  🏠 Formulario para nueva dirección -->
+    <!-- 🏠 Formulario para nueva dirección -->
     <div *ngIf="mostrarFormulario" class="card-new-address p-3 mb-4">
       <h5 class="text-gold mb-3">Nueva dirección</h5>
 
@@ -96,20 +97,49 @@
           />
         </div>
 
-        <div class="form-check mb-3">
-          <input
-            type="checkbox"
-            class="form-check-input"
-            formControlName="isDefault"
-          />
-          <label class="form-check-label"
-            >Usar como dirección predeterminada</label
-          >
-        </div>
+        
 
         <button class="btn btn-gold" type="submit">Guardar dirección</button>
       </form>
     </div>
+
+    <br />
+    <hr />
+    <!-- 💬 Hint emocional interior -->
+
+    <div class="d-flex flex-column align-items-center text-center mt-2 gap-2">
+      <div>
+        <p>
+          ¿Estás en el interior del país? Escribinos y vemos juntos la mejor
+          forma de hacerte llegar tu pedido. En <strong>Distinzione</strong>,
+          cada envío tiene su cuidado 💎
+        </p>
+      </div>
+      <div>
+        <a
+          class="btn btn-success d-flex align-items-center gap-2 px-3 py-2 rounded-pill"
+          (click)="abrirWhatsApp()"
+        >
+          <i class="fab fa-whatsapp"></i> Consultar por WhatsApp
+        </a>
+      </div>
+    </div>
+
+    <hr />
+
+    <!-- ✅ Checkbox Córdoba capital -->
+    <div class="form-check  d-flex flex-column align-items-center text-center mt-2">
+      <div>
+        <label class="form-check-label" for="cordobaCapitalCheck">
+          Vivo dentro de Córdoba capital y quiero coordinar entrega
+          personalizada 🚚
+        </label>
+      </div>
+      <div><input class="check-imput" type="checkbox" id="cordobaCapitalCheck" /></div>
+    </div>
+
+    <br />
+    <hr />
 
     <!-- 💳 Método de pago -->
     <div class="mb-3">
