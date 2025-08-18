@@ -59,51 +59,13 @@
     </div>
     <div class="product-grid">
       <!-- Productos estándar (no portfolio) -->
-      <ng-container *ngFor="let product of paginatedProducts">
-        <div
-          class="product-card"
-          *ngIf="!product.isPortfolio"
-          [class.out-of-stock]="product.stock === 0"
-        >
-          <img
-            *ngIf="product.image?.length"
-            [src]="product.image[0]"
-            alt="{{ product.name }}"
-            (click)="openImageModal(product.image[0])"
-            class="clickable-image"
-          />
 
-          <hr class="gold-divider" />
-          <h4>{{ product.name }}</h4>
-          <p *ngIf="product.price > 0" class="price">
-            {{ product.price | currency : "$" }}
-          </p>
-          <p class="stock-indicator">Stock: {{ product.stock }}</p>
+      <app-cards
+        *ngFor="let product of paginatedProducts"
+        [product]="product"
+        class="product-card"
+      ></app-cards>
 
-          <div class="product-buttons">
-            <button (click)="goToProductDetail(product._id)">Ver</button>
-<!--
-            <button
-              class="add-btn"
-              *ngIf="isAuthenticated && product._id"
-              disabled
-              (click)="addToCart(product._id)"
-            >
-              Comprar
-            </button>
-
-            <button
-              class="add-btn guest"
-              *ngIf="!isAuthenticated && product._id"
-              (click)="addToCartAnonimous(product._id)"
-            >
-              Comprar
-            </button>-->
-          </div>
-
-          <small *ngIf="product.stock === 0">Sin stock</small>
-        </div>
-      </ng-container>
       <div
         class="image-modal"
         *ngIf="selectedImageUrl"

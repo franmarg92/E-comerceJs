@@ -4,7 +4,6 @@ import { Product } from '../../models/productModel';
 import { ProductService } from '../../services/product/product.service';
 import { CardsComponent } from '../../shared/cards/cards.component';
 
-
 @Component({
   selector: 'app-home',
   standalone: true,
@@ -27,13 +26,25 @@ export class HomeComponent {
     this.productService.getPortfolioProducts().subscribe((res: Product[]) => {
       this.portfolioProducts = res;
     });
-    
   }
 
   private loadFeaturedProducts(): void {
     this.productService.getFeaturedProducts().subscribe((res: Product[]) => {
       this.featuredProducts = res;
     });
-    
   }
+
+isPortfolioAndFeatured(): Product[] {
+  if (!this.portfolioProducts || !this.featuredProducts) return [];
+  return this.featuredProducts.filter(product =>
+    this.portfolioProducts.some(p => p._id === product._id)
+  );
+}
+
+isFeaturedNotPortfolio(): Product[] {
+  if (!this.featuredProducts || !this.portfolioProducts) return [];
+  return this.featuredProducts.filter(product =>
+    !this.portfolioProducts.some(p => p._id === product._id)
+  );
+}
 }

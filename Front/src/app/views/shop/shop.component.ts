@@ -11,11 +11,12 @@ import { Category } from '../../models/categoryModel';
 import { Product } from '../../models/productModel';
 import { CartItem } from '../../models/cartModel';
 import { shuffleArray, paginateArray } from '../../helpers/productHelper';
+import { CardsComponent } from '../../shared/cards/cards.component';
 
 @Component({
   selector: 'app-shop',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, CardsComponent],
   templateUrl: './shop.component.html',
   styleUrl: './shop.component.css',
 })
@@ -182,5 +183,9 @@ export class ShopComponent {
 
 closeImageModal(): void {
   this.selectedImageUrl = null;
+}
+
+isStockAvailable(product: Product | undefined): boolean {
+  return !!product?.stock && product.stock > 0;
 }
 }

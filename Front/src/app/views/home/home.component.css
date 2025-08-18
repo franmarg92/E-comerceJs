@@ -234,7 +234,15 @@
   max-width: 500px;
   margin-inline: auto;
 }
+.carrusel-freemode {
+  padding: 32px 0;
+  --swiper-pagination-color: #d4af37;
+}
 
+swiper-slide {
+  width: auto !important;
+  flex-shrink: 0;
+}
 
 
 /* Responsive */
