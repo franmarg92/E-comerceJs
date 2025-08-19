@@ -1,6 +1,10 @@
 <div class="product-showcase" *ngIf="product">
   <div class="left-block">
-    <img *ngIf="product?.image?.length" [src]="product.image[0]" alt="{{ product.name }}" />
+    <img
+      *ngIf="product?.image?.length"
+      [src]="product.image[0]"
+      alt="{{ product.name }}"
+    />
   </div>
 
   <div class="right-block">
@@ -10,40 +14,41 @@
 
     <div class="price-section">
       <div class="main-price">$ {{ product.price }}</div>
-      <div class="installments">🚚 Envios a todo el pais </div>
+      <div class="installments">🚚 Envios a todo el pais</div>
       <a class="tax-note" routerLink="/contact">Consultas y sugerencias</a>
     </div>
 
     <div class="badges">
       <span class="badge">💎 100% Original</span>
-      <span class="badge"><i class="fa-solid fa-arrow-rotate-left"> </i> Cambios y devoluciones</span>
-      <span class="badge stock"><i class="fa-solid fa-lock"> </i > Compra protegida</span>
+      <span class="badge"
+        ><i class="fa-solid fa-arrow-rotate-left"> </i> Cambios y
+        devoluciones</span
+      >
+      <span class="badge stock"
+        ><i class="fa-solid fa-lock"> </i> Compra protegida</span
+      >
     </div>
 
-     <button
-        class="cta-button"
-        *ngIf="isAuthenticated && product._id"
-        (click)="addToCart(product._id)"
-      >
-        Comprar
-      </button>
+    <!-- Usuario autenticado -->
+    <button
+      class="add-btn"
+      *ngIf="isAuthenticated && product._id && product.price > 0"
+      (click)="addToCart(product._id)"
+    >
+      Comprar
+    </button>
 
-      <button
-        class="cta-button"
-        *ngIf="!isAuthenticated && product._id"
-        (click)="addToCartAnonimous(product._id)"
-      >
-        Comprar
-      </button>
+    <!-- Usuario no autenticado -->
+    <button
+      class="add-btn guest"
+      *ngIf="!isAuthenticated && product._id && product.price > 0"
+      (click)="addToCartAnonimous(product._id)"
+    >
+      Comprar
+    </button>
   </div>
 </div>
-
 
 <div *ngIf="!product" class="loading">
   <p>Cargando producto...</p>
 </div>
-
-
-
-
-

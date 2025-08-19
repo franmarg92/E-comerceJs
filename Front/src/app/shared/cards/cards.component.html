@@ -30,21 +30,23 @@
     <div class="product-buttons" *ngIf="!product.isPortfolio">
       <button (click)="goToProductDetail(product._id)">Ver</button>
 
-      <button
-        class="add-btn"
-        *ngIf="isAuthenticated && product._id"
-        (click)="addToCart(product._id)"
-      >
-        Comprar
-      </button>
+ <!-- Usuario autenticado -->
+<button
+  class="add-btn"
+  *ngIf="isAuthenticated && product._id && product.price > 0"
+  (click)="addToCart(product._id)"
+>
+  Comprar
+</button>
 
-      <button
-        class="add-btn guest"
-        *ngIf="!isAuthenticated && product._id"
-        (click)="addToCartAnonimous(product._id)"
-      >
-        Comprar
-      </button>
+<!-- Usuario no autenticado -->
+<button
+  class="add-btn guest"
+  *ngIf="!isAuthenticated && product._id && product.price > 0"
+  (click)="addToCartAnonimous(product._id)"
+>
+  Comprar
+</button>
     </div>
   </div>
     <div
