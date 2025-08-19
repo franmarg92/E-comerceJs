@@ -151,3 +151,16 @@
   border-radius: 8px;
   box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
 }
+
+.add-btn:disabled {
+  background-color: #ccc; /* gris suave, transmite pausa */
+  color: #666; /* texto apagado */
+  cursor: not-allowed;
+  opacity: 0.7;
+  border: 1px solid #999;
+}
+
+.add-btn.disabled {
+  background-color: #f5f5f5; /* tono más claro si usás clase */
+  color: #999;
+}
