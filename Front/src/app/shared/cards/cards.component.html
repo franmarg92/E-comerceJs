@@ -1,25 +1,28 @@
 <div class="cards-conteiner">
   <div class="product-card">
-     <img
-            *ngIf="product.image?.length"
-            [src]="product.image[0]"
-            alt="{{ product.name }}"
-            (click)="openImageModal(product.image[0])"
-            class="clickable-image"
-          />
-          
+    <img
+      *ngIf="product.image?.length"
+      [src]="product.image[0]"
+      alt="{{ product.name }}"
+      (click)="openImageModal(product.image[0])"
+      class="clickable-image"
+    />
+
     <h4>{{ product.name }}</h4>
 
     <!-- Solo si NO es portfolio -->
     <ng-container *ngIf="!product.isPortfolio">
       <p>Stock: {{ product.stock }}</p>
-      <span class="price">$ {{ product.price }}</span>
+      <span class="price">
+        {{ product.price > 0 ? "ARS " + product.price : "--" }}
+      </span>
     </ng-container>
 
-      <!-- Solo si NO es portfolio -->
+    <!-- Solo si NO es portfolio -->
     <ng-container *ngIf="product.isPortfolio">
-      <p class="portfolio-description">Descripción: {{ product.description }}</p>
-      
+      <p class="portfolio-description">
+        Descripción: {{ product.description }}
+      </p>
     </ng-container>
 
     <!-- Badges -->
@@ -30,35 +33,30 @@
     <div class="product-buttons" *ngIf="!product.isPortfolio">
       <button (click)="goToProductDetail(product._id)">Ver</button>
 
-<!-- Usuario autenticado -->
-<button
-  class="add-btn"
-  [class.disabled]="product.stock === 0"
-  [disabled]="product.stock === 0"
-  *ngIf="isAuthenticated && product._id && product.price > 0"
-  (click)="addToCart(product._id)"
->
-  Comprar
-</button>
+      <!-- Usuario autenticado -->
+      <button
+        class="add-btn"
+        [class.disabled]="product.stock === 0"
+        [disabled]="product.stock === 0"
+        *ngIf="isAuthenticated && product._id && product.price > 0"
+        (click)="addToCart(product._id)"
+      >
+        Comprar
+      </button>
 
-<!-- Usuario no autenticado -->
-<button
-  class="add-btn guest"
-  [class.disabled]="product.stock === 0"
-  [disabled]="product.stock === 0"
-  *ngIf="!isAuthenticated && product._id && product.price > 0"
-  (click)="addToCartAnonimous(product._id)"
->
-  Comprar
-</button>
-
+      <!-- Usuario no autenticado -->
+      <button
+        class="add-btn guest"
+        [class.disabled]="product.stock === 0"
+        [disabled]="product.stock === 0"
+        *ngIf="!isAuthenticated && product._id && product.price > 0"
+        (click)="addToCartAnonimous(product._id)"
+      >
+        Comprar
+      </button>
     </div>
   </div>
-    <div
-        class="image-modal"
-        *ngIf="selectedImageUrl"
-        (click)="closeImageModal()"
-      >
-        <img [src]="selectedImageUrl" alt="Imagen ampliada" />
-      </div>
+  <div class="image-modal" *ngIf="selectedImageUrl" (click)="closeImageModal()">
+    <img [src]="selectedImageUrl" alt="Imagen ampliada" />
+  </div>
 </div>
