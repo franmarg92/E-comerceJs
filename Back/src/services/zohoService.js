@@ -23,7 +23,7 @@ const initZohoIntegration = async (code) => {
 const enviarCorreoService = async ({  to, subject, content }) => {
   try {
     // paso 1: conseguir un access token válido
-    const accessToken = await accessTokenPorRefreshToken();
+    const accessToken = await getAccessToken();
     const accountId = await obtenerAccountId(accessToken);
     // paso 2: mandar correo a Zoho
     const resultado = await enviarCorreoZoho({
