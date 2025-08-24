@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { ReactiveFormsModule, FormGroup, FormBuilder, Validators } from '@angular/forms';
 import emailjs from '@emailjs/browser';
 import Swal from 'sweetalert2';
+import { ZohoService } from '../../services/Zoho/zoho.service';
 
 @Component({
   selector: 'app-contact',
@@ -13,66 +14,58 @@ import Swal from 'sweetalert2';
 export class ContactComponent {
   contactForm: FormGroup;
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder, private zohoService: ZohoService) {
     this.contactForm = this.fb.group({
-      title: ['', Validators.required],
-      name: ['', Validators.required],
+      nombre: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
-      phoneNumber: [''],
-      message: ['', Validators.required]
+      telefono: [''],
+      asunto: ['', Validators.required],
+      mensaje: ['', Validators.required]
     });
   }
 
   sendEmail() {
-  if (this.contactForm.invalid) {
-    Swal.fire({
-      icon: 'warning',
-      title: 'Formulario incompleto',
-      text: 'Por favor completá todos los campos obligatorios.',
-      confirmButtonColor: '#d4af37'
-    });
-    return;
-  }
-
-  const formData = {
-    title: this.contactForm.value.title,
-    name: this.contactForm.value.name,
-    email: this.contactForm.value.email,
-    phoneNumber: this.contactForm.value.phoneNumber,
-    message: this.contactForm.value.message
-  };
-
-  Swal.fire({
-    title: 'Enviando mensaje...',
-    text: 'Por favor esperá un momento.',
-    allowOutsideClick: false,
-    didOpen: () => {
-      Swal.showLoading(null);
+    if (this.contactForm.invalid) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Formulario incompleto',
+        text: 'Por favor completá todos los campos obligatorios.',
+        confirmButtonColor: '#d4af37'
+      });
+      return;
     }
-  });
 
-  emailjs.send(
-    'service_jjzxa0b',
-    'template_l73cmo8',
-    formData,
-    '_DjtX78mWa3QF_N1V'
-  ).then(() => {
+    const datos = this.contactForm.value;
+
     Swal.fire({
-      icon: 'success',
-      title: '¡Mensaje enviado!',
-      text: 'Gracias por contactarnos. Te responderemos a la brevedad.',
-      confirmButtonColor: '#d4af37'
+      title: 'Enviando mensaje...',
+      text: 'Por favor esperá un momento.',
+      allowOutsideClick: false,
+      didOpen: () => {
+        Swal.showLoading(null);
+      }
     });
-    this.contactForm.reset();
-  }).catch((error) => {
-    console.error('Error al enviar el mensaje:', error);
-    Swal.fire({
-      icon: 'error',
-      title: 'Error al enviar',
-      text: 'Hubo un problema al enviar el mensaje. Intentá nuevamente más tarde.',
-      confirmButtonColor: '#d4af37'
+
+    this.zohoService.enviarMensaje(datos).subscribe({
+      next: () => {
+        Swal.fire({
+          icon: 'success',
+          title: '¡Mensaje enviado!',
+          text: 'Gracias por contactarnos. Te responderemos a la brevedad.',
+          confirmButtonColor: '#d4af37'
+        });
+        this.contactForm.reset();
+      },
+      error: (error) => {
+        console.error('Error al enviar el mensaje:', error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Error al enviar',
+          text: 'Hubo un problema al enviar el mensaje. Intentá nuevamente más tarde.',
+          confirmButtonColor: '#d4af37'
+        });
+      }
     });
-  });
-}
+  }
 
 }
