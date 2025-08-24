@@ -8,6 +8,7 @@ const orderService = require("./orderService");
 const roleSerivce = require("./roleService");
 const userService = require("./userService");
 const mercadoPagoService = require("./mercadoPagoService");
+const zohoService = require("./zohoService");
 
 module.exports = {
   registerService,
@@ -20,4 +21,5 @@ module.exports = {
   roleSerivce,
   userService,
   mercadoPagoService,
+  zohoService
 };

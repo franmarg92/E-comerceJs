@@ -15,7 +15,8 @@ const {
   cartRouter,
   orderRouter,
   addressRouter,
-  mercadoPagoRouter
+  mercadoPagoRouter,
+  zohoRouter
 } = require("./src/routes");
 
 const app = express();
@@ -53,6 +54,7 @@ app.use("/api/cart", cartRouter);
 app.use("/api/order", orderRouter);
 app.use("/api/address", addressRouter);
 app.use("/api/mercadoPago", mercadoPagoRouter);
+app.use("/api/zoho", zohoRouter);
 
 
 

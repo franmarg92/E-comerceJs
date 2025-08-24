@@ -8,7 +8,7 @@ const productController = require("./productController");
 const roleController = require("./roleController");
 const userController = require("./userController");
 const mercadoPagoController = require("./mercadoPagoController");
-
+const zohoController = require('./ControllerZoho')
 module.exports = {
   registerController,
   loginController,
@@ -20,4 +20,6 @@ module.exports = {
   roleController,
   userController,
   mercadoPagoController,
+  zohoController
+  
 };
