@@ -1,4 +1,4 @@
-const { codePorTokensZoho, obtenerAccountId, accessTokenPorRefreshToken } = require('../helpers/callBackZoho');
+const { codePorTokensZoho, obtenerAccountId, getAccessToken } = require('../helpers/callBackZoho');
 const { enviarCorreoZoho } = require('../helpers/zohoMailer');
 
 const initZohoIntegration = async (code) => {
