@@ -20,11 +20,11 @@ const initZohoIntegration = async (code) => {
     throw new Error('Falló la integración con Zoho Mail 💥');
   }
 };
-const enviarCorreoService = async ({ accountId, to, subject, content }) => {
+const enviarCorreoService = async ({  to, subject, content }) => {
   try {
     // paso 1: conseguir un access token válido
     const accessToken = await accessTokenPorRefreshToken();
-
+    const accountId = await obtenerAccountId(accessToken);
     // paso 2: mandar correo a Zoho
     const resultado = await enviarCorreoZoho({
       accessToken,

@@ -11,7 +11,7 @@ export class ZohoService {
 
   enviarMensaje(datos: any): Observable<any> {
     const payload = {
-      to: 'contacto@distinzione.com',
+      to: 'info@distinzionejoyas.com',
       subject: `💎 Contacto desde Joyas Distinzione: ${datos.asunto}`,
       content: `
 👤 Nombre: ${datos.nombre}
