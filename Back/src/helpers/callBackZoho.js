@@ -66,9 +66,21 @@ const getAccountId = async (accessToken) => {
   return accountId;
 };
 
+const validarToken = async (accessToken) => {
+  try {
+    await axios.get("https://mail.zoho.com/api/accounts", {
+      headers: { Authorization: `Zoho-oauthtoken ${accessToken}` },
+    });
+    return true;
+  } catch (error) {
+    return false;
+  }
+};
+
 module.exports = {
   codePorTokensZoho,
   getAccountId,
   accessTokenPorRefreshToken,
   getAccessToken,
+  validarToken
 };

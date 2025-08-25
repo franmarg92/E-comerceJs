@@ -1,4 +1,4 @@
-const { codePorTokensZoho, getAccountId, getAccessToken } = require('../helpers/callBackZoho');
+const { codePorTokensZoho, getAccountId, getAccessToken, validarToken, accessTokenPorRefreshToken } = require('../helpers/callBackZoho');
 const { enviarCorreoZoho } = require('../helpers/zohoMailer');
 
 const initZohoIntegration = async (code) => {
@@ -20,10 +20,24 @@ const initZohoIntegration = async (code) => {
     throw new Error('Falló la integración con Zoho Mail 💥');
   }
 };
+
+
 const enviarCorreoService = async ({ to, subject, content }) => {
   try {
-    const accessToken = await getAccessToken();
-    const accountId = await getAccountId(accessToken); // ahora cacheado
+    let accessToken = await getAccessToken();
+    let tokenValido = await validarToken(accessToken);
+
+    if (!tokenValido) {
+      console.warn("[ZohoMailer] Token inválido detectado 💥. Forzando refresh...");
+      cachedToken = await accessTokenPorRefreshToken();
+      lastRefresh = Date.now();
+      accessToken = cachedToken;
+      cachedAccountId = null; // 🧼 limpiar cache de accountId
+    }
+
+    const accountId = await getAccountId(accessToken);
+
+    console.log(`[ZohoMailer] Token: ${accessToken.slice(0, 6)}... | AccountId: ${accountId} | To: ${to}`);
 
     const resultado = await enviarCorreoZoho({
       accessToken,
@@ -39,9 +53,9 @@ const enviarCorreoService = async ({ to, subject, content }) => {
       data: resultado,
     };
   } catch (error) {
-  console.error("Error en enviarCorreoService:", error.response?.data || error.message);
-  throw new Error("Zoho respondió: " + JSON.stringify(error.response?.data || error.message));
-}
-}
+    console.error("Error en enviarCorreoService:", error.response?.data || error.message);
+    throw new Error("Zoho respondió: " + JSON.stringify(error.response?.data || error.message));
+  }
+};
 
 module.exports = { initZohoIntegration, enviarCorreoService };
