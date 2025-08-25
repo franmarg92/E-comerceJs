@@ -29,12 +29,13 @@ const initZohoController = async (req, res) => {
 };
 
 const enviarCorreoController = async (req, res) => {
-  const { accessToken, accountId, to, subject, content } = req.body;
+  const { to, subject, content } = req.body;
 
   try {
-    const resultado = await zohoService.enviarCorreoService({ accessToken, accountId, to, subject, content });
+    const resultado = await zohoService.enviarCorreoService({ to, subject, content });
     res.status(200).json(resultado);
   } catch (error) {
+    console.error("Error en enviarCorreoController:", error);
     res.status(500).json({ error: error.message });
   }
 };
