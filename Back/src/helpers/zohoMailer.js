@@ -1,7 +1,12 @@
 const axios = require('axios');
 
 const sanitizeEmail = (email) =>
-  email.trim().replace(/[\u200B-\u200D\uFEFF]/g, '').replace(/["']/g, '');
+  email
+    .trim()
+    .replace(/[\u200B-\u200D\uFEFF]/g, '') // caracteres invisibles
+    .replace(/["'<>()[\]{}|\\^`~;:,]/g, '') // símbolos conflictivos
+    .replace(/\s+/g, '') // espacios
+    .toLowerCase();
 
 
 
@@ -13,11 +18,11 @@ const enviarCorreoZoho = async ({ accessToken, accountId, to, subject, content }
     const response = await axios.post(
       `https://mail.zoho.com/api/accounts/${accountId}/messages`,
       {
-        fromAddress: "info@distinzionejoyas.com", // ⚠️ debe existir en Zoho Mail
-        toAddress: [sanitizedTo], // ✅ Zoho espera array
+        fromAddress: "info@distinzionejoyas.com", 
+        toAddress: sanitizedTo, 
         subject,
         content,
-        mailFormat: "html" // opcional, si querés enviar HTML
+        mailFormat: "html" 
       },
       {
         headers: {
