@@ -39,9 +39,9 @@ const enviarCorreoService = async ({ to, subject, content }) => {
       data: resultado,
     };
   } catch (error) {
-    console.error("Error en enviarCorreoService:", error.response?.data || error.message);
-    throw new Error("No se pudo entregar el mensaje boutique 💥");
-  }
+  console.error("Error en enviarCorreoService:", error.response?.data || error.message);
+  throw new Error("Zoho respondió: " + JSON.stringify(error.response?.data || error.message));
+}
 }
 
 module.exports = { initZohoIntegration, enviarCorreoService };
