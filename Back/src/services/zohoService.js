@@ -1,4 +1,4 @@
-const { codePorTokensZoho, obtenerAccountId, getAccessToken } = require('../helpers/callBackZoho');
+const { codePorTokensZoho, getAccountId, getAccessToken } = require('../helpers/callBackZoho');
 const { enviarCorreoZoho } = require('../helpers/zohoMailer');
 
 const initZohoIntegration = async (code) => {
@@ -20,12 +20,11 @@ const initZohoIntegration = async (code) => {
     throw new Error('Falló la integración con Zoho Mail 💥');
   }
 };
-const enviarCorreoService = async ({  to, subject, content }) => {
+const enviarCorreoService = async ({ to, subject, content }) => {
   try {
-    // paso 1: conseguir un access token válido
     const accessToken = await getAccessToken();
-    const accountId = await obtenerAccountId(accessToken);
-    // paso 2: mandar correo a Zoho
+    const accountId = await getAccountId(accessToken); // ahora cacheado
+
     const resultado = await enviarCorreoZoho({
       accessToken,
       accountId,
@@ -43,6 +42,6 @@ const enviarCorreoService = async ({  to, subject, content }) => {
     console.error("Error en enviarCorreoService:", error.response?.data || error.message);
     throw new Error("No se pudo entregar el mensaje boutique 💥");
   }
-};
+}
 
 module.exports = { initZohoIntegration, enviarCorreoService };

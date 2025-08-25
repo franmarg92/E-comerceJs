@@ -55,7 +55,7 @@ const accessTokenPorRefreshToken = async () => {
 
 let cachedToken = null;
 let lastRefresh = 0;
-
+let cachedAccountId = null;
 
 const getAccessToken = async () => {
   const ahora = Date.now();
@@ -67,30 +67,23 @@ const getAccessToken = async () => {
   return cachedToken;
 };
 
-const obtenerAccountId = async (accessToken) => {
-  try {
-    const response = await axios.get("https://mail.zoho.com/api/accounts", {
-      headers: {
-        Authorization: `Zoho-oauthtoken ${accessToken}`,
-      },
-    });
+const getAccountId = async (accessToken) => {
+  if (cachedAccountId) return cachedAccountId; // ✅ usar el cache
 
-    const accountId = response.data?.data?.[0]?.accountId;
-    if (!accountId) throw new Error("No se encontró accountId 😔");
+  const response = await axios.get("https://mail.zoho.com/api/accounts", {
+    headers: { Authorization: `Zoho-oauthtoken ${accessToken}` },
+  });
 
-    return accountId;
-  } catch (error) {
-    console.error(
-      "Error al obtener accountId:",
-      error.response?.data || error.message
-    );
-    throw new Error("Falló la obtención del accountId 💥");
-  }
+  const accountId = response.data?.data?.[0]?.accountId;
+  if (!accountId) throw new Error("No se encontró accountId 😔");
+
+  cachedAccountId = accountId; // ✅ guardarlo para futuros envíos
+  return accountId;
 };
 
 module.exports = {
   codePorTokensZoho,
-  obtenerAccountId,
+  getAccountId,
   accessTokenPorRefreshToken,
   getAccessToken,
 };
