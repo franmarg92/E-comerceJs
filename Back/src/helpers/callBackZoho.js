@@ -21,34 +21,19 @@ const codePorTokensZoho = async (code) => {
 
 const accessTokenPorRefreshToken = async () => {
   try {
-    const response = await axios.post(
-      "https://accounts.zoho.com/oauth/v2/token",
-      new URLSearchParams({
+    const response = await axios.post("https://accounts.zoho.com/oauth/v2/token", null, {
+      params: {
         refresh_token: process.env.ZOHO_REFRESH_TOKEN,
         client_id: process.env.ZOHO_CLIENT_ID,
         client_secret: process.env.ZOHO_CLIENT_SECRET,
         grant_type: "refresh_token",
-      }),
-      {
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      }
-    );
+      },
+    });
 
-    const data = response.data;
-
-    if (data.access_token) {
-      return data.access_token; // válido por 1h
-    } else {
-      throw new Error(
-        "No se pudo obtener access_token: " + JSON.stringify(data)
-      );
-    }
-  } catch (error) {
-    console.error(
-      "Error al pedir access_token:",
-      error.response?.data || error.message
-    );
-    throw error;
+    return response.data.access_token;
+  } catch (err) {
+    console.error("Error renovando token Zoho:", err.response?.data || err.message);
+    throw err;
   }
 };
 
