@@ -30,7 +30,9 @@ const initZohoController = async (req, res) => {
 
 const enviarCorreoController = async (req, res) => {
   const { to, subject, content } = req.body;
+;
 
+  console.log(`[Contacto] Intento de envío a ${to} - ${new Date().toISOString()} - IP: ${req.ip}`);
   try {
     const resultado = await zohoService.enviarCorreoService({ to, subject, content });
     res.status(200).json(resultado);

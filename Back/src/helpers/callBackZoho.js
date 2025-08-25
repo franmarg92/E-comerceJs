@@ -60,8 +60,7 @@ let lastRefresh = 0;
 const getAccessToken = async () => {
   const ahora = Date.now();
   if (cachedToken && ahora - lastRefresh < 50 * 60 * 1000) return cachedToken;
-  if (ahora - lastRefresh < 60 * 1000)
-    throw new Error("Throttle: Esperá un momento");
+  if (ahora - lastRefresh < 60 * 1000) throw new Error('Throttle: Esperá un momento');
 
   cachedToken = await accessTokenPorRefreshToken();
   lastRefresh = ahora;
