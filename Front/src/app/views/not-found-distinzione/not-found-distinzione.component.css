@@ -1,0 +1,40 @@
+.distinzione-card {
+  background-color: #f8f6f4;
+  border: 1px solid #d1cfcf;
+  border-radius: 12px;
+  padding: 2rem;
+  max-width: 400px;
+  margin: auto;
+  margin-top: 150px;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  font-family: 'Montserrat', sans-serif;
+}
+
+.card-title {
+  font-size: 1.8rem;
+  color: #d4af37;
+  margin-bottom: 1rem;
+  
+}
+
+.card-description {
+  font-size: 1rem;
+  color: #555;
+  margin-bottom: 1.5rem;
+  opacity: 0.85;
+}
+
+.card-button {
+  background-color: #d4af37;
+  color: #fff;
+  border: none;
+  padding: 0.8rem 1.6rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.card-button:hover {
+  background-color: #ad9137;
+}
