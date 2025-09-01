@@ -12,7 +12,7 @@ import { ProductDetailComponent } from './views/product-detail/product-detail.co
 import { OrderDetailComponent } from './views/order-detail/order-detail.component';
 import { MyPurchasesComponent } from './views/my-purchases/my-purchases.component';
 import { SalesComponent } from './views/sales/sales.component';
-import { EditProductComponent } from './views/edit-product/edit-product.component';
+
 import { PaidsComponent } from './views/paids/paids.component';
 import { NotFoundDistinzioneComponent } from './views/not-found-distinzione/not-found-distinzione.component';
 
@@ -36,7 +36,7 @@ export const routes: Routes = [
       { path: 'product-editor', component: ProductEditorComponent },
       { path: 'my-purchases', component: MyPurchasesComponent },
       { path: 'sales', component: SalesComponent },
-      { path: 'edit-product', component: EditProductComponent },
+      
     ],
   },
   { path: '**', component: NotFoundDistinzioneComponent }
