@@ -8,6 +8,8 @@ import { Register } from '../../models/registerModel';
 import { login } from '../../models/loginModel';
 import { loginResponse } from '../../models/loginResponseModel';
 import { User } from '../../models/userModel';
+import Swal from 'sweetalert2';
+import { jwtDecode } from 'jwt-decode';
 
 @Injectable({
   providedIn: 'root',
@@ -108,5 +110,32 @@ this.authStatusSubject.next(true);
 
   private isBrowser(): boolean {
     return isPlatformBrowser(this.platformId);
+  }
+
+  isTokenExpired(): boolean {
+  const token = localStorage.getItem('token');
+  if (!token) return true; // si no hay token, está "expirado"
+
+  try {
+    const decoded: any = jwtDecode(token);
+    const now = Math.floor(Date.now() / 1000);
+
+    return decoded.exp < now;
+  } catch (e) {
+    return true; // si no se puede decodificar, lo tratamos como inválido
+  }
+}
+
+  checkTokenExpiration() {
+    if (this.isTokenExpired()) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Sesión expirada',
+        text: 'Tu sesión ha caducado, por favor inicia sesión de nuevo.',
+        confirmButtonColor: '#d4af37'
+      }).then(() => {
+        this.logout();
+      });
+    }
   }
 }

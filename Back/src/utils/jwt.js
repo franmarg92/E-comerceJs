@@ -9,7 +9,7 @@ const generateJWT = (payload) => {
   }
 
   return jwt.sign(payload, secret, {
-    expiresIn: '2d',
+    expiresIn: '2h',
   });
 };
 
