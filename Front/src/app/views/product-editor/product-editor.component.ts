@@ -290,6 +290,8 @@ onCategoryChange(): void {
     },
   });
 
+  
+
   const request$ = this.isEditMode && this.initialData?._id
     ? this.productService.editProductSmart(this.initialData._id, formData)
     : this.productService.createProduct(formData);
