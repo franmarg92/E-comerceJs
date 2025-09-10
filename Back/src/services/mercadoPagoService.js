@@ -32,7 +32,7 @@ const createPreference = async (
 
   const externalReference = encodeURIComponent(
     JSON.stringify(externalReferencePayload),
-    console.log("🔗 externalReference:", externalReference)
+    console.log(externalReferencePayload)
   );
 
   const preferenceData = {
