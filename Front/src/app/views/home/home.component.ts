@@ -4,18 +4,34 @@ import { Product } from '../../models/productModel';
 import { ProductService } from '../../services/product/product.service';
 import { CardsComponent } from '../../shared/cards/cards.component';
 
+
+import 'swiper/css';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
+
+
 @Component({
   selector: 'app-home',
   standalone: true,
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
-  imports: [CommonModule, CardsComponent],
+  imports: [CommonModule,  CardsComponent],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css',
 })
-export class HomeComponent {
+export class HomeComponent  {
   featuredProducts: Product[] = [];
   portfolioProducts: Product[] = [];
-  constructor(private productService: ProductService) {}
+
+
+
+
+
+
+  constructor(private productService: ProductService) {
+  
+
+  }
+
 
   ngOnInit() {
     this.loadFeaturedProducts();
@@ -47,4 +63,8 @@ isFeaturedNotPortfolio(): Product[] {
     !this.portfolioProducts.some(p => p._id === product._id)
   );
 }
+
+
+
+ 
 }

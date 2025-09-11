@@ -6,6 +6,32 @@
   border-bottom: 2px solid #d4af37;
 }
 
+
+.banner {
+  width: 100%;
+  overflow: hidden;      /* Esconde lo que se sale */
+  background: #d4af37;      /* Fondo oscuro */
+  color: white;
+  font-size: 15px;
+  white-space: nowrap;   /* Texto en una sola línea */
+  max-height: 30px;
+}
+
+.banner p {
+  display: inline-block;
+  padding-left: 100%;    /* Empieza afuera a la derecha */
+  animation: correr 30s linear infinite;
+}
+
+@keyframes correr {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-100%);
+  }
+}
+
 .nav-container {
   display: flex;
   justify-content: space-between;
