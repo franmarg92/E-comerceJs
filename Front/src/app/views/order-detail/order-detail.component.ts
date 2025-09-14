@@ -119,7 +119,7 @@ onCreateAddress(): void {
   let totalConDescuento = this.total;
 
 if (this.selectedPayment === 'Transferencia') {
-  totalConDescuento = this.total * 0.8; // Aplica 20% de descuento
+  totalConDescuento = this.total * 0.9; // Aplica 20% de descuento
 }
 
   const payload = {
