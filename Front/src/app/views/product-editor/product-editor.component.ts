@@ -378,16 +378,8 @@ createSubcategory(): void {
             ? 'Los cambios fueron guardados correctamente.'
             : 'El producto se ha registrado exitosamente.',
           confirmButtonColor: '#d4af37',
-        }).then(() => {
-          if (!this.isEditMode) {
-            // 👇 redirección al mismo path
-            this.router
-              .navigateByUrl('/', { skipLocationChange: true })
-              .then(() => {
-                this.router.navigate(['/dashboard/product-editor']);
-              });
-          }
         });
+        this.reloadSelf();
       },
       error: (err) => {
         Swal.close();
