@@ -46,6 +46,12 @@ export class ProductEditorComponent {
     private categoryService: CategoryService
   ) {}
 
+  private reloadSelf(): void {
+  const url = this.router.url;
+  this.router.navigateByUrl('/', { skipLocationChange: true })
+    .then(() => this.router.navigateByUrl(url));
+}
+
   ngOnInit(): void {
     this.isEditMode = !!this.initialData;
 
@@ -171,58 +177,68 @@ export class ProductEditorComponent {
 
   /** -------- Categorías / Subcategorías -------- */
   createCategory(): void {
-    if (!this.newCategoryName.trim()) return;
+  const name = this.newCategoryName.trim();
+  if (!name) return;
 
-    const newCategory: Category = {
-      name: this.newCategoryName.trim(),
-      isActive: true,
-    };
+  const newCategory: Category = { name, isActive: true };
 
-    this.categoryService.createCategory(newCategory).subscribe((response) => {
+  this.categoryService.createCategory(newCategory).subscribe({
+    next: (response) => {
+      // Actualizo estado actual por si NO querés redirigir
       this.availableCategories.push(response);
       this.productForm.get('categories')?.setValue(response._id);
       this.newCategoryName = '';
-    });
-  }
 
-  createSubcategory(): void {
-    const parentId = this.productForm.get('categories')?.value;
-    const name = this.newSubcategoryName.trim();
-    if (!parentId || !name) return;
+      // ✅ redirección suave al mismo componente
+      this.reloadSelf();
+    },
+    error: (err) => {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error al crear categoría',
+        text: err?.error?.message || 'Ocurrió un problema al guardar.',
+        confirmButtonColor: '#d4af37',
+      });
+    }
+  });
+}
 
-    const subCat: Category = {
-      name,
-      parent: parentId,
-      isActive: true,
-    };
 
-    this.categoryService.createCategory(subCat).subscribe({
-      next: (created: Category) => {
-        this.subcategoryList.push(created);
-        const currentSubs: string[] =
-          this.productForm.get('subcategories')?.value || [];
-        this.productForm
-          .get('subcategories')
-          ?.setValue([...currentSubs, created._id]);
-        this.newSubcategoryName = '';
+createSubcategory(): void {
+  const parentId = this.productForm.get('categories')?.value;
+  const name = this.newSubcategoryName.trim();
+  if (!parentId || !name) return;
 
-        Swal.fire({
-          icon: 'success',
-          title: 'Subcategoría creada',
-          text: `"${created.name}" fue vinculada exitosamente.`,
-          confirmButtonColor: '#d4af37',
-        });
-      },
-      error: (err) => {
-        Swal.fire({
-          icon: 'error',
-          title: 'Error al crear subcategoría',
-          text: err?.error?.message || 'Ocurrió un problema al guardar.',
-          confirmButtonColor: '#d4af37',
-        });
-      },
-    });
-  }
+  const subCat: Category = { name, parent: parentId, isActive: true };
+
+  this.categoryService.createCategory(subCat).subscribe({
+    next: (created: Category) => {
+      // Actualizo estado actual por si NO querés redirigir
+      this.subcategoryList.push(created);
+      const currentSubs: string[] = this.productForm.get('subcategories')?.value || [];
+      this.productForm.get('subcategories')?.setValue([...currentSubs, created._id]);
+      this.newSubcategoryName = '';
+
+      Swal.fire({
+        icon: 'success',
+        title: 'Subcategoría creada',
+        text: `"${created.name}" fue vinculada exitosamente.`,
+        confirmButtonColor: '#696763ff',
+      });
+
+      // ✅ redirección suave al mismo componente
+      this.reloadSelf();
+    },
+    error: (err) => {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error al crear subcategoría',
+        text: err?.error?.message || 'Ocurrió un problema al guardar.',
+        confirmButtonColor: '#d4af37',
+      });
+    },
+  });
+}
 
   onCategoryChange(): void {
     const selectedCatId = this.productForm.get('categories')?.value;
