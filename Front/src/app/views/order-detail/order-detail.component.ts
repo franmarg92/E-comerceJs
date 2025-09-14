@@ -116,6 +116,12 @@ onCreateAddress(): void {
     return;
   }
 
+  let totalConDescuento = this.total;
+
+if (this.selectedPayment === 'Transferencia') {
+  totalConDescuento = this.total * 0.8; // Aplica 20% de descuento
+}
+
   const payload = {
     userId: this.userId,
     shippingAddressId: this.selectedAddressId,
@@ -125,7 +131,7 @@ onCreateAddress(): void {
     notes: this.notes,
   };
   console.log(payload)
-
+if (this.selectedPayment === 'MercadoPago') {
   this.mercadoPagoService.createPreference(payload).subscribe({
     next: (url) => {
       console.log(payload)
@@ -140,15 +146,27 @@ onCreateAddress(): void {
           Swal.showLoading(null);
           setTimeout(() => {
             window.location.href = url;
-          }, 1000); // Pequeño delay para que el usuario vea el mensaje
+          }, 3000); // Pequeño delay para que el usuario vea el mensaje
         }
       });
     },
     error: () => {
       Swal.fire('❌ Error', 'No se pudo iniciar el pago.', 'error');
     }
-  });
-}
+  }); // Cierre de suscripción
+} else if (this.selectedPayment === 'Transferencia') {
+  this.orderService.createOrder(payload).subscribe({
+    next: (order) => {
+      Swal.fire('✅ Orden confirmada', 'Gracias por tu compra.', 'success');
+      this.cartService.clearCart(this.userId);
+      this.router.navigate(['/dashboard/orders']);
+    },
+    error: () => {
+      Swal.fire('❌ Error', 'No se pudo confirmar la orden.', 'error');
+    }
+  }); // Cierre de suscripción
+
+}}
 
 abrirWhatsApp() {
   window.open('https://wa.me/5493515194113?text=Hola! Quisiera consultar por envíos al interior desde Distinzione 💎', '_blank');

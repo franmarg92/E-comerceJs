@@ -1,5 +1,6 @@
 const { Product } = require("../models");
 const { Order } = require("../models");
+const cartService = require("../services/cartService");
 
 const createOrder = async ({
   userId,
@@ -46,6 +47,10 @@ const createOrder = async ({
   });
 
   await newOrder.save();
+
+  if (paymentStatus === "pending") {
+    await cartService.deleteCart(userId);
+  }
   return newOrder;
 };
 
