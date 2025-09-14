@@ -3,7 +3,7 @@
 
   <div class="widget-body">
     <div *ngFor="let item of cartService.items$ | async" class="widget-item">
-      <img [src]="item.productId.image[0]" alt="{{ item.productId.name }}" />
+      <img [src]="item.productId.images[0]" alt="{{ item.productId.name }}" />
 
       <div class="info">
         <p class="name">{{ item.productId.name }}</p>

@@ -14,8 +14,8 @@
   <li *ngFor="let product of products" (click)="selectForEdit(product)">
     <div class="product-row">
       <img
-        *ngIf="product.image?.[0]"
-        [src]="product.image[0]"
+        *ngIf="product.images?.[0]"
+        [src]="product.images[0]"
         alt="Preview"
         class="thumbnail"
       />
@@ -99,16 +99,18 @@
   </div>
 
   <!-- URLs de imágenes -->
- <div class="mb-3">
-  <label for="imageFile" class="form-label">Subir imagen</label>
-  <input
-    id="imageFile"
-    type="file"
-    (change)="onFileSelected($event)"
-    class="form-control elegant-input"
-    accept="image/*"
-  />
-</div>
+  <div class="mb-3">
+    <label for="imageFile" class="form-label">Subir imagen</label>
+    <input
+      id="imageFile"
+      type="file"
+      multiple
+      accept="image/*"
+      (change)="onFileSelected($event)"
+      class="form-control elegant-input"
+      #imageInputRef
+    />
+  </div>
 
 
 

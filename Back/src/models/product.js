@@ -19,7 +19,7 @@ const productSchema = new mongoose.Schema(
     },
     name: { type: String },
     description: { type: String },
-    image: [String],
+    images: [String],
     price: { type: Number },
     stock: { type: Number, default: 0 },
     categories: [

@@ -7,7 +7,7 @@ const {multerMidleware} = require('../midleeware')
 router.get("/", productController.getAllProductsController);
 router.post(
   "/create",
-  multerMidleware.uploadWithFile.single("image"),
+  multerMidleware.uploadWithFile.array("images", 12),
   productController.createProductController
 );
 router.patch("/edit/:id", multerMidleware.uploadNoFile.none(), productController.editProductController);

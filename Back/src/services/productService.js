@@ -6,7 +6,7 @@ const createProduct = async (productData) => {
       articleCode,
       name,
       description,
-      image,
+      images, // 👈 plural
       price,
       cost,
       stock,
@@ -18,46 +18,39 @@ const createProduct = async (productData) => {
       featured
     } = productData;
 
-    // Limpiar imágenes
-    const imageArray = Array.isArray(image)
-      ? image
-      : typeof image === "string"
-      ? image.split(",").map((url) => url.trim())
+    // Asegurar array
+    const imageArray = Array.isArray(images)
+      ? images
+      : typeof images === 'string'
+      ? images.split(',').map((u) => u.trim()).filter(Boolean)
       : [];
 
-    // Preparar variantes sólo si se usan (joyería no las necesita)
-    const variantList =
-      Array.isArray(variants) && variants.length > 0
-        ? variants.filter(
-            (v) =>
-              typeof v === "object" &&
-              (v.color || v.size || v.stock !== undefined)
-          )
-        : undefined;
+    const variantList = Array.isArray(variants)
+      ? variants.filter(v => v && (v.color || v.size || v.stock !== undefined))
+      : [];
 
-    // Crear producto adaptado
+    const totalVariantStock = variantList.reduce((acc, v) => acc + Number(v.stock || 0), 0);
+
     const newProduct = new Product({
       articleCode,
       name,
       description,
-      image: imageArray,
+      images: imageArray,     // 👈 guarda en 'images'
       price,
       cost,
-      stock: stock || 0,
-      categories: categories,
-      subcategories: subcategories,
-      ...(variantList ? { variants: variantList } : {}),
+      stock: variantList.length ? totalVariantStock : Number(stock || 0),
+      categories,
+      subcategories,
+      ...(variantList.length ? { variants: variantList } : {}),
       isActive: isActive !== undefined ? isActive : true,
       isPortfolio: isPortfolio !== undefined ? isPortfolio : false,
       featured: featured !== undefined ? featured : false,
-
     });
 
     const savedProduct = await newProduct.save();
-
     return { success: true, product: savedProduct };
   } catch (error) {
-    console.error("🧨 Error al crear producto:", error.message);
+    console.error('🧨 Error al crear producto:', error.message);
     return { success: false, error: error.message };
   }
 };

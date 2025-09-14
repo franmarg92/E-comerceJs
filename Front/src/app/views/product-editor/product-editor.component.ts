@@ -64,7 +64,8 @@ export class ProductEditorComponent {
         [ Validators.min(0)],
       ],
       description: [this.initialData?.description || ''],
-      image: [this.initialData?.image?.join(', ') || '', Validators.required],
+      existingImages: [this.initialData?.images ?? []], // string[]
+      images: [[] as File[]],
       categories: [
         this.initialData?.categories?.[0] || '',
         Validators.required,
@@ -238,14 +239,21 @@ onCategoryChange(): void {
   }
 
   onFileSelected(event: Event): void {
-  const input = event.target as HTMLInputElement;
-  if (input.files && input.files.length > 0) {
-    const file = input.files[0];
-    this.productForm.patchValue({ image: file });
-    this.productForm.get('image')?.updateValueAndValidity();
-  }
-}
+    const input = event.target as HTMLInputElement;
+    if (input.files?.length) {
+      const files = Array.from(input.files);
+      this.productForm.patchValue({ images: files });
+      this.productForm.get('images')?.updateValueAndValidity();
 
+      // Debug:
+      console.log(
+        'files seleccionados:',
+        files.map((f) => f.name)
+      );
+    } else {
+      console.log('No se seleccionaron archivos');
+    }
+  }
 
  onSubmit(): void {
   if (this.productForm.invalid) return;
@@ -275,10 +283,14 @@ onCategoryChange(): void {
   ];
   allSubcategories.forEach((subcat: string) => formData.append('subcategories', subcat));
 
-  // Imagen
-  if (raw.image instanceof File) {
-    formData.append('image', raw.image);
-  }
+     formData.append('existingImages', JSON.stringify(raw.existingImages || []));
+
+    // ⬇️ agregá los archivos nuevos
+    if (Array.isArray(raw.images)) {
+      (raw.images as File[]).forEach((file: File) => {
+        formData.append('images', file); // <-- NOMBRE DEL CAMPO
+      });
+    }
 
   // Mostrar cartel de espera
   Swal.fire({

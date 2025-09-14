@@ -10,7 +10,7 @@ export interface Product {
   articleCode: string;
   name: string;
   description?: string;
-  image: string[]; // URLs de imágenes
+  images: string[]; // URLs de imágenes
   price: number;
   cost?:number;
   stock?: number;

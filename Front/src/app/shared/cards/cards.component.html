@@ -1,10 +1,10 @@
 <div class="cards-conteiner">
   <div class="product-card">
     <img
-      *ngIf="product.image?.length"
-      [src]="product.image[0]"
+      *ngIf="product.images?.length"
+      [src]="product.images[0]"
       alt="{{ product.name }}"
-      (click)="openImageModal(product.image[0])"
+      (click)="openImageModal(product.images[0])"
       class="clickable-image"
     />
 

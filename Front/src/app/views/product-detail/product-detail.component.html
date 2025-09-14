@@ -1,8 +1,8 @@
 <div class="product-showcase" *ngIf="product">
   <div class="left-block">
     <img
-      *ngIf="product?.image?.length"
-      [src]="product.image[0]"
+      *ngIf="product?.images?.length"
+      [src]="product.images[0]"
       alt="{{ product.name }}"
     />
   </div>
