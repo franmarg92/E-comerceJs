@@ -59,5 +59,7 @@ export class ProductDetailComponent {
     this.cartService.addToAnonymousCart(productId);
   }
 
+  
+
 
 }
