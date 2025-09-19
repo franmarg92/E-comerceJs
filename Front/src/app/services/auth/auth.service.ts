@@ -103,36 +103,45 @@ this.authStatusSubject.next(true);
 
   
 
+  private isBrowser(): boolean {
+    return isPlatformBrowser(this.platformId);
+  }
+
   getToken(): string | null {
     if (!this.isBrowser()) return null;
     return localStorage.getItem('token');
   }
 
-  private isBrowser(): boolean {
-    return isPlatformBrowser(this.platformId);
-  }
-
   isTokenExpired(): boolean {
-  const token = localStorage.getItem('token');
-  if (!token) return true; // si no hay token, está "expirado"
+    if (!this.isBrowser()) return true; // 🚀 Protección SSR
 
-  try {
-    const decoded: any = jwtDecode(token);
-    const now = Math.floor(Date.now() / 1000);
+    const token = localStorage.getItem('token');
+    if (!token) return true; // si no hay token, está "expirado"
 
-    return decoded.exp < now;
-  } catch (e) {
-    return true; // si no se puede decodificar, lo tratamos como inválido
+    try {
+      const decoded: any = jwtDecode(token);
+      const now = Math.floor(Date.now() / 1000);
+
+      return decoded.exp < now;
+    } catch (e) {
+      return true; // si no se puede decodificar, lo tratamos como inválido
+    }
   }
-}
 
   checkTokenExpiration() {
-    if (this.isTokenExpired()) {
+    if (!this.isBrowser()) return; // 🚀 Protección SSR
+
+    const token = localStorage.getItem('token');
+
+    if (!token) {
+      // 🚀 No hay sesión iniciada → no mostramos alerta
+      return;
+    }else  if (this.isTokenExpired()) {
       Swal.fire({
         icon: 'warning',
         title: 'Sesión expirada',
         text: 'Tu sesión ha caducado, por favor inicia sesión de nuevo.',
-        confirmButtonColor: '#d4af37'
+        confirmButtonColor: '#4b4944ff',
       }).then(() => {
         this.logout();
       });
